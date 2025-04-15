@@ -172,10 +172,14 @@ template:
       device_class: energy
       state_class: total_increasing
       state: >
-        {{ states('sensor.eta_<IP>_kessel_zahlerstande_gesamtverbrauch') | float(default=0.0) | multiply(4.8) | round(1) }}
+        {% if states('sensor.eta_<IP>_kessel_zahlerstande_gesamtverbrauch') | float(default=none) is not none %}
+          {{ states('sensor.eta_<IP>_kessel_zahlerstande_gesamtverbrauch') | float(default=0.0) | multiply(4.8) | round(1) }}
+        {% else %}
+          {{ states('sensor.eta_<IP>_kessel_zahlerstande_gesamtverbrauch') }}
+        {% endif %}
 ```
 
-Make sure to replace the `&lt;IP> field with the Ip address of your ETA unit. You can also check the sensor id by going to the options of the sensor, and
+Make sure to replace the `&lt;IP> field with the IP address of your ETA unit. You can also check the sensor id by going to the options of the sensor, and searching for it in the entities.
 
 You can also use the web interface to create a template helper:
 ![template helper](images/template_sensor.png)
