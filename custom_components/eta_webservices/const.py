@@ -13,8 +13,10 @@ CHOSEN_TEXT_SENSORS = "chosen_text_sensors"
 CHOSEN_WRITABLE_SENSORS = "chosen_writable_sensors"
 
 FORCE_LEGACY_MODE = "force_legacy_mode"
-FORCE_SENSOR_DETECTION = "force_sensor_detection"
 ENABLE_DEBUG_LOGGING = "enable_debug_logging"
+
+OPTIONS_UPDATE_SENSOR_VALUES = "update_sensor_values"
+OPTIONS_ENUMERATE_NEW_ENDPOINTS = "enumerate_new_endpoints"
 
 ERROR_UPDATE_COORDINATOR = "error_update_coordinator"
 WRITABLE_UPDATE_COORDINATOR = "writable_update_coordinator"
