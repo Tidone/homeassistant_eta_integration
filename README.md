@@ -58,6 +58,22 @@ This integration can be configured directly in Home Assistant via HACS:
 
 -   Your ETA pellets unit needs a static IP address! Either configure the IP adress directly on the ETA terminal, or set the DHCP server on your router to give the ETA unit a static lease.
 
+## Updating the List of Sensors
+
+If the sensors on the ETA unit are changed, the integration can be updated to reflect that. This is useful for example if new sensors are added, which should be shown in HA.
+
+To do that follow these steps:
+1. Go to `Settings` -> `Devices & services` -> `ETA Sensors`
+1. Click on the gear symbol (`Configure`)
+1. In the popup dialog you can choose between different options to update the list of sensors:
+    - The first option, `Update sensor values`, will only update the current values of all sensors in the list. It will not update the list of sensors itself. This option is enabled by default to make it easier to find the correct sensor in the list.
+    - The second option, `Update list of sensors`, will update the whole list of sensors.
+1. New sensors will then be added to the list, where you can select them in the next step.
+1. Deleted or renamed sensors will be handled differently depending on if the sensor has previously been added to HA:
+    - If the sensor has not been added to HA, it will simply be removed from the list. If it has been renamed on the ETA terminal, it will show its new name instead.
+    - If the sensor has previously been added to HA, its entity will remain in HA, but it will be orphaned. HA will show a warning that the integration does not provide this entity any more.\
+    **If the sensor has been renamed in the ETA terminal, its new name will show up in the list instead, but the integration will not link the new name to the old entity!** You have to find the new name in the list of available sensors and add it again. If you want to keep the history of the entitiy you have to manually rename the new entity to its old name. If you do this the integration will orphan this entity again the next time the list of sensors is updated in the options, because it can't keep track if the user renames the entities.
+
 ## Logs
 
 If you have problems setting up this integration you can enable verbose logs on the dialog where you enter your ETA credentials.

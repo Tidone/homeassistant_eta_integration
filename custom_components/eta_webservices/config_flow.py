@@ -313,7 +313,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     self.data[FLOAT_DICT][entity]["url"]
                 )
             except Exception:
-                _LOGGER.error(
+                _LOGGER.exception(
                     "Exception while updating the value for endpoint '%s' (%s)",
                     self.data[FLOAT_DICT][entity]["friendly_name"],
                     self.data[FLOAT_DICT][entity]["url"],
@@ -327,7 +327,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     _,
                 ) = await eta_client.get_data(self.data[SWITCHES_DICT][entity]["url"])
             except Exception:
-                _LOGGER.error(
+                _LOGGER.exception(
                     "Exception while updating the value for endpoint '%s' (%s)",
                     self.data[SWITCHES_DICT][entity]["friendly_name"],
                     self.data[SWITCHES_DICT][entity]["url"],
@@ -339,7 +339,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     self.data[TEXT_DICT][entity]["url"]
                 )
             except Exception:
-                _LOGGER.error(
+                _LOGGER.exception(
                     "Exception while updating the value for endpoint '%s' (%s)",
                     self.data[TEXT_DICT][entity]["friendly_name"],
                     self.data[TEXT_DICT][entity]["url"],
@@ -352,7 +352,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     _,
                 ) = await eta_client.get_data(self.data[WRITABLE_DICT][entity]["url"])
             except Exception:
-                _LOGGER.error(
+                _LOGGER.exception(
                     "Exception while updating the value for endpoint '%s' (%s)",
                     self.data[WRITABLE_DICT][entity]["friendly_name"],
                     self.data[WRITABLE_DICT][entity]["url"],
@@ -660,6 +660,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         }
 
         if len(self.unavailable_sensors) > 0:
+            # Add list of unavailable sensors to the schema if necessary
             unavailable_sensor_keys = "\n\n".join(
                 [
                     f"{value['friendly_name']}\n ({key})"
@@ -678,31 +679,6 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     ),
                 }
             )
-
-        """
-            unavailable_sensor_keys = list(self.unavailable_sensors.keys())
-            vol.Optional("sd"): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    multiline=True, multiple=True
-                )
-            ),
-                    vol.Optional(
-                        "unavailable_sensors", default=unavailable_sensor_keys
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{value['friendly_name']}",
-                                )
-                                for key, value in self.unavailable_sensors.items()
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                            read_only=True,
-                        )
-                    ),
-        """
 
         return self.async_show_form(
             step_id="user",
