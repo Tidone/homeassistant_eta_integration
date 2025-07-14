@@ -3,7 +3,7 @@
 import copy
 import logging
 import voluptuous as vol
-from homeassistant import config_entries
+from homeassistant.config_entries import ConfigFlow, OptionsFlow, CONN_CLASS_CLOUD_POLL
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -33,11 +33,11 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for Eta."""
 
     VERSION = 5
-    CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
+    CONNECTION_CLASS = CONN_CLASS_CLOUD_POLL
 
     def __init__(self) -> None:
         """Initialize."""
@@ -125,7 +125,7 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        return EtaOptionsFlowHandler(config_entry)
+        return EtaOptionsFlowHandler()
 
     async def _show_config_form_user(self, user_input):  # pylint: disable=unused-argument
         """Show the configuration form to edit host and port data."""
@@ -158,7 +158,7 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                             options=[
                                 selector.SelectOptionDict(
                                     value=key,
-                                    label=f"{sensors_dict[key]['friendly_name']} ({sensors_dict[key]['value']} {sensors_dict[key]['unit'] if sensors_dict[key]['unit'] not in INVISIBLE_UNITS else ""})",
+                                    label=f"{sensors_dict[key]['friendly_name']} ({sensors_dict[key]['value']} {sensors_dict[key]['unit'] if sensors_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                                 )
                                 for key in sensors_dict
                             ],
@@ -197,7 +197,7 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                             options=[
                                 selector.SelectOptionDict(
                                     value=key,
-                                    label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ""})",
+                                    label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                                 )
                                 for key in writable_dict
                             ],
@@ -249,12 +249,15 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         return await eta_client.is_correct_api_version()
 
 
-class EtaOptionsFlowHandler(config_entries.OptionsFlow):
+class EtaOptionsFlowHandler(OptionsFlow):
     """Blueprint config flow options handler."""
 
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+    @property
+    def config_entry(self):
+        return self.hass.config_entries.async_get_entry(self.handler)
+
+    def __init__(self) -> None:
         """Initialize HACS options flow."""
-        self.config_entry = config_entry
         self.data = {}
         self._errors = {}
 
@@ -477,7 +480,7 @@ class EtaOptionsFlowHandler(config_entries.OptionsFlow):
                             options=[
                                 selector.SelectOptionDict(
                                     value=key,
-                                    label=f"{sensors_dict[key]['friendly_name']} ({sensors_dict[key]['value']} {sensors_dict[key]['unit'] if sensors_dict[key]['unit'] not in INVISIBLE_UNITS else ""})",
+                                    label=f"{sensors_dict[key]['friendly_name']} ({sensors_dict[key]['value']} {sensors_dict[key]['unit'] if sensors_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                                 )
                                 for key in sensors_dict
                             ],
@@ -522,7 +525,7 @@ class EtaOptionsFlowHandler(config_entries.OptionsFlow):
                             options=[
                                 selector.SelectOptionDict(
                                     value=key,
-                                    label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ""})",
+                                    label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                                 )
                                 for key in writable_dict
                             ],
