@@ -35,18 +35,28 @@
     },
     "options": {
         "step": {
+            "init": {
+                "title": "Initialize options",
+                "description": "Select if the sensors should be updated before going to the next step",
+                "data": {
+                    "update_sensor_values": "Update sensor values",
+                    "enumerate_new_endpoints": "Update list of sensors"
+                }
+            },
             "user": {
                 "data": {
                     "chosen_float_sensors": "Possible sensors",
                     "chosen_switches": "Possible switches",
                     "chosen_text_sensors": "Possible state sensors",
-                    "chosen_writable_sensors": "Possible writable sensors"
+                    "chosen_writable_sensors": "Possible writable sensors",
+                    "unavailable_sensors": "Unavailable sensors"
                 }
             }
         },
         "error": {
             "wrong_api_version": "API version of ETA terminal is too low. Some entities may not be detected. Please consider updating the firmware of your ETA terminal to the latest version.",
-            "value_update_error": "At least one endpoint is reporting an error. The respective entities won't be shown in the list."
+            "value_update_error": "At least one endpoint could not be updated. You may have to update the list of available sensors.",
+            "unavailable_sensors": "One or more selected sensors are not available any more. You have to manually add their replacements, if available. Please check the list at the bottom."
         }
     },
     "entity": {

@@ -25,9 +25,10 @@ from .const import (
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
     FORCE_LEGACY_MODE,
-    FORCE_SENSOR_DETECTION,
     ENABLE_DEBUG_LOGGING,
     INVISIBLE_UNITS,
+    OPTIONS_UPDATE_SENSOR_VALUES,
+    OPTIONS_ENUMERATE_NEW_ENDPOINTS,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -260,6 +261,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
         """Initialize HACS options flow."""
         self.data = {}
         self._errors = {}
+        self.update_sensor_values = True
+        self.enumerate_new_endpoints = False
+        self.unavailable_sensors: dict = {}
 
     async def _get_possible_endpoints(self, host, port, force_legacy_mode):
         session = async_get_clientsession(self.hass)
@@ -274,19 +278,211 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
         return float_dict, switches_dict, text_dict, writable_dict
 
-    async def async_step_init(self, user_input=None):  # pylint: disable=unused-argument
-        self.data = self.hass.data[DOMAIN][self.config_entry.entry_id]
+    async def async_step_init(self, user_input=None):
+        if user_input is not None:
+            self.update_sensor_values = user_input[OPTIONS_UPDATE_SENSOR_VALUES]
+            self.enumerate_new_endpoints = user_input[OPTIONS_ENUMERATE_NEW_ENDPOINTS]
+            return await self._update_data_structures()
 
-        # query the list of writable sensors if it is currently empty
-        # this happens if a user updates from config v1 (pre-writable-sensors) to v2
-        if len(self.data[WRITABLE_DICT]) == 0:
-            _, _, _, self.data[WRITABLE_DICT] = await self._get_possible_endpoints(
-                self.data[CONF_HOST], self.data[CONF_PORT], self.data[FORCE_LEGACY_MODE]
+        return await self._show_initial_option_screen()
+
+    async def _show_initial_option_screen(self):
+        """Show the initial option form."""
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        OPTIONS_UPDATE_SENSOR_VALUES, default=True
+                    ): cv.boolean,
+                    vol.Required(
+                        OPTIONS_ENUMERATE_NEW_ENDPOINTS, default=False
+                    ): cv.boolean,
+                }
+            ),
+            errors=self._errors,
+        )
+
+    async def _update_sensor_values(self):
+        session = async_get_clientsession(self.hass)
+        eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
+
+        for entity in list(self.data[FLOAT_DICT].keys()):
+            try:
+                self.data[FLOAT_DICT][entity]["value"], _ = await eta_client.get_data(
+                    self.data[FLOAT_DICT][entity]["url"]
+                )
+            except Exception:
+                _LOGGER.exception(
+                    "Exception while updating the value for endpoint '%s' (%s)",
+                    self.data[FLOAT_DICT][entity]["friendly_name"],
+                    self.data[FLOAT_DICT][entity]["url"],
+                )
+                self._errors["base"] = "value_update_error"
+
+        for entity in list(self.data[SWITCHES_DICT].keys()):
+            try:
+                (
+                    self.data[SWITCHES_DICT][entity]["value"],
+                    _,
+                ) = await eta_client.get_data(self.data[SWITCHES_DICT][entity]["url"])
+            except Exception:
+                _LOGGER.exception(
+                    "Exception while updating the value for endpoint '%s' (%s)",
+                    self.data[SWITCHES_DICT][entity]["friendly_name"],
+                    self.data[SWITCHES_DICT][entity]["url"],
+                )
+                self._errors["base"] = "value_update_error"
+        for entity in list(self.data[TEXT_DICT].keys()):
+            try:
+                self.data[TEXT_DICT][entity]["value"], _ = await eta_client.get_data(
+                    self.data[TEXT_DICT][entity]["url"]
+                )
+            except Exception:
+                _LOGGER.exception(
+                    "Exception while updating the value for endpoint '%s' (%s)",
+                    self.data[TEXT_DICT][entity]["friendly_name"],
+                    self.data[TEXT_DICT][entity]["url"],
+                )
+                self._errors["base"] = "value_update_error"
+        for entity in list(self.data[WRITABLE_DICT].keys()):
+            try:
+                (
+                    self.data[WRITABLE_DICT][entity]["value"],
+                    _,
+                ) = await eta_client.get_data(self.data[WRITABLE_DICT][entity]["url"])
+            except Exception:
+                _LOGGER.exception(
+                    "Exception while updating the value for endpoint '%s' (%s)",
+                    self.data[WRITABLE_DICT][entity]["friendly_name"],
+                    self.data[WRITABLE_DICT][entity]["url"],
+                )
+                self._errors["base"] = "value_update_error"
+
+    def _handle_new_sensors(
+        self,
+        new_float_sensors: dict,
+        new_switches: dict,
+        new_text_sensors: dict,
+        new_writable_sensors: dict,
+    ):
+        added_sensor_count = 0
+        # Add newly detected sensors to the lists of available sensors
+        for key, value in new_float_sensors.items():
+            if key not in self.data[FLOAT_DICT]:
+                added_sensor_count += 1
+                self.data[FLOAT_DICT][key] = value
+
+        for key, value in new_switches.items():
+            if key not in self.data[SWITCHES_DICT]:
+                added_sensor_count += 1
+                self.data[SWITCHES_DICT][key] = value
+
+        for key, value in new_text_sensors.items():
+            if key not in self.data[TEXT_DICT]:
+                added_sensor_count += 1
+                self.data[TEXT_DICT][key] = value
+
+        for key, value in new_writable_sensors.items():
+            if key not in self.data[WRITABLE_DICT]:
+                added_sensor_count += 1
+                self.data[WRITABLE_DICT][key] = value
+
+        return added_sensor_count
+
+    def _handle_deleted_sensors(
+        self,
+        new_float_sensors: dict,
+        new_switches: dict,
+        new_text_sensors: dict,
+        new_writable_sensors: dict,
+    ):
+        deleted_sensor_count = 0
+        # Delete sensors which are no longer available
+        for key in list(self.data[FLOAT_DICT].keys()):
+            # Loop over a copy of the keys of the dict to be able to delete items in-place
+            if key not in new_float_sensors:
+                deleted_sensor_count += 1
+                if key in self.data[CHOSEN_FLOAT_SENSORS]:
+                    # Remember deleted chosen sensors to be able to show them to the user later
+                    self.data[CHOSEN_FLOAT_SENSORS].remove(key)
+                    self.unavailable_sensors[key] = self.data[FLOAT_DICT][key]
+                del self.data[FLOAT_DICT][key]
+
+        for key in list(self.data[SWITCHES_DICT].keys()):
+            # Loop over a copy of the keys of the dict to be able to delete items in-place
+            if key not in new_switches:
+                deleted_sensor_count += 1
+                if key in self.data[CHOSEN_SWITCHES]:
+                    # Remember deleted chosen sensors to be able to show them to the user later
+                    self.data[CHOSEN_SWITCHES].remove(key)
+                    self.unavailable_sensors[key] = self.data[SWITCHES_DICT][key]
+                del self.data[SWITCHES_DICT][key]
+
+        for key in list(self.data[TEXT_DICT].keys()):
+            # Loop over a copy of the keys of the dict to be able to delete items in-place
+            if key not in new_text_sensors:
+                deleted_sensor_count += 1
+                if key in self.data[CHOSEN_TEXT_SENSORS]:
+                    # Remember deleted chosen sensors to be able to show them to the user later
+                    self.data[CHOSEN_TEXT_SENSORS].remove(key)
+                    self.unavailable_sensors[key] = self.data[TEXT_DICT][key]
+                del self.data[TEXT_DICT][key]
+
+        for key in list(self.data[WRITABLE_DICT].keys()):
+            # Loop over a copy of the keys of the dict to be able to delete items in-place
+            if key not in new_writable_sensors:
+                deleted_sensor_count += 1
+                if key in self.data[CHOSEN_WRITABLE_SENSORS]:
+                    # Remember deleted chosen sensors to be able to show them to the user later
+                    self.data[CHOSEN_WRITABLE_SENSORS].remove(key)
+                    self.unavailable_sensors[key] = self.data[WRITABLE_DICT][key]
+                del self.data[WRITABLE_DICT][key]
+
+        return deleted_sensor_count
+
+    def _handle_sensor_value_updates_from_enumeration(
+        self,
+        new_float_sensors: dict,
+        new_switches: dict,
+        new_text_sensors: dict,
+        new_writable_sensors: dict,
+    ):
+        try:
+            for key in self.data[FLOAT_DICT]:
+                self.data[FLOAT_DICT][key]["value"] = new_float_sensors[key]["value"]
+            for key in self.data[SWITCHES_DICT]:
+                self.data[SWITCHES_DICT][key]["value"] = new_switches[key]["value"]
+            for key in self.data[TEXT_DICT]:
+                self.data[TEXT_DICT][key]["value"] = new_text_sensors[key]["value"]
+            for key in self.data[WRITABLE_DICT]:
+                self.data[WRITABLE_DICT][key]["value"] = new_writable_sensors[key][
+                    "value"
+                ]
+        except Exception:
+            _LOGGER.exception("Exception while updating sensor values")
+
+    async def _update_data_structures(self):
+        # Make a copy of the data structure to make sure we don't alter the original data
+        for key in [
+            CONF_HOST,
+            CONF_PORT,
+            FLOAT_DICT,
+            SWITCHES_DICT,
+            TEXT_DICT,
+            WRITABLE_DICT,
+            CHOSEN_FLOAT_SENSORS,
+            CHOSEN_SWITCHES,
+            CHOSEN_TEXT_SENSORS,
+            CHOSEN_WRITABLE_SENSORS,
+            FORCE_LEGACY_MODE,
+        ]:
+            self.data[key] = copy.copy(
+                self.hass.data[DOMAIN][self.config_entry.entry_id][key]
             )
 
-        if self.data.get(FORCE_SENSOR_DETECTION, False):
-            _LOGGER.info("Forcing new endpoint discovery")
-            self.data[FORCE_SENSOR_DETECTION] = False
+        if self.enumerate_new_endpoints:
+            _LOGGER.info("Discovering new endpoints")
             (
                 new_float_sensors,
                 new_switches,
@@ -295,29 +491,25 @@ class EtaOptionsFlowHandler(OptionsFlow):
             ) = await self._get_possible_endpoints(
                 self.data[CONF_HOST], self.data[CONF_PORT], self.data[FORCE_LEGACY_MODE]
             )
-            added_sensor_count = 0
-            # Add newly detected sensors without changing the old ones
-            for key in new_float_sensors:
-                if key not in self.data[FLOAT_DICT]:
-                    added_sensor_count += 1
-                    self.data[FLOAT_DICT][key] = new_float_sensors[key]
 
-            for key in new_switches:
-                if key not in self.data[SWITCHES_DICT]:
-                    added_sensor_count += 1
-                    self.data[SWITCHES_DICT][key] = new_switches[key]
-
-            for key in new_text_sensors:
-                if key not in self.data[TEXT_DICT]:
-                    added_sensor_count += 1
-                    self.data[TEXT_DICT][key] = new_text_sensors[key]
-
-            for key in new_writable_sensors:
-                if key not in self.data[WRITABLE_DICT]:
-                    added_sensor_count += 1
-                    self.data[WRITABLE_DICT][key] = new_writable_sensors[key]
-
+            added_sensor_count = self._handle_new_sensors(
+                new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
+            )
             _LOGGER.info("Added %i new sensors", added_sensor_count)
+
+            deleted_sensor_count = self._handle_deleted_sensors(
+                new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
+            )
+            _LOGGER.info("Deleted %i unavailable sensors", deleted_sensor_count)
+
+            self._handle_sensor_value_updates_from_enumeration(
+                new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
+            )
+            _LOGGER.info("Updated sensor values")
+
+        elif self.update_sensor_values:
+            # Update the current sensor values if requested and if we did not already re-enumerate the whole list of sensors
+            await self._update_sensor_values()
 
         return await self.async_step_user()
 
@@ -401,139 +593,95 @@ class EtaOptionsFlowHandler(OptionsFlow):
         current_chosen_writable_sensors,
     ):
         """Show the configuration form to select which endpoints should become entities."""
-        # Create shallow copies of the dicts to make sure the del operators below won't delete the original data
-        sensors_dict: dict[str, ETAEndpoint] = copy.copy(self.data[FLOAT_DICT])
-        switches_dict: dict[str, ETAEndpoint] = copy.copy(self.data[SWITCHES_DICT])
-        text_dict: dict[str, ETAEndpoint] = copy.copy(self.data[TEXT_DICT])
-        writable_dict: dict[str, ETAEndpoint] = copy.copy(self.data[WRITABLE_DICT])
+        if len(self.unavailable_sensors) > 0:
+            self._errors["base"] = "unavailable_sensors"
 
-        session = async_get_clientsession(self.hass)
-        eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
+        schema = {
+            vol.Optional(
+                CHOSEN_FLOAT_SENSORS, default=current_chosen_sensors
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{self.data[FLOAT_DICT][key]['friendly_name']} ({self.data[FLOAT_DICT][key]['value']} {self.data[FLOAT_DICT][key]['unit'] if self.data[FLOAT_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                        )
+                        for key in self.data[FLOAT_DICT]
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            ),
+            vol.Optional(
+                CHOSEN_SWITCHES, default=current_chosen_switches
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{self.data[SWITCHES_DICT][key]['friendly_name']} ({self.data[SWITCHES_DICT][key]['value']})",
+                        )
+                        for key in self.data[SWITCHES_DICT]
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            ),
+            vol.Optional(
+                CHOSEN_TEXT_SENSORS, default=current_chosen_text_sensors
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{self.data[TEXT_DICT][key]['friendly_name']} ({self.data[TEXT_DICT][key]['value']})",
+                        )
+                        for key in self.data[TEXT_DICT]
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            ),
+            vol.Optional(
+                CHOSEN_WRITABLE_SENSORS, default=current_chosen_writable_sensors
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{self.data[WRITABLE_DICT][key]['friendly_name']} ({self.data[WRITABLE_DICT][key]['value']} {self.data[WRITABLE_DICT][key]['unit'] if self.data[WRITABLE_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                        )
+                        for key in self.data[WRITABLE_DICT]
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            ),
+        }
 
-        is_correct_api_version = await eta_client.is_correct_api_version()
-        if not is_correct_api_version:
-            self._errors["base"] = "wrong_api_version"
-
-        # Update current values
-        for entity in list(sensors_dict.keys()):
-            try:
-                sensors_dict[entity]["value"], _ = await eta_client.get_data(
-                    sensors_dict[entity]["url"]
-                )
-            except Exception:
-                _LOGGER.error(
-                    "Exception while updating the value for endpoint '%s' (%s), removing sensor from the lists",
-                    sensors_dict[entity]["friendly_name"],
-                    sensors_dict[entity]["url"],
-                )
-                del sensors_dict[entity]
-                self._errors["base"] = "value_update_error"
-
-        for entity in list(switches_dict.keys()):
-            try:
-                switches_dict[entity]["value"], _ = await eta_client.get_data(
-                    switches_dict[entity]["url"]
-                )
-            except Exception:
-                _LOGGER.error(
-                    "Exception while updating the value for endpoint '%s' (%s), removing sensor from the lists",
-                    switches_dict[entity]["friendly_name"],
-                    switches_dict[entity]["url"],
-                )
-                del switches_dict[entity]
-                self._errors["base"] = "value_update_error"
-        for entity in list(text_dict.keys()):
-            try:
-                text_dict[entity]["value"], _ = await eta_client.get_data(
-                    text_dict[entity]["url"]
-                )
-            except Exception:
-                _LOGGER.error(
-                    "Exception while updating the value for endpoint '%s' (%s), removing sensor from the lists",
-                    text_dict[entity]["friendly_name"],
-                    text_dict[entity]["url"],
-                )
-                del text_dict[entity]
-                self._errors["base"] = "value_update_error"
-        for entity in list(writable_dict.keys()):
-            try:
-                writable_dict[entity]["value"], _ = await eta_client.get_data(
-                    writable_dict[entity]["url"]
-                )
-            except Exception:
-                _LOGGER.error(
-                    "Exception while updating the value for endpoint '%s' (%s), removing sensor from the lists",
-                    writable_dict[entity]["friendly_name"],
-                    writable_dict[entity]["url"],
-                )
-                del writable_dict[entity]
-                self._errors["base"] = "value_update_error"
-
-        return self.async_show_form(
-            step_id="user",
-            data_schema=vol.Schema(
+        if len(self.unavailable_sensors) > 0:
+            # Add list of unavailable sensors to the schema if necessary
+            unavailable_sensor_keys = "\n\n".join(
+                [
+                    f"{value['friendly_name']}\n ({key})"
+                    for key, value in self.unavailable_sensors.items()
+                ]
+            )
+            schema.update(
                 {
                     vol.Optional(
-                        CHOSEN_FLOAT_SENSORS, default=current_chosen_sensors
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{sensors_dict[key]['friendly_name']} ({sensors_dict[key]['value']} {sensors_dict[key]['unit'] if sensors_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
-                                )
-                                for key in sensors_dict
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                        )
-                    ),
-                    vol.Optional(
-                        CHOSEN_SWITCHES, default=current_chosen_switches
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{switches_dict[key]['friendly_name']} ({switches_dict[key]['value']})",
-                                )
-                                for key in switches_dict
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                        )
-                    ),
-                    vol.Optional(
-                        CHOSEN_TEXT_SENSORS, default=current_chosen_text_sensors
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{text_dict[key]['friendly_name']} ({text_dict[key]['value']})",
-                                )
-                                for key in text_dict
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                        )
-                    ),
-                    vol.Optional(
-                        CHOSEN_WRITABLE_SENSORS, default=current_chosen_writable_sensors
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
-                                )
-                                for key in writable_dict
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
+                        "unavailable_sensors", default=unavailable_sensor_keys
+                    ): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            multiline=True,
+                            read_only=True,
                         )
                     ),
                 }
-            ),
+            )
+
+        return self.async_show_form(
+            step_id="user",
+            data_schema=vol.Schema(schema),
             errors=self._errors,
         )
