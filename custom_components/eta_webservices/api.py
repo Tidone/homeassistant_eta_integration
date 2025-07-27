@@ -525,20 +525,20 @@ class EtaAPI:
                 fub_errors = [
                     fub_errors,
                 ]
-            errors = [
+            errors.extend(
                 ETAError(
                     msg=error["@msg"],
                     priority=error["@priority"],
                     time=datetime.strptime(error["@time"], "%Y-%m-%d %H:%M:%S")
                     if error.get("@time", "") != ""
-                    else datetime.now,
+                    else datetime.now(),
                     text=error["#text"],
                     fub=fub_name,
                     host=self._host,
                     port=self._port,
                 )
                 for error in fub_errors
-            ]
+            )
 
         return errors
 
