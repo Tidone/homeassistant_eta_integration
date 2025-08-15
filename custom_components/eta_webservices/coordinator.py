@@ -68,7 +68,7 @@ class EtaDataUpdateCoordinator(DataUpdateCoordinator):
         if not data:
             config_entry = self.hass.config_entries.async_get_entry(self.entry_id)
             # Try to load from cache first
-            stored_entities = config_entry.data.get("discovered_entities", {}).get(
+            stored_entities = config_entry.data.get("scanned_devices_data", {}).get(
                 self.device_name
             )
 
@@ -167,9 +167,9 @@ class EtaDataUpdateCoordinator(DataUpdateCoordinator):
                     len(leaf_nodes),
                 )
                 new_entry_data = {**config_entry.data}
-                if "discovered_entities" not in new_entry_data:
-                    new_entry_data["discovered_entities"] = {}
-                new_entry_data["discovered_entities"][
+                if "scanned_devices_data" not in new_entry_data:
+                    new_entry_data["scanned_devices_data"] = {}
+                new_entry_data["scanned_devices_data"][
                     self.device_name
                 ] = discovered_data
                 self.hass.config_entries.async_update_entry(
@@ -192,13 +192,9 @@ class EtaDataUpdateCoordinator(DataUpdateCoordinator):
 
         # If options are not set, update all discovered sensors
         chosen_sensors_keys = [
-            *options.get(
-                CHOSEN_FLOAT_SENSORS, list(data.get(FLOAT_DICT, {}).keys())
-            ),
+            *options.get(CHOSEN_FLOAT_SENSORS, list(data.get(FLOAT_DICT, {}).keys())),
             *options.get(CHOSEN_SWITCHES, list(data.get(SWITCHES_DICT, {}).keys())),
-            *options.get(
-                CHOSEN_TEXT_SENSORS, list(data.get(TEXT_DICT, {}).keys())
-            ),
+            *options.get(CHOSEN_TEXT_SENSORS, list(data.get(TEXT_DICT, {}).keys())),
             *options.get(
                 CHOSEN_WRITABLE_SENSORS, list(data.get(WRITABLE_DICT, {}).keys())
             ),
