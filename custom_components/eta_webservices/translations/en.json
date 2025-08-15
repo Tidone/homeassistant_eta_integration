@@ -20,6 +20,14 @@
                     "chosen_text_sensors": "Possible state sensors",
                     "chosen_writable_sensors": "Possible writable sensors"
                 }
+            },
+            "confirm_scan": {
+                "title": "Confirm Scan",
+                "description": "The following devices were found: {devices}. Do you want to proceed with scanning all of them? This may take a few minutes."
+            },
+            "scan_device": {
+                "title": "Scanning Device: {device}",
+                "description": "Press Next to scan the device. This can take a moment."
             }
         },
         "error": {

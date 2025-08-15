@@ -1,4 +1,4 @@
 homeassistant
 xmltodict
-aoihttp
+aiohttp
 packaging

@@ -56,6 +56,11 @@ class EtaCoordinatorEntity(CoordinatorEntity, EtaEntity):
         CoordinatorEntity.__init__(self, coordinator)
         self._attr_device_info = device_info
 
+    @property
+    def entity_registry_enabled_default(self) -> bool:
+        """Return if the entity should be enabled by default."""
+        return False
+
     @callback
     def _handle_coordinator_update(self) -> None:
         """Update attributes when the coordinator updates."""

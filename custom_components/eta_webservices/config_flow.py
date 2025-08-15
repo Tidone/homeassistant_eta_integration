@@ -45,6 +45,7 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Initialize."""
         self._errors = {}
         self.data = {}
+        self.options = {}
         self._old_logging_level = logging.NOTSET
 
     async def async_step_user(self, user_input=None):
@@ -67,7 +68,8 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 )
                 if not is_correct_api_version:
                     self._errors["base"] = "wrong_api_version"
-                elif user_input[FORCE_LEGACY_MODE]:
+                    return await self._show_config_form_user(user_input)
+                if user_input[FORCE_LEGACY_MODE]:
                     self._errors["base"] = "legacy_mode_selected"
 
                 if user_input[ENABLE_DEBUG_LOGGING]:
@@ -82,7 +84,7 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 if not self.data["possible_devices"]:
                     self._errors["base"] = "no_devices_found"
                     return await self._show_config_form_user(user_input)
-                return await self.async_step_select_devices()
+                return await self.async_step_confirm_scan()
             else:
                 self._errors["base"] = (
                     "no_eta_endpoint" if valid == 0 else "unknown_host"
@@ -97,25 +99,208 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         return await self._show_config_form_user(user_input)
 
-    async def async_step_select_devices(self, user_input: dict = None):
-        """Second step in config flow to select devices."""
+    async def async_step_confirm_scan(self, user_input=None):
+        """Step to confirm the scan of all devices."""
         if user_input is not None:
-            self.data[CHOSEN_DEVICES] = user_input.get(CHOSEN_DEVICES, [])
-            # Create a config entry without scanning for entities
-            return self.async_create_entry(
-                title=f"ETA at {self.data[CONF_HOST]}",
-                data=self.data,
-            )
+            self.data["devices_to_scan"] = self.data["possible_devices"].copy()
+            self.data["scanned_devices_data"] = {}
+            return await self.async_step_scan_device()
+
+        devices = self.data.get("possible_devices", [])
+        return self.async_show_form(
+            step_id="confirm_scan",
+            description_placeholders={"devices": ", ".join(devices)},
+            data_schema=vol.Schema({}),
+        )
+
+    async def _scan_device(self, device_name: str):
+        """Scan a device and get all its entities."""
+        session = async_get_clientsession(self.hass)
+        eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
+
+        entities = {
+            FLOAT_DICT: {},
+            SWITCHES_DICT: {},
+            TEXT_DICT: {},
+            WRITABLE_DICT: {},
+        }
+
+        async def traverse_and_scan(node):
+            if not node:
+                return
+
+            if uri := node.get("uri"):
+                try:
+                    metadata = await eta_client.async_get_entity_metadata(uri)
+                    if metadata:
+                        entity_type = eta_client.classify_entity(metadata)
+                        if entity_type == "sensor":
+                            if metadata.get("unit") == "":
+                                entities[TEXT_DICT][uri] = metadata
+                            else:
+                                entities[FLOAT_DICT][uri] = metadata
+                        elif entity_type == "switch":
+                            entities[SWITCHES_DICT][uri] = metadata
+                        elif entity_type in ("number", "time"):
+                            entities[WRITABLE_DICT][uri] = metadata
+                except Exception as e:
+                    _LOGGER.warning(f"Could not scan URI {uri}: {e}")
+
+            if children := node.get("children"):
+                for child in children:
+                    await traverse_and_scan(child)
+
+        structure = await eta_client.get_entity_structure(device_name)
+        await traverse_and_scan(structure)
+
+        return entities
+
+    async def async_step_scan_device(self, user_input=None):
+        """Step to scan a single device."""
+        if not self.data.get("devices_to_scan"):
+            # All devices scanned, move to device selection
+            self.data[CHOSEN_DEVICES] = self.data["possible_devices"]
+            return await self.async_step_select_device()
+
+        device_to_scan = self.data["devices_to_scan"][0]
+
+        if user_input is not None:
+            scanned_data = await self._scan_device(device_to_scan)
+            self.data["scanned_devices_data"][device_to_scan] = scanned_data
+
+            # Remove the scanned device from the list
+            self.data["devices_to_scan"].pop(0)
+
+            # Move to the next device or finish
+            return await self.async_step_scan_device()
 
         return self.async_show_form(
-            step_id="select_devices",
+            step_id="scan_device",
+            description_placeholders={"device": device_to_scan},
+            data_schema=vol.Schema({}),
+            last_step=len(self.data["devices_to_scan"]) == 1,
+        )
+
+    async def async_step_select_device(self, user_input=None):
+        """Step to select a device to configure."""
+        if user_input is not None:
+            if user_input["device"] == "finish_setup":
+                return self.async_create_entry(
+                    title=f"ETA at {self.data[CONF_HOST]}",
+                    data=self.data,
+                    options=self.options,
+                )
+            self.device_name = user_input["device"]
+            return await self.async_step_select_entities()
+
+        devices = self.data.get(CHOSEN_DEVICES, [])
+        options = [
+            selector.SelectOptionDict(value=device, label=device) for device in devices
+        ]
+        options.append(
+            selector.SelectOptionDict(value="finish_setup", label="Finish Setup")
+        )
+
+        return self.async_show_form(
+            step_id="select_device",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CHOSEN_DEVICES): selector.SelectSelector(
+                    vol.Required("device"): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=options,
+                            mode=selector.SelectSelectorMode.LIST,
+                        )
+                    ),
+                }
+            ),
+        )
+
+    async def async_step_select_entities(self, user_input=None):
+        """Step to select entities for a specific device."""
+        if user_input is not None:
+            # Get all entities for the device from our scanned data
+            device_data = self.data["scanned_devices_data"][self.device_name]
+            all_entities = {
+                **device_data.get(FLOAT_DICT, {}),
+                **device_data.get(SWITCHES_DICT, {}),
+                **device_data.get(TEXT_DICT, {}),
+                **device_data.get(WRITABLE_DICT, {}),
+            }
+
+            chosen_for_device = user_input.get("chosen_entities", [])
+
+            # Initialize options lists if they don't exist
+            self.options.setdefault(CHOSEN_FLOAT_SENSORS, [])
+            self.options.setdefault(CHOSEN_SWITCHES, [])
+            self.options.setdefault(CHOSEN_TEXT_SENSORS, [])
+            self.options.setdefault(CHOSEN_WRITABLE_SENSORS, [])
+
+            # Use a dummy API client just for classify_entity
+            session = async_get_clientsession(self.hass)
+            eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
+
+            # Clear out previous selections for THIS DEVICE ONLY
+            device_entity_keys = all_entities.keys()
+            for category_list in self.options.values():
+                for entity_key in list(category_list):
+                    if entity_key in device_entity_keys:
+                        category_list.remove(entity_key)
+
+            # Add back the new selections for this device
+            for key in chosen_for_device:
+                entity = all_entities[key]
+                entity_type = eta_client.classify_entity(entity)
+                if entity_type == "sensor":
+                    if entity.get("unit") == "":
+                        self.options[CHOSEN_TEXT_SENSORS].append(key)
+                    else:
+                        self.options[CHOSEN_FLOAT_SENSORS].append(key)
+                elif entity_type == "switch":
+                    self.options[CHOSEN_SWITCHES].append(key)
+                elif entity_type in ("number", "time"):
+                    self.options[CHOSEN_WRITABLE_SENSORS].append(key)
+
+
+            return await self.async_step_select_device()
+
+        # Get all entities for the device from our scanned data
+        device_data = self.data["scanned_devices_data"][self.device_name]
+        all_entities = {
+            **device_data.get(FLOAT_DICT, {}),
+            **device_data.get(SWITCHES_DICT, {}),
+            **device_data.get(TEXT_DICT, {}),
+            **device_data.get(WRITABLE_DICT, {}),
+        }
+
+        # Determine currently selected entities for this device
+        default_selected = [
+            key for key in all_entities if key in self.options.get(CHOSEN_FLOAT_SENSORS, [])
+        ]
+        default_selected.extend(
+            [key for key in all_entities if key in self.options.get(CHOSEN_SWITCHES, [])]
+        )
+        default_selected.extend(
+            [key for key in all_entities if key in self.options.get(CHOSEN_TEXT_SENSORS, [])]
+        )
+        default_selected.extend(
+            [key for key in all_entities if key in self.options.get(CHOSEN_WRITABLE_SENSORS, [])]
+        )
+
+
+        return self.async_show_form(
+            step_id="select_entities",
+            data_schema=vol.Schema(
+                {
+                    vol.Optional(
+                        "chosen_entities",
+                        default=default_selected,
+                    ): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=[
-                                selector.SelectOptionDict(value=device, label=device)
-                                for device in self.data["possible_devices"]
+                                selector.SelectOptionDict(
+                                    value=key, label=entity["friendly_name"]
+                                )
+                                for key, entity in all_entities.items()
                             ],
                             mode=selector.SelectSelectorMode.DROPDOWN,
                             multiple=True,
@@ -123,6 +308,7 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     ),
                 }
             ),
+            description_placeholders={"device_name": self.device_name},
         )
 
     @staticmethod

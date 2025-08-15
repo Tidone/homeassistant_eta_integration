@@ -20,6 +20,14 @@
                     "chosen_text_sensors": "Zustandssensoren",
                     "chosen_writable_sensors": "Schreibbare Sensoren"
                 }
+            },
+            "confirm_scan": {
+                "title": "Scan bestätigen",
+                "description": "Die folgenden Geräte wurden gefunden: {devices}. Möchten Sie mit dem Scannen aller Geräte fortfahren? Dies kann einige Minuten dauern."
+            },
+            "scan_device": {
+                "title": "Scanne Gerät: {device}",
+                "description": "Drücken Sie Weiter, um das Gerät zu scannen. Das kann einen Moment dauern."
             }
         },
         "error": {
