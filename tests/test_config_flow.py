@@ -1,4 +1,5 @@
 """Tests for the ETA Webservices config flow."""
+
 from unittest.mock import patch, MagicMock
 
 from unittest.mock import AsyncMock
@@ -26,7 +27,9 @@ from custom_components.eta_webservices.const import (
 @pytest.fixture(autouse=True)
 def mock_setup_entry():
     """Mock setting up a config entry."""
-    with patch("custom_components.eta_webservices.async_setup_entry", return_value=True):
+    with patch(
+        "custom_components.eta_webservices.async_setup_entry", return_value=True
+    ):
         yield
 
 
@@ -65,7 +68,9 @@ async def test_user_form_invalid_host(hass: HomeAssistant, enable_custom_integra
 
 
 @pytest.mark.asyncio
-async def test_user_form_wrong_api_version(hass: HomeAssistant, enable_custom_integrations):
+async def test_user_form_wrong_api_version(
+    hass: HomeAssistant, enable_custom_integrations
+):
     """Test that the user form shows an error for a wrong API version."""
     with patch(
         "custom_components.eta_webservices.config_flow.EtaFlowHandler._test_url",
@@ -94,7 +99,9 @@ async def test_user_form_wrong_api_version(hass: HomeAssistant, enable_custom_in
 
 
 @pytest.mark.asyncio
-async def test_user_form_no_devices_found(hass: HomeAssistant, enable_custom_integrations):
+async def test_user_form_no_devices_found(
+    hass: HomeAssistant, enable_custom_integrations
+):
     """Test that the user form shows an error if no devices are found."""
     with patch(
         "custom_components.eta_webservices.config_flow.EtaFlowHandler._test_url",
@@ -154,7 +161,9 @@ async def test_user_form_success(hass: HomeAssistant, enable_custom_integrations
 
 
 @pytest.mark.asyncio
-async def test_options_flow_select_device_show(hass: HomeAssistant, enable_custom_integrations):
+async def test_options_flow_select_device_show(
+    hass: HomeAssistant, enable_custom_integrations
+):
     """Test that the options flow shows the select device form."""
     entry = MockConfigEntry(
         domain=DOMAIN,
@@ -174,7 +183,9 @@ async def test_options_flow_select_device_show(hass: HomeAssistant, enable_custo
 
 
 @pytest.mark.asyncio
-async def test_options_flow_select_device_submit(hass: HomeAssistant, enable_custom_integrations):
+async def test_options_flow_select_device_submit(
+    hass: HomeAssistant, enable_custom_integrations
+):
     """Test that the options flow moves to select_entities after device selection."""
     entry = MockConfigEntry(
         domain=DOMAIN,
@@ -209,7 +220,9 @@ async def test_options_flow_select_device_submit(hass: HomeAssistant, enable_cus
 
 
 @pytest.mark.asyncio
-async def test_options_flow_select_entities_submit(hass: HomeAssistant, enable_custom_integrations):
+async def test_options_flow_select_entities_submit(
+    hass: HomeAssistant, enable_custom_integrations
+):
     """Test that options are updated on select_entities submit."""
     entry = MockConfigEntry(
         domain=DOMAIN,
@@ -310,7 +323,16 @@ async def test_scan_device_step(hass: HomeAssistant, enable_custom_integrations)
             user_input={},
         )
         assert result["type"] == data_entry_flow.FlowResultType.FORM
+        assert result["step_id"] == "show_found_entities"
+
+        # Continue from intermediate step
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={},
+        )
+        assert result["type"] == data_entry_flow.FlowResultType.FORM
         assert result["step_id"] == "scan_device"
+        assert result["description_placeholders"]["device"] == "device2"
 
         # Scan second device
         result = await hass.config_entries.flow.async_configure(
@@ -318,4 +340,76 @@ async def test_scan_device_step(hass: HomeAssistant, enable_custom_integrations)
             user_input={},
         )
         assert result["type"] == data_entry_flow.FlowResultType.FORM
-        assert result["step_id"] == "select_device"
+        assert result["step_id"] == "show_found_entities"
+
+        # Continue from intermediate step
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={},
+        )
+        assert result["type"] == data_entry_flow.FlowResultType.CREATE_ENTRY
+        assert result["title"] == "ETA at valid_host"
+        assert result["data"][CHOSEN_DEVICES] == ["device1", "device2"]
+
+
+@pytest.mark.asyncio
+async def test_scan_device_shows_entities_step(
+    hass: HomeAssistant, enable_custom_integrations
+):
+    """Test that the intermediate show_found_entities step is shown."""
+    mock_entities = {
+        FLOAT_DICT: {"uri1": {"friendly_name": "Sensor 1"}},
+        SWITCHES_DICT: {"uri2": {"friendly_name": "Switch 1"}},
+        TEXT_DICT: {},
+        WRITABLE_DICT: {},
+    }
+
+    with patch(
+        "custom_components.eta_webservices.config_flow.EtaFlowHandler._test_url",
+        return_value=1,
+    ), patch(
+        "custom_components.eta_webservices.config_flow.EtaFlowHandler._is_correct_api_version",
+        return_value=True,
+    ), patch(
+        "custom_components.eta_webservices.config_flow.EtaFlowHandler._get_possible_devices",
+        return_value=["device1", "device2"],
+    ), patch(
+        "custom_components.eta_webservices.config_flow.EtaFlowHandler._scan_device",
+        return_value=mock_entities,
+    ):
+        result = await hass.config_entries.flow.async_init(
+            DOMAIN,
+            context={"source": config_entries.SOURCE_USER},
+            data={
+                CONF_HOST: "valid_host",
+                CONF_PORT: "8080",
+                FORCE_LEGACY_MODE: False,
+                ENABLE_DEBUG_LOGGING: False,
+            },
+        )
+
+        # Confirm scan
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], user_input={}
+        )
+
+        # Scan first device
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], user_input={}
+        )
+
+        # Assert that we are at the new intermediate step
+        assert result["type"] == data_entry_flow.FlowResultType.FORM
+        assert result["step_id"] == "show_found_entities"
+        assert "Sensor 1" in result["description_placeholders"]["entities"]
+        assert "Switch 1" in result["description_placeholders"]["entities"]
+
+        # Continue from the intermediate step
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], user_input={}
+        )
+
+        # Assert that we are now scanning the second device
+        assert result["type"] == data_entry_flow.FlowResultType.FORM
+        assert result["step_id"] == "scan_device"
+        assert result["description_placeholders"]["device"] == "device2"

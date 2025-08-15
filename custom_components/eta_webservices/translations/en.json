@@ -28,6 +28,10 @@
             "scan_device": {
                 "title": "Scanning Device: {device}",
                 "description": "Press Next to scan the device. This can take a moment."
+            },
+            "show_found_entities": {
+                "title": "Entities Found for {device_name}",
+                "description": "The following entities were found: {entities}"
             }
         },
         "error": {

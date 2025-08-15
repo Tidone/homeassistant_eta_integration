@@ -45,7 +45,6 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Initialize."""
         self._errors = {}
         self.data = {}
-        self.options = {}
         self._old_logging_level = logging.NOTSET
 
     async def async_step_user(self, user_input=None):
@@ -158,9 +157,12 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_scan_device(self, user_input=None):
         """Step to scan a single device."""
         if not self.data.get("devices_to_scan"):
-            # All devices scanned, move to device selection
+            # All devices scanned, create the entry
             self.data[CHOSEN_DEVICES] = self.data["possible_devices"]
-            return await self.async_step_select_device()
+            return self.async_create_entry(
+                title=f"ETA at {self.data[CONF_HOST]}",
+                data=self.data,
+            )
 
         device_to_scan = self.data["devices_to_scan"][0]
 
@@ -168,11 +170,14 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             scanned_data = await self._scan_device(device_to_scan)
             self.data["scanned_devices_data"][device_to_scan] = scanned_data
 
+            # Store the current device and its entities for the next step
+            self.data["current_device_scanned"] = device_to_scan
+            self.data["current_entities_found"] = scanned_data
+
             # Remove the scanned device from the list
             self.data["devices_to_scan"].pop(0)
 
-            # Move to the next device or finish
-            return await self.async_step_scan_device()
+            return await self.async_step_show_found_entities()
 
         return self.async_show_form(
             step_id="scan_device",
@@ -181,134 +186,31 @@ class EtaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             last_step=len(self.data["devices_to_scan"]) == 1,
         )
 
-    async def async_step_select_device(self, user_input=None):
-        """Step to select a device to configure."""
+    async def async_step_show_found_entities(self, user_input=None):
+        """Show the entities found in the last scan."""
         if user_input is not None:
-            if user_input["device"] == "finish_setup":
-                return self.async_create_entry(
-                    title=f"ETA at {self.data[CONF_HOST]}",
-                    data=self.data,
-                    options=self.options,
-                )
-            self.device_name = user_input["device"]
-            return await self.async_step_select_entities()
+            # Continue to the next scan
+            return await self.async_step_scan_device()
 
-        devices = self.data.get(CHOSEN_DEVICES, [])
-        options = [
-            selector.SelectOptionDict(value=device, label=device) for device in devices
-        ]
-        options.append(
-            selector.SelectOptionDict(value="finish_setup", label="Finish Setup")
-        )
+        device_name = self.data.get("current_device_scanned")
+        entities_data = self.data.get("current_entities_found", {})
 
-        return self.async_show_form(
-            step_id="select_device",
-            data_schema=vol.Schema(
-                {
-                    vol.Required("device"): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=options,
-                            mode=selector.SelectSelectorMode.LIST,
-                        )
-                    ),
-                }
-            ),
-        )
-
-    async def async_step_select_entities(self, user_input=None):
-        """Step to select entities for a specific device."""
-        if user_input is not None:
-            # Get all entities for the device from our scanned data
-            device_data = self.data["scanned_devices_data"][self.device_name]
-            all_entities = {
-                **device_data.get(FLOAT_DICT, {}),
-                **device_data.get(SWITCHES_DICT, {}),
-                **device_data.get(TEXT_DICT, {}),
-                **device_data.get(WRITABLE_DICT, {}),
-            }
-
-            chosen_for_device = user_input.get("chosen_entities", [])
-
-            # Initialize options lists if they don't exist
-            self.options.setdefault(CHOSEN_FLOAT_SENSORS, [])
-            self.options.setdefault(CHOSEN_SWITCHES, [])
-            self.options.setdefault(CHOSEN_TEXT_SENSORS, [])
-            self.options.setdefault(CHOSEN_WRITABLE_SENSORS, [])
-
-            # Use a dummy API client just for classify_entity
-            session = async_get_clientsession(self.hass)
-            eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
-
-            # Clear out previous selections for THIS DEVICE ONLY
-            device_entity_keys = all_entities.keys()
-            for category_list in self.options.values():
-                for entity_key in list(category_list):
-                    if entity_key in device_entity_keys:
-                        category_list.remove(entity_key)
-
-            # Add back the new selections for this device
-            for key in chosen_for_device:
-                entity = all_entities[key]
-                entity_type = eta_client.classify_entity(entity)
-                if entity_type == "sensor":
-                    if entity.get("unit") == "":
-                        self.options[CHOSEN_TEXT_SENSORS].append(key)
-                    else:
-                        self.options[CHOSEN_FLOAT_SENSORS].append(key)
-                elif entity_type == "switch":
-                    self.options[CHOSEN_SWITCHES].append(key)
-                elif entity_type in ("number", "time"):
-                    self.options[CHOSEN_WRITABLE_SENSORS].append(key)
-
-
-            return await self.async_step_select_device()
-
-        # Get all entities for the device from our scanned data
-        device_data = self.data["scanned_devices_data"][self.device_name]
         all_entities = {
-            **device_data.get(FLOAT_DICT, {}),
-            **device_data.get(SWITCHES_DICT, {}),
-            **device_data.get(TEXT_DICT, {}),
-            **device_data.get(WRITABLE_DICT, {}),
+            **entities_data.get(FLOAT_DICT, {}),
+            **entities_data.get(SWITCHES_DICT, {}),
+            **entities_data.get(TEXT_DICT, {}),
+            **entities_data.get(WRITABLE_DICT, {}),
         }
 
-        # Determine currently selected entities for this device
-        default_selected = [
-            key for key in all_entities if key in self.options.get(CHOSEN_FLOAT_SENSORS, [])
-        ]
-        default_selected.extend(
-            [key for key in all_entities if key in self.options.get(CHOSEN_SWITCHES, [])]
-        )
-        default_selected.extend(
-            [key for key in all_entities if key in self.options.get(CHOSEN_TEXT_SENSORS, [])]
-        )
-        default_selected.extend(
-            [key for key in all_entities if key in self.options.get(CHOSEN_WRITABLE_SENSORS, [])]
-        )
-
+        entity_names = [entity["friendly_name"] for entity in all_entities.values()]
 
         return self.async_show_form(
-            step_id="select_entities",
-            data_schema=vol.Schema(
-                {
-                    vol.Optional(
-                        "chosen_entities",
-                        default=default_selected,
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key, label=entity["friendly_name"]
-                                )
-                                for key, entity in all_entities.items()
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                        )
-                    ),
-                }
-            ),
-            description_placeholders={"device_name": self.device_name},
+            step_id="show_found_entities",
+            description_placeholders={
+                "device_name": device_name,
+                "entities": ", ".join(entity_names) or "None",
+            },
+            data_schema=vol.Schema({}),
         )
 
     @staticmethod
