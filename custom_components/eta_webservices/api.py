@@ -144,10 +144,11 @@ class EtaAPI:
         unit = data["@unit"]
         if unit in self._float_sensor_units or force_number_handling:
             scale_factor = int(data["@scaleFactor"])
-            decimal_places = int(data["@decPlaces"])
+            # ignore the decPlaces to avoid removing any additional precision the API values have
+            # i.e. the API may send a value of 444 with scaleFactor=10, but set decPlaces=0,
+            # which would remove the decimal places and set the value to 44 instead of 44.4
             raw_value = float(data["#text"])
             value = raw_value / scale_factor
-            value = round(value, decimal_places)
         else:
             # use default text string representation for values that cannot be parsed properly
             value = data["@strValue"]
