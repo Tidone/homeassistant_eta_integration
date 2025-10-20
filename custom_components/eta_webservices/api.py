@@ -7,6 +7,7 @@ from packaging import version
 import xmltodict
 
 from .const import CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+# Make sure to update _get_all_sensors_v12() if a new custom unit is added
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -335,9 +336,27 @@ class EtaAPI:
                     self._is_float_sensor(endpoint_info)
                     or self._is_switch(endpoint_info)
                     or self._is_text_sensor(endpoint_info)
+                    or (
+                        # the ETA API is not very consistent and some sensors show different units in their `varinfo` and `var` endpoints
+                        # all of those sensors have an empty unit in `varinfo` and have `DEFAULT` as their type
+                        # i.e. the Volllaststunden sensor shows up with an empty unit in `varinfo`, but with seconds in `var`
+                        endpoint_info["unit"] == ""
+                        and endpoint_info["endpoint_type"] == "DEFAULT"
+                    )
                 ):
-                    value, _ = await self.get_data(all_endpoints[key])
+                    value, unit = await self.get_data(all_endpoints[key])
                     endpoint_info["value"] = value
+                    if (
+                        unit != endpoint_info["unit"]
+                        and endpoint_info["unit"] != CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+                        # update the unit of the sensor if they are different, but only if we didn't assign a custom unit to the sensor
+                    ):
+                        _LOGGER.debug(
+                            "Correcting unit for sensor from '%s' to '%s'",
+                            endpoint_info["unit"],
+                            unit,
+                        )
+                        endpoint_info["unit"] = unit
 
                 if self._is_writable(endpoint_info):
                     _LOGGER.debug("Adding as writable sensor")

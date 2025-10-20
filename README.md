@@ -58,6 +58,11 @@ This integration can be configured directly in Home Assistant via HACS:
 
 -   Your ETA pellets unit needs a static IP address! Either configure the IP adress directly on the ETA terminal, or set the DHCP server on your router to give the ETA unit a static lease.
 
+- If your pellets unit is behind a proxy (`nginx`, `Cloudflare`, etc.) you may have to increase the timeout of the proxy when adding or configuring the integration.
+    - The integration can take a very long time (> 5 minutes) when enumerating the list of available sensors. A proxy server may interrupt the connection between the browser and the HA server because it thinks the HA server is down because it takes too long to send the requested data.
+    - Check the manual of your proxy server for how to increase the timeouts.
+        - For nginx you may have to set the options `proxy_connect_timeout`, `proxy_send_timeout`, `proxy_read_timeout` and `send_timeout` to a higher number (600 seconds).
+
 ## Updating the List of Sensors
 
 If the sensors on the ETA unit are changed, the integration can be updated to reflect that. This is useful for example if new sensors are added, which should be shown in HA.
