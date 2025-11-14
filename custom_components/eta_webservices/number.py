@@ -104,8 +104,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
-        raw_value = round(value, self.valid_values["dec_places"])
-        raw_value *= self.valid_values["scale_factor"]
+        raw_value = round(value * self.valid_values["scale_factor"], self.valid_values["dec_places"])
         eta_client = EtaAPI(self.session, self.host, self.port)
         success = await eta_client.write_endpoint(self.uri, raw_value)
         if not success:
