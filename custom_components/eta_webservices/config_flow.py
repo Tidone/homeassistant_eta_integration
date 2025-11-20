@@ -29,6 +29,7 @@ from .const import (
     INVISIBLE_UNITS,
     OPTIONS_UPDATE_SENSOR_VALUES,
     OPTIONS_ENUMERATE_NEW_ENDPOINTS,
+    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -480,6 +481,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.data[key] = copy.copy(
                 self.hass.data[DOMAIN][self.config_entry.entry_id][key]
             )
+        # ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION can be unset, so we have to handle it separately
+        self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = self.hass.data[
+            DOMAIN
+        ][self.config_entry.entry_id].get(
+            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, False
+        )
 
         if self.enumerate_new_endpoints:
             _LOGGER.info("Discovering new endpoints")
@@ -575,14 +582,56 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 WRITABLE_DICT: self.data[WRITABLE_DICT],
                 CONF_HOST: self.data[CONF_HOST],
                 CONF_PORT: self.data[CONF_PORT],
+                ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: self.data[
+                    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION
+                ],
+                FORCE_LEGACY_MODE: self.data[FORCE_LEGACY_MODE],
             }
 
+            # If the user selected at least one writable sensor, show
+            # an additional options page to configure advanced settings.
+            if len(data[CHOSEN_WRITABLE_SENSORS]) > 0:
+                # store interim data and show extra options step
+                self.data = data
+                return await self.async_step_advanced_options()
+
             return self.async_create_entry(title="", data=data)
+
         return await self._show_config_form_endpoint(
             list(entity_map_sensors.keys()),
             list(entity_map_switches.keys()),
             list(entity_map_text_sensors.keys()),
             list(entity_map_writable_sensors.keys()),
+        )
+
+    async def async_step_advanced_options(self, user_input=None):
+        """Handle the advanced options step (only if writable sensors are selected for now)."""
+
+        if user_input is not None:
+            self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = user_input[
+                ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION
+            ]
+
+            return self.async_create_entry(title="", data=self.data)
+
+        return await self._show_advanced_options_screen()
+
+    async def _show_advanced_options_screen(self):
+        """Show the extra options form for writable sensors."""
+
+        return self.async_show_form(
+            step_id="advanced_options",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
+                        default=self.data.get(
+                            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, False
+                        ),
+                    ): cv.boolean
+                }
+            ),
+            errors=self._errors,
         )
 
     async def _show_config_form_endpoint(

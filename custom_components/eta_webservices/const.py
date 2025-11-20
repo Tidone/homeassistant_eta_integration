@@ -17,6 +17,7 @@ ENABLE_DEBUG_LOGGING = "enable_debug_logging"
 
 OPTIONS_UPDATE_SENSOR_VALUES = "update_sensor_values"
 OPTIONS_ENUMERATE_NEW_ENDPOINTS = "enumerate_new_endpoints"
+ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION = "ignore_decimal_places_restriction"
 
 ERROR_UPDATE_COORDINATOR = "error_update_coordinator"
 WRITABLE_UPDATE_COORDINATOR = "writable_update_coordinator"

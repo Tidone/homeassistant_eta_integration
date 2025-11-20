@@ -51,6 +51,13 @@
                     "chosen_writable_sensors": "Possible writable sensors",
                     "unavailable_sensors": "Unavailable sensors"
                 }
+            },
+            "advanced_options": {
+                "title": "Advanced options",
+                "description": "Select advanced options for the integration. You can find more information about these options here: https://github.com/Tidone/homeassistant_eta_integration/wiki/Advanded-Options",
+                "data": {
+                    "ignore_decimal_places_restriction": "HACK: Handle decimal places of writable sensor values even if the ETA API says otherwise (may lead to errors!)"
+                }
             }
         },
         "error": {

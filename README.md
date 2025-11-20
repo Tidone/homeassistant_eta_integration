@@ -54,6 +54,7 @@ This integration can be configured directly in Home Assistant via HACS:
     -   Follow the instructions
 
 -   For best results, your pellet heater has to support at least API version **1.2**. If you are on an older version the integration will fall back to a compatibility mode, which means that some sensors may not be correctly detected/identified. The ones that are correctly detected and identified should still work without problems.\
+    Writable sensors may not work correctly in this mode (they may set the wrong value), because version 1.1 lacks the necessary functions to query details about sensors.\
     If you want to update the firmware of your pellet heater you can find the firmware files on `meinETA` (`Settings at the bottom` -> `Installation & Software`).
 
 -   Your ETA pellets unit needs a static IP address! Either configure the IP adress directly on the ETA terminal, or set the DHCP server on your router to give the ETA unit a static lease.

@@ -33,6 +33,7 @@ from .const import (
     WRITABLE_DICT,
     WRITABLE_UPDATE_COORDINATOR,
     INVISIBLE_UNITS,
+    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
 )
 
 SCAN_INTERVAL = timedelta(minutes=1)
@@ -83,6 +84,9 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
         )
 
+        self.ignore_decimal_places_restriction = config.get(
+            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, False
+        )
         self._attr_device_class = self.determine_device_class(endpoint_info["unit"])
         self.valid_values: ETAValidWritableValues = endpoint_info["valid_values"]
 
@@ -93,19 +97,34 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         self._attr_entity_category = EntityCategory.CONFIG
 
         self._attr_mode = NumberMode.BOX
-        self._attr_native_min_value = endpoint_info["valid_values"]["scaled_min_value"]
-        self._attr_native_max_value = endpoint_info["valid_values"]["scaled_max_value"]
-        self._attr_native_step = pow(
-            10, endpoint_info["valid_values"]["dec_places"] * -1
-        )  # calculate the step size based on the number of decimal places
+        self._attr_native_min_value = self.valid_values["scaled_min_value"]
+        self._attr_native_max_value = self.valid_values["scaled_max_value"]
+        if self.ignore_decimal_places_restriction:
+            # set the step size based on the scale factor, i.e. use as many decimal places as the scale factor allows
+            self._attr_native_step = pow(
+                10, (len(str(self.valid_values["scale_factor"])) - 1) * -1
+            )
+        else:
+            # calculate the step size based on the number of decimal places
+            self._attr_native_step = pow(10, self.valid_values["dec_places"] * -1)
+        pass
 
     def handle_data_updates(self, data: float) -> None:
         self._attr_native_value = data
 
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
-        raw_value = round(value, self.valid_values["dec_places"])
-        raw_value *= self.valid_values["scale_factor"]
+        if self.ignore_decimal_places_restriction:
+            _LOGGER.debug(
+                "ETA Integration - HACK: Ignoring decimal places restriction for writable sensor %s",
+                self._attr_name,
+            )
+            # scale the value based on the scale factor and ignore the dec_places, i.e. set as many decimal places as the scale factor allows
+            raw_value = round(value * self.valid_values["scale_factor"], 0)
+        else:
+            raw_value = round(value, self.valid_values["dec_places"])
+            raw_value *= self.valid_values["scale_factor"]
+
         eta_client = EtaAPI(self.session, self.host, self.port)
         success = await eta_client.write_endpoint(self.uri, raw_value)
         if not success:
