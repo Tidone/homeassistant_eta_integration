@@ -161,23 +161,9 @@ Also, on API v1.1 it is not possible to query if a sensor is writable at all! Th
 
 The authors cannot be made responsible if the user renders their ETA heating unit unusable because they set a sensor to an invalid value.
 
-## Set Value Service
+## Custom Services
 
-This integration implements a custom service to write values to ETA endpoints.
-
-**Attention**: This service is very low-level and does not respect the `scaleFactor` and other attributes of the endpoints! You have to calculate the correct value yourself!
-E.g. If an endpoint has a scaleFactor of 10 and you want set the value 55, you have to write 550 to the endpoint.
-
-### Testing the Service
-
-1. Open Home Assistant
-1. Go to `Developer tools` -> `Services` on top
-1. Select the `Eta Sensors: Set value` service
-1. Enter the numeric part of the endpoint URI (e.g. `/40/10021/0/0/12080`, which should be the On/Off button)
-1. Enter the value you want to write (e.g. `1803` to turn on the heating unit)
-1. Some endpoints, such as the heating windows, require a begin and end time in addition to the value
-    - These values have to be specified in 15 minute increments since midnight!
-        - E.g. a time of 15:30 (3:30pm) would be a value of `62` (`15*4+2` or `(15*60+30)/15`)
+THis integration provides some custom services. More information can be found on the [wiki](https://github.com/Tidone/homeassistant_eta_integration/wiki/Custom-Services).
 
 ## Integrating the ETA Unit into the Energy Dashboard
 

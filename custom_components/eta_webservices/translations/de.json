@@ -56,7 +56,7 @@
                 "title": "Erweiterte Optionen",
                 "description": "Wähle erweiterte Optionen für die Integration. Weitere Informationen zu diesen Optionen findest du hier: https://github.com/Tidone/homeassistant_eta_integration/wiki/Advanded-Options",
                 "data": {
-                    "ignore_decimal_places_restriction": "HACK: Füge Dezimalstellen zu den Werten der schreibbaren Sensoren hinzu, auch wenn die ETA API das nicht vorsieht (kann zu Fehlern führen!)"
+                    "ignore_decimal_places_restriction_for_writable_entities": "HACK: Füge Dezimalstellen zu den Werten dieser schreibbaren Sensoren hinzu"
                 }
             }
         },
@@ -89,7 +89,7 @@
     "services": {
         "write_value": {
             "name": "Wert setzen",
-            "description": "Setzt den Wert eines Endpunkts (Achtung: Nur unter großer Vorsicht verwenden! Ein falscher Wert kann die ETA Heizung unbrauchbar machen.)",
+            "description": "Setzt den Wert eines Endpunkts (Achtung: Nur unter großer Vorsicht verwenden! Ein falscher Wert kann das ETA Gerät unbrauchbar machen.)",
             "fields": {
                 "endpoint_url": {
                     "name": "Endpunkt URI",
@@ -106,6 +106,20 @@
                 "end": {
                     "name": "Endzeit",
                     "description": "Optionale Endzeit in 15 Minuten Schritten seit Mitternacht"
+                }
+            }
+        },
+        "write_value_scaled": {
+            "name": "Skalierten Wert setzen",
+            "description": "Setzt den Wert eines Endpunkts unter Anwendung des in der ETA API definierten Skalierungsfaktors",
+            "fields": {
+                "value": {
+                    "name": "Wert",
+                    "description": "Zu setzender Wert (im menschenlesbaren Format)"
+                },
+                "force_decimals": {
+                    "name": "Dezimalstellen erzwingen",
+                    "description": "Wenn aktiviert, werden Dezimalstellen beibehalten, auch wenn die ETA API sie für diesen Endpunkt nicht unterstützt (kann zu Fehlern führen!)"
                 }
             }
         }

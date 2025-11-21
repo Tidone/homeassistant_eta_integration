@@ -22,3 +22,18 @@ write_value:
        min: 0
        max: 96
        mode: box
+write_value_scaled:
+  target:
+    entity:
+      integration: eta_webservices
+      domain: number
+  fields:
+    value:
+      required: true
+      selector:
+        number:
+          step: 0.1
+    force_decimals:
+      required: true
+      selector:
+        boolean:

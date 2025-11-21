@@ -8,6 +8,7 @@ author Tidone
 from __future__ import annotations
 
 import logging
+import voluptuous as vol
 from datetime import timedelta
 
 from homeassistant.exceptions import HomeAssistantError
@@ -26,6 +27,9 @@ from homeassistant.components.number import (
 from homeassistant.core import HomeAssistant
 from homeassistant import config_entries
 from homeassistant.const import EntityCategory
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.entity_platform import async_get_current_platform
+from homeassistant.helpers.typing import VolDictType
 from .coordinator import ETAWritableUpdateCoordinator
 from .const import (
     DOMAIN,
@@ -37,6 +41,11 @@ from .const import (
 )
 
 SCAN_INTERVAL = timedelta(minutes=1)
+
+WRITE_VALUE_SCALED_SCHEMA: VolDictType = {
+    vol.Required("value"): vol.Number(),
+    vol.Required("force_decimals"): cv.boolean,
+}
 
 
 async def async_setup_entry(
@@ -59,6 +68,11 @@ async def async_setup_entry(
         not in INVISIBLE_UNITS  # exclude all endpoints with a custom unit (e.g. time endpoints)
     ]
     async_add_entities(sensors, update_before_add=True)
+
+    platform = async_get_current_platform()
+    platform.async_register_entity_service(
+        "write_value_scaled", WRITE_VALUE_SCALED_SCHEMA, "async_set_native_value"
+    )
 
 
 class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
@@ -84,8 +98,8 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
         )
 
-        self.ignore_decimal_places_restriction = config.get(
-            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, False
+        self.ignore_decimal_places_restriction = unique_id in config.get(
+            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
         )
         self._attr_device_class = self.determine_device_class(endpoint_info["unit"])
         self.valid_values: ETAValidWritableValues = endpoint_info["valid_values"]
@@ -107,14 +121,15 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         else:
             # calculate the step size based on the number of decimal places
             self._attr_native_step = pow(10, self.valid_values["dec_places"] * -1)
-        pass
 
     def handle_data_updates(self, data: float) -> None:
         self._attr_native_value = data
 
-    async def async_set_native_value(self, value: float) -> None:
+    async def async_set_native_value(
+        self, value: float, force_decimals: bool = False
+    ) -> None:
         """Update the current value."""
-        if self.ignore_decimal_places_restriction:
+        if self.ignore_decimal_places_restriction or force_decimals:
             _LOGGER.debug(
                 "ETA Integration - HACK: Ignoring decimal places restriction for writable sensor %s",
                 self._attr_name,
@@ -124,6 +139,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         else:
             raw_value = round(value, self.valid_values["dec_places"])
             raw_value *= self.valid_values["scale_factor"]
+            raw_value = round(raw_value, 0)
 
         eta_client = EtaAPI(self.session, self.host, self.port)
         success = await eta_client.write_endpoint(self.uri, raw_value)

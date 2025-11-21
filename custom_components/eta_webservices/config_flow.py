@@ -485,7 +485,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = self.hass.data[
             DOMAIN
         ][self.config_entry.entry_id].get(
-            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, False
+            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
         )
 
         if self.enumerate_new_endpoints:
@@ -623,12 +623,24 @@ class EtaOptionsFlowHandler(OptionsFlow):
             step_id="advanced_options",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
+                    vol.Optional(
                         ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
                         default=self.data.get(
-                            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, False
+                            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
                         ),
-                    ): cv.boolean
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=[
+                                selector.SelectOptionDict(
+                                    value=key,
+                                    label=f"{self.data[WRITABLE_DICT][key]['friendly_name']} ({self.data[WRITABLE_DICT][key]['value']} {self.data[WRITABLE_DICT][key]['unit'] if self.data[WRITABLE_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                                )
+                                for key in self.data[CHOSEN_WRITABLE_SENSORS]
+                            ],
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                            multiple=True,
+                        )
+                    ),
                 }
             ),
             errors=self._errors,
