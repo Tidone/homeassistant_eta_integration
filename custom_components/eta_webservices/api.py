@@ -1,3 +1,5 @@
+"""Handle all low-level API calls for ETA Sensors."""
+
 from datetime import datetime
 import logging
 from typing import TypedDict
@@ -7,6 +9,7 @@ from packaging import version
 import xmltodict
 
 from .const import CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+
 # Make sure to update _get_all_sensors_v12() if a new custom unit is added
 
 _LOGGER = logging.getLogger(__name__)
@@ -70,7 +73,6 @@ class EtaAPI:
             "s",
             "°C",
             "%rH",
-            CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
         ]
 
         self._writable_sensor_units = [
@@ -390,7 +392,9 @@ class EtaAPI:
         )
 
     def _is_text_sensor(self, endpoint_info: ETAEndpoint):
-        return endpoint_info["unit"] == "" and endpoint_info["endpoint_type"] == "TEXT"
+        return endpoint_info["unit"] == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT or (
+            endpoint_info["unit"] == "" and endpoint_info["endpoint_type"] == "TEXT"
+        )
 
     def _is_float_sensor(self, endpoint_info: ETAEndpoint):
         return endpoint_info["unit"] in self._float_sensor_units

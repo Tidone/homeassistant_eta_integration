@@ -1,35 +1,36 @@
-"""Adds config flow for Blueprint."""
+"""Adds config flow for ETA Sensors."""
 
 import copy
 import logging
+
 import voluptuous as vol
-from homeassistant.config_entries import ConfigFlow, OptionsFlow, CONN_CLASS_CLOUD_POLL
+
+from homeassistant.config_entries import CONN_CLASS_CLOUD_POLL, ConfigFlow, OptionsFlow
+from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.const import CONF_HOST, CONF_PORT
-from homeassistant.helpers.entity_registry import (
-    async_entries_for_config_entry,
-    async_get,
-)
 import homeassistant.helpers.config_validation as cv
-from .api import ETAEndpoint, EtaAPI
+import homeassistant.helpers.entity_registry as er
+
+from .api import EtaAPI, ETAEndpoint
 from .const import (
-    DOMAIN,
-    FLOAT_DICT,
-    SWITCHES_DICT,
-    TEXT_DICT,
-    WRITABLE_DICT,
+    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
     CHOSEN_FLOAT_SENSORS,
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
-    FORCE_LEGACY_MODE,
+    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    DOMAIN,
     ENABLE_DEBUG_LOGGING,
+    FLOAT_DICT,
+    FORCE_LEGACY_MODE,
     INVISIBLE_UNITS,
-    OPTIONS_UPDATE_SENSOR_VALUES,
     OPTIONS_ENUMERATE_NEW_ENDPOINTS,
-    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
+    OPTIONS_UPDATE_SENSOR_VALUES,
+    SWITCHES_DICT,
+    TEXT_DICT,
+    WRITABLE_DICT,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -38,7 +39,7 @@ _LOGGER = logging.getLogger(__name__)
 class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for Eta."""
 
-    VERSION = 5
+    VERSION = 6
     CONNECTION_CLASS = CONN_CLASS_CLOUD_POLL
 
     def __init__(self) -> None:
@@ -265,6 +266,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.update_sensor_values = True
         self.enumerate_new_endpoints = False
         self.unavailable_sensors: dict = {}
+        self.advanced_options_writable_sensors = []
 
     async def _get_possible_endpoints(self, host, port, force_legacy_mode):
         session = async_get_clientsession(self.hass)
@@ -522,8 +524,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def async_step_user(self, user_input=None):
         """Manage the options."""
-        entity_registry = async_get(self.hass)
-        entries = async_entries_for_config_entry(
+        entity_registry = er.async_get(self.hass)
+        entries = er.async_entries_for_config_entry(
             entity_registry, self.config_entry.entry_id
         )
 
@@ -588,9 +590,17 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 FORCE_LEGACY_MODE: self.data[FORCE_LEGACY_MODE],
             }
 
+            # only show advanced options for writable sensors that do not have a custom unit like time sensors
+            self.advanced_options_writable_sensors = [
+                entity
+                for entity in data[CHOSEN_WRITABLE_SENSORS]
+                if data[WRITABLE_DICT][entity]["unit"]
+                != CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+            ]
+
             # If the user selected at least one writable sensor, show
             # an additional options page to configure advanced settings.
-            if len(data[CHOSEN_WRITABLE_SENSORS]) > 0:
+            if len(self.advanced_options_writable_sensors) > 0:
                 # store interim data and show extra options step
                 self.data = data
                 return await self.async_step_advanced_options()
@@ -635,7 +645,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                                     value=key,
                                     label=f"{self.data[WRITABLE_DICT][key]['friendly_name']} ({self.data[WRITABLE_DICT][key]['value']} {self.data[WRITABLE_DICT][key]['unit'] if self.data[WRITABLE_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
                                 )
-                                for key in self.data[CHOSEN_WRITABLE_SENSORS]
+                                for key in self.advanced_options_writable_sensors
                             ],
                             mode=selector.SelectSelectorMode.DROPDOWN,
                             multiple=True,
