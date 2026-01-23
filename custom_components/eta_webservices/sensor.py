@@ -1,5 +1,4 @@
-"""
-Platform for ETA sensor integration in Home Assistant
+"""Sensor platform for ETA sensor integration in Home Assistant.
 
 Help Links:
  Entity Source: https://github.com/home-assistant/core/blob/dev/homeassistant/helpers/entity.py
@@ -7,40 +6,38 @@ Help Links:
 
 
 author nigl, Tidone
-
 """
 
 from __future__ import annotations
 
-import logging
 from datetime import timedelta
+import logging
 
-_LOGGER = logging.getLogger(__name__)
-from .api import ETAEndpoint, ETAError
-from .coordinator import ETAErrorUpdateCoordinator, ETAWritableUpdateCoordinator
-from .entity import EtaSensorEntity, EtaErrorEntity, EtaWritableSensorEntity
-
+from homeassistant import config_entries
 from homeassistant.components.sensor import (
+    ENTITY_ID_FORMAT,
     SensorDeviceClass,
     SensorEntity,
     SensorStateClass,
-    ENTITY_ID_FORMAT,
 )
-
-from homeassistant.core import HomeAssistant
-from homeassistant import config_entries
 from homeassistant.const import EntityCategory
+from homeassistant.core import HomeAssistant
+
+from .api import ETAEndpoint, ETAError
 from .const import (
-    DOMAIN,
     CHOSEN_FLOAT_SENSORS,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
+    DOMAIN,
+    ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
     TEXT_DICT,
-    ERROR_UPDATE_COORDINATOR,
     WRITABLE_UPDATE_COORDINATOR,
 )
+from .coordinator import ETAErrorUpdateCoordinator, ETAWritableUpdateCoordinator
+from .entity import EtaErrorEntity, EtaSensorEntity, EtaWritableSensorEntity
 
+_LOGGER = logging.getLogger(__name__)
 SCAN_INTERVAL = timedelta(minutes=1)
 
 
@@ -69,6 +66,8 @@ async def async_setup_entry(
     ]
     # sensors use a coordinator if they are also selected as writable endpoints,
     # to be able to update the value immediately if the user writes a new value
+    # this only handles cases where a sensor is selected as both, a writable sensor and a float sensor
+    # the actual writable sensor is handled in the number entity
     sensors.extend(
         [
             EtaFloatWritableSensor(
@@ -80,9 +79,12 @@ async def async_setup_entry(
             )
             for entity in chosen_float_sensors
             if entity + "_writable" in chosen_writable_sensors
-        ]
+        ]  # pyright: ignore[reportArgumentType]
     )
+
     chosen_text_sensors = config[CHOSEN_TEXT_SENSORS]
+    # add the text sensors which are not also writable first
+    # these entities don't use a coordinator
     sensors.extend(
         [
             EtaTextSensor(
@@ -92,14 +94,31 @@ async def async_setup_entry(
                 config[TEXT_DICT][entity],
             )
             for entity in chosen_text_sensors
-        ]
+            if entity + "_writable" not in chosen_writable_sensors
+        ]  # pyright: ignore[reportArgumentType]
+    )
+    # use a special entity if a text sensor is also added as a writable sensor
+    # this entity uses a coordinator to update the value immediately after a user sets it in the writable (time) entity
+    sensors.extend(
+        [
+            EtaTimeWritableSensor(
+                config,
+                hass,
+                entity,
+                config[TEXT_DICT][entity],
+                writable_coordinator,
+            )
+            for entity in chosen_text_sensors
+            if entity + "_writable"
+            in chosen_writable_sensors  # this only affects sensors with the unit CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT for now
+        ]  # pyright: ignore[reportArgumentType]
     )
     error_coordinator = config[ERROR_UPDATE_COORDINATOR]
     sensors.extend(
         [
             EtaNbrErrorsSensor(config, hass, error_coordinator),
             EtaLatestErrorSensor(config, hass, error_coordinator),
-        ]
+        ]  # pyright: ignore[reportArgumentType]
     )
     async_add_entities(sensors, update_before_add=True)
 
@@ -146,12 +165,6 @@ class EtaFloatSensor(EtaSensorEntity[float]):
         unique_id: str,
         endpoint_info: ETAEndpoint,
     ) -> None:
-        """
-        Initialize sensor.
-
-        To show all values: http://192.168.178.75:8080/user/menu
-
-        """
         _LOGGER.info("ETA Integration - init float sensor")
 
         super().__init__(config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT)
@@ -165,11 +178,11 @@ class EtaFloatSensor(EtaSensorEntity[float]):
         else:
             self._attr_state_class = SensorStateClass.MEASUREMENT
 
-        self._attr_native_value = float
+        self._attr_native_value = 0
 
 
 class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
-    """Representation of a Float Sensor."""
+    """Representation of a Float Sensor with a coordinator."""
 
     def __init__(
         self,
@@ -179,12 +192,6 @@ class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
         endpoint_info: ETAEndpoint,
         coordinator: ETAWritableUpdateCoordinator,
     ) -> None:
-        """
-        Initialize sensor.
-
-        To show all values: http://192.168.178.75:8080/user/menu
-
-        """
         _LOGGER.info("ETA Integration - init float sensor with coordinator")
 
         super().__init__(
@@ -214,17 +221,38 @@ class EtaTextSensor(EtaSensorEntity[str]):
         unique_id: str,
         endpoint_info: ETAEndpoint,
     ) -> None:
-        """
-        Initialize sensor.
-
-        To show all values: http://192.168.178.75:8080/user/menu
-
-        """
         _LOGGER.info("ETA Integration - init text sensor")
 
         super().__init__(config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT)
 
         self._attr_native_value = ""
+
+
+class EtaTimeWritableSensor(SensorEntity, EtaWritableSensorEntity):
+    """Representation of a Text Sensor (displaying a time) with a coordinator."""
+
+    def __init__(
+        self,
+        config: dict,
+        hass: HomeAssistant,
+        unique_id: str,
+        endpoint_info: ETAEndpoint,
+        coordinator: ETAWritableUpdateCoordinator,
+    ) -> None:
+        _LOGGER.info("ETA Integration - init text sensor with coordinator")
+
+        super().__init__(
+            coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
+        )
+
+    def handle_data_updates(self, data: float) -> None:
+        # the coordinator returns the minutes since midnight, not the textual representation
+        # so we have to calculate the textual representation here
+        total_minutes = int(data)
+        hours = total_minutes // 60
+        minutes = total_minutes % 60
+
+        self._attr_native_value = f"{hours:02d}:{minutes:02d}"
 
 
 class EtaNbrErrorsSensor(SensorEntity, EtaErrorEntity):
@@ -240,7 +268,7 @@ class EtaNbrErrorsSensor(SensorEntity, EtaErrorEntity):
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
         self._attr_state_class = SensorStateClass.MEASUREMENT
 
-        self._attr_native_value = float
+        self._attr_native_value = 0
         self._attr_native_unit_of_measurement = None
 
         self._attr_has_entity_name = True
