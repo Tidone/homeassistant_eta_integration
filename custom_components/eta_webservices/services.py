@@ -1,4 +1,7 @@
+"""Low-level service support for ETA Sensors."""
+
 import voluptuous as vol
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant, ServiceCall
@@ -6,11 +9,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import (
-    DOMAIN,
-)
-
 from .api import EtaAPI
+from .const import DOMAIN
 
 WRITE_ENDPOINT_SCHEMA = vol.Schema(
     {
@@ -23,6 +23,7 @@ WRITE_ENDPOINT_SCHEMA = vol.Schema(
 
 
 async def async_setup_services(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
+    """Setup low-level services, as defined in the services.yaml file."""
     session = async_get_clientsession(hass)
     config = hass.data[DOMAIN][config_entry.entry_id]
 

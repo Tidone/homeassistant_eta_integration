@@ -197,3 +197,8 @@ You can then add your ETA heating unit to your Energy Dashboard by adding this n
 ## Future Development
 
 If you have some ideas about expansions to this implementation, please open an issue and I may look into it.
+
+## Tests
+
+You can run the unit tests by executing `python3 -m pytest tests/ -v` in the root directory of the project.\
+Make sure to install the requirements before: `pip3 install -r requirements_test.txt`.

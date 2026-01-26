@@ -1,4 +1,4 @@
-"""The Airzone integration."""
+"""Coordinator for writable sensors and their normal sensor counterparts."""
 
 from __future__ import annotations
 
@@ -8,16 +8,16 @@ import logging
 
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
+from .api import EtaAPI, ETAEndpoint, ETAError
 from .const import (
-    DOMAIN,
-    WRITABLE_DICT,
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    DOMAIN,
+    WRITABLE_DICT,
 )
-from .api import EtaAPI, ETAError, ETAEndpoint
 
 DATA_SCAN_INTERVAL = timedelta(minutes=1)
 # the error endpoint doesn't have to be updated as often because we don't expect any updates most of the time

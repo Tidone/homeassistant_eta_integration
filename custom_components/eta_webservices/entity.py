@@ -1,5 +1,8 @@
+"""Common entity definitions for the ETA sensor integration."""
+
 from abc import abstractmethod
-from typing import Any, Generic, TypeVar, cast
+from typing import Generic, TypeVar, cast
+
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant, callback
@@ -7,15 +10,17 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity import Entity, generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .api import ETAEndpoint, EtaAPI
-from .utils import create_device_info
+from .api import EtaAPI, ETAEndpoint
 from .coordinator import ETAErrorUpdateCoordinator, ETAWritableUpdateCoordinator
+from .utils import create_device_info
 
 _EntityT = TypeVar("_EntityT")
 
 
 class EtaEntity(Entity):
-    def __init__(
+    """Common entity definition for all ETA entities."""
+
+    def __init__(  # noqa: D107
         self,
         config: dict,
         hass: HomeAssistant,
@@ -25,8 +30,8 @@ class EtaEntity(Entity):
     ) -> None:
         self._attr_name = endpoint_info["friendly_name"]
         self.session = async_get_clientsession(hass)
-        self.host = config.get(CONF_HOST)
-        self.port = config.get(CONF_PORT)
+        self.host = config.get(CONF_HOST, "")
+        self.port = config.get(CONF_PORT, "")
         self.uri = endpoint_info["url"]
 
         self._attr_device_info = create_device_info(self.host, self.port)
@@ -35,20 +40,24 @@ class EtaEntity(Entity):
 
 
 class EtaSensorEntity(SensorEntity, EtaEntity, Generic[_EntityT]):
+    """Common sensor entity definition for all ETA sensors."""
+
     async def async_update(self):
         """Fetch new state data for the sensor.
+
         This is the only method that should fetch new data for Home Assistant.
-        readme: activate first: https://www.meineta.at/javax.faces.resource/downloads/ETA-RESTful-v1.2.pdf.xhtml?ln=default&v=0
         """
         eta_client = EtaAPI(self.session, self.host, self.port)
         value, _ = await eta_client.get_data(self.uri)
-        self._attr_native_value = cast(_EntityT, value)
+        self._attr_native_value = cast(_EntityT, value)  # pyright: ignore[reportAttributeAccessIssue]
 
 
 class EtaWritableSensorEntity(
     EtaEntity, CoordinatorEntity[ETAWritableUpdateCoordinator]
 ):
-    def __init__(
+    """Common sensor entity definition for all ETA sensors."""
+
+    def __init__(  # noqa: D107
         self,
         coordinator: ETAWritableUpdateCoordinator,
         config: dict,
@@ -60,12 +69,12 @@ class EtaWritableSensorEntity(
         EtaEntity.__init__(
             self, config, hass, unique_id, endpoint_info, entity_id_format
         )
-        CoordinatorEntity.__init__(self, coordinator)
+        CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
 
         self.handle_data_updates(float(coordinator.data[self.unique_id]))
 
     @abstractmethod
-    def handle_data_updates(self, data: float) -> None:
+    def handle_data_updates(self, data: float) -> None:  # noqa: D102
         raise NotImplementedError
 
     @callback
@@ -77,7 +86,9 @@ class EtaWritableSensorEntity(
 
 
 class EtaErrorEntity(CoordinatorEntity[ETAErrorUpdateCoordinator]):
-    def __init__(
+    """Entity definition for all ETA error sensors."""
+
+    def __init__(  # noqa: D107
         self,
         coordinator: ETAErrorUpdateCoordinator,
         config: dict,
@@ -87,8 +98,8 @@ class EtaErrorEntity(CoordinatorEntity[ETAErrorUpdateCoordinator]):
     ) -> None:
         super().__init__(coordinator)
 
-        host = config.get(CONF_HOST)
-        port = config.get(CONF_PORT)
+        host = config.get(CONF_HOST, "")
+        port = config.get(CONF_PORT, "")
 
         self._attr_unique_id = (
             "eta_" + host.replace(".", "_") + "_" + str(port) + unique_id_suffix
@@ -101,7 +112,7 @@ class EtaErrorEntity(CoordinatorEntity[ETAErrorUpdateCoordinator]):
         self._attr_device_info = create_device_info(host, port)
 
     @abstractmethod
-    def handle_data_updates(self, data) -> None:
+    def handle_data_updates(self, data) -> None:  # noqa: D102
         raise NotImplementedError
 
     @callback

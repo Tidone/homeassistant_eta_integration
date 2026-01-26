@@ -68,7 +68,7 @@ async def async_setup_entry(
     return True
 
 
-async def async_migrate_entry(
+async def async_migrate_entry(  # noqa: D103
     hass: core.HomeAssistant, config_entry: config_entries.ConfigEntry
 ):
     # Move all sensors with the custom CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT unit

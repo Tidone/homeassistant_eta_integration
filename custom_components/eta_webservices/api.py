@@ -1,6 +1,7 @@
+"""Handle all low-level API calls for ETA Sensors."""
+
 import asyncio
 from datetime import datetime
-import time
 import logging
 from typing import TypedDict
 
@@ -9,17 +10,22 @@ from packaging import version
 import xmltodict
 
 from .const import CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+
 # Make sure to update _get_all_sensors_v12() if a new custom unit is added
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class ETAValidSwitchValues(TypedDict):
+    """Dict providing the raw values for ETA switch sensors."""
+
     on_value: int
     off_value: int
 
 
 class ETAValidWritableValues(TypedDict):
+    """Dict providing the necessary metadata for ETA writable sensors."""
+
     scaled_min_value: float
     scaled_max_value: float
     scale_factor: int
@@ -27,6 +33,8 @@ class ETAValidWritableValues(TypedDict):
 
 
 class ETAEndpoint(TypedDict):
+    """Dict providing metadata for a ETA sensor."""
+
     url: str
     value: float | str
     valid_values: dict | ETAValidSwitchValues | ETAValidWritableValues | None
@@ -36,6 +44,8 @@ class ETAEndpoint(TypedDict):
 
 
 class ETAError(TypedDict):
+    """Dict encapsulating all available data of an ETA Error."""
+
     msg: str
     priority: str
     time: datetime
@@ -46,12 +56,14 @@ class ETAError(TypedDict):
 
 
 class EtaAPI:
-    def __init__(self, session, host, port) -> None:
+    """Class which handles all low-level communication with the ETA terminal via the ETA REST API."""
+
+    def __init__(self, session, host, port) -> None:  # noqa: D107
         self._session: ClientSession = session
         self._host = host
         self._port = int(port)
-        # 5 concurrent requests seem to be the sweetpoint between speed and stability
-        # More requests are only very slightly faster (in the order of seconds), with the downside that the ETA user interface becomes very laggy
+        # 5 concurrent requests seem to be the sweetspot between speed and stability
+        # More parallel requests are only very slightly faster (in the order of seconds), with the downside that the ETA user interface becomes very laggy
         self._max_concurrent_requests = 5
 
         self._float_sensor_units = [
@@ -104,41 +116,45 @@ class EtaAPI:
             ),
         }
 
-    def build_uri(self, suffix):
+    def _build_uri(self, suffix):
         return "http://" + self._host + ":" + str(self._port) + suffix
 
     def _evaluate_xml_dict(self, xml_dict, uri_dict, prefix=""):
-        if type(xml_dict) == list:
+        if isinstance(xml_dict, list):
             for child in xml_dict:
                 self._evaluate_xml_dict(child, uri_dict, prefix)
+        elif "object" in xml_dict:
+            child = xml_dict["object"]
+            new_prefix = f"{prefix}_{xml_dict['@name']}"
+            # add parent to uri_dict and evaluate childs then
+            uri_dict[f"{prefix}_{xml_dict['@name']}"] = xml_dict["@uri"]
+            self._evaluate_xml_dict(child, uri_dict, new_prefix)
         else:
-            if "object" in xml_dict:
-                child = xml_dict["object"]
-                new_prefix = f"{prefix}_{xml_dict['@name']}"
-                # add parent to uri_dict and evaluate childs then
-                uri_dict[f"{prefix}_{xml_dict['@name']}"] = xml_dict["@uri"]
-                self._evaluate_xml_dict(child, uri_dict, new_prefix)
-            else:
-                uri_dict[f"{prefix}_{xml_dict['@name']}"] = xml_dict["@uri"]
+            uri_dict[f"{prefix}_{xml_dict['@name']}"] = xml_dict["@uri"]
 
     async def _get_request(self, suffix):
-        data = await self._session.get(self.build_uri(suffix))
-        return data
+        return await self._session.get(self._build_uri(suffix))
 
-    async def post_request(self, suffix, data):
-        data = await self._session.post(self.build_uri(suffix), data=data)
-        return data
+    async def _post_request(self, suffix, data):
+        return await self._session.post(self._build_uri(suffix), data=data)
 
     async def does_endpoint_exists(self):
+        """Returns true if the ETA API is accessible."""
         resp = await self._get_request("/user/menu")
         return resp.status == 200
 
     async def get_api_version(self):
+        """Get the version of the ETA API as a raw string.
+
+        :return: Version of the ETA API
+        :rtype: Version
+        """
         data = await self._get_request("/user/api")
         text = await data.text()
         return version.parse(xmltodict.parse(text)["eta"]["api"]["@version"])
 
     async def is_correct_api_version(self):
+        """Returns true if the ETA API version is v1.2 or higher."""
         eta_version = await self.get_api_version()
         required_version = version.parse("1.2")
 
@@ -160,12 +176,24 @@ class EtaAPI:
         return value, unit
 
     async def get_data(self, uri, force_number_handling=False):
+        """Request the data from a API URL.
+
+        :param uri: ETA API url suffix, like /120/1/123
+        :param force_number_handling: Set to true if the data should be treated as a number even if its unit is not in the list of valid float sensors
+        :return: Parsed data as a Tuple[Value, Unit]
+        :rtype: Tuple[Any,str]
+        """
         data = await self._get_request("/user/var/" + str(uri))
         text = await data.text()
         data = xmltodict.parse(text)["eta"]["value"]
         return self._parse_data(data, force_number_handling)
 
     async def get_all_data(self):
+        """Get all data from all endpoints.
+
+        :return: List of all data
+        :rtype: Dict[str, Any]
+        """
         all_endpoints = await self._get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
 
@@ -201,14 +229,14 @@ class EtaAPI:
         return value, unit, data
 
     async def get_menu(self):
+        """Request the menu from the ETA API, which includes links to all possible sensors."""
         data = await self._get_request("/user/menu")
         text = await data.text()
         return xmltodict.parse(text)
 
     async def _get_raw_sensor_dict(self):
         data = await self.get_menu()
-        raw_dict = data["eta"]["menu"]["fub"]
-        return raw_dict
+        return data["eta"]["menu"]["fub"]
 
     async def _get_sensors_dict(self):
         raw_dict = await self._get_raw_sensor_dict()
@@ -219,16 +247,24 @@ class EtaAPI:
     async def get_all_sensors(
         self, force_legacy_mode, float_dict, switches_dict, text_dict, writable_dict
     ):
+        """Enumerate all possible sensors on the ETA API.
+
+        :param force_legacy_mode: Set to true to force the use of the old API mode
+        :param float_dict: Dictionary which will be filled with all float sensors
+        :param switches_dict: Dictionary which will be filled with all switch sensors
+        :param text_dict: Dictionary which will be filled with all text sensors
+        :param writable_dict: Dictionary which will be filled with all writable sensors
+        """
         if not force_legacy_mode and await self.is_correct_api_version():
             _LOGGER.debug("Get all sensors - API v1.2")
             # New version with varinfo endpoint detected
-            return await self._get_all_sensors_v12(
+            await self._get_all_sensors_v12(
                 float_dict, switches_dict, text_dict, writable_dict
             )
         else:
             _LOGGER.debug("Get all sensors - API v1.1")
             # varinfo not available -> fall back to compatibility mode
-            return await self._get_all_sensors_v11(
+            await self._get_all_sensors_v11(
                 float_dict, switches_dict, text_dict, writable_dict
             )
 
@@ -281,8 +317,6 @@ class EtaAPI:
     ):
         all_endpoints = await self._get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
-
-        start_time = time.time()
 
         # Deduplicate endpoints
         # INFO: The key and value fields are flipped between this and all_endpoints
@@ -362,14 +396,16 @@ class EtaAPI:
                 else:
                     _LOGGER.debug("Not adding endpoint %s: Unknown type", uri)
 
-            except Exception:
+            except Exception:  # noqa: BLE001
                 _LOGGER.debug("Invalid endpoint %s", uri, exc_info=True)
-
-        end_time = time.time()
-        pass
 
     def _parse_switch_values(self, endpoint_info: ETAEndpoint):
         valid_values = ETAValidSwitchValues(on_value=0, off_value=0)
+        if (
+            endpoint_info["valid_values"] is None
+            or type(endpoint_info["valid_values"]) is not dict
+        ):
+            return
         for key in endpoint_info["valid_values"]:
             if key in ("Ein", "On", "Ja", "Yes"):
                 valid_values["on_value"] = endpoint_info["valid_values"][key]
@@ -394,8 +430,6 @@ class EtaAPI:
     ):
         all_endpoints = await self._get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
-
-        start_time = time.time()
 
         # Deduplicate endpoints
         # INFO: The key and value fields are flipped between this and all_endpoints
@@ -517,11 +551,8 @@ class EtaAPI:
                 else:
                     _LOGGER.debug("Not adding endpoint %s: Unknown type", uri)
 
-            except Exception:
+            except Exception:  # noqa: BLE001
                 _LOGGER.debug("Invalid endpoint %s", uri, exc_info=True)
-
-        end_time = time.time()
-        pass
 
     def _is_writable(self, endpoint_info: ETAEndpoint):
         # TypedDict does not support isinstance(),
@@ -574,7 +605,7 @@ class EtaAPI:
                     unit = CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
         return unit
 
-    def _parse_varinfo(self, data):
+    def _parse_varinfo(self, data, fub: str, uri: str):
         _LOGGER.debug("Parsing varinfo %s", data)
         valid_values = None
         unit = self._parse_unit(data)
@@ -613,34 +644,46 @@ class EtaAPI:
             )
 
         return ETAEndpoint(
+            url=uri,
             valid_values=valid_values,
-            friendly_name=data["@fullName"],
+            friendly_name=f"{fub} > {data['@fullName']}",
             unit=unit,
             endpoint_type=data["type"],
+            value=0,
         )
 
     async def _get_varinfo(self, fub, uri):
         data = await self._get_request("/user/varinfo/" + str(uri))
         text = await data.text()
         data = xmltodict.parse(text)["eta"]["varInfo"]["variable"]
-        endpoint_info = self._parse_varinfo(data)
-        endpoint_info["url"] = uri
-        endpoint_info["friendly_name"] = f"{fub} > {endpoint_info['friendly_name']}"
-        return endpoint_info
+        return self._parse_varinfo(data, fub, uri)
 
     def _parse_switch_state(self, data):
         return int(data["#text"])
 
     async def get_switch_state(self, uri):
+        """Get the raw state of a switch sensor.
+
+        :param uri: URL suffix of the switch sensor
+        :return: Raw switch value, like 1802
+        :rtype: int
+        """
         data = await self._get_request("/user/var/" + str(uri))
         text = await data.text()
         data = xmltodict.parse(text)["eta"]["value"]
         return self._parse_switch_state(data)
 
     async def set_switch_state(self, uri, state):
+        """Set the state of a switch sensor.
+
+        :param uri: URL suffix of the switch sensor
+        :param state: Raw switch state value, like 1802
+        :return: True on success
+        :rtype: boolean
+        """
         payload = {"value": state}
         uri = "/user/var/" + str(uri)
-        data = await self.post_request(uri, payload)
+        data = await self._post_request(uri, payload)
         text = await data.text()
         data = xmltodict.parse(text)["eta"]
         if "success" in data:
@@ -653,12 +696,21 @@ class EtaAPI:
         return False
 
     async def write_endpoint(self, uri, value, begin=None, end=None):
+        """Writa a raw value to a writable sensor.
+
+        :param uri: URL suffix of the writable sensor
+        :param value: Raw value of the sensor
+        :param begin: Optional begin time, used for some sensors
+        :param end: Optional end time, used for some sensors
+        :return: True on success
+        :rtype: boolean
+        """
         payload = {"value": value}
         if begin is not None:
             payload["begin"] = begin
             payload["end"] = end
         uri = "/user/var/" + str(uri)
-        data = await self.post_request(uri, payload)
+        data = await self._post_request(uri, payload)
         text = await data.text()
         data = xmltodict.parse(text)["eta"]
         if "success" in data:
@@ -708,6 +760,11 @@ class EtaAPI:
         return errors
 
     async def get_errors(self):
+        """Request a list of active errors from the ETA system.
+
+        :return: List of active errors
+        :rtype: List[ETAError]
+        """
         data = await self._get_request("/user/errors")
         text = await data.text()
         data = xmltodict.parse(text)["eta"]["errors"]["fub"]

@@ -1,4 +1,4 @@
-"""Sensor platform for ETA sensor integration in Home Assistant.
+"""Sensor platform for the ETA sensor integration in Home Assistant.
 
 Help Links:
  Entity Source: https://github.com/home-assistant/core/blob/dev/homeassistant/helpers/entity.py
@@ -158,7 +158,7 @@ def _get_native_unit(unit):
 class EtaFloatSensor(EtaSensorEntity[float]):
     """Representation of a Float Sensor."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: dict,
         hass: HomeAssistant,
@@ -184,7 +184,7 @@ class EtaFloatSensor(EtaSensorEntity[float]):
 class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
     """Representation of a Float Sensor with a coordinator."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: dict,
         hass: HomeAssistant,
@@ -207,14 +207,14 @@ class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
         else:
             self._attr_state_class = SensorStateClass.MEASUREMENT
 
-    def handle_data_updates(self, data: float) -> None:
+    def handle_data_updates(self, data: float) -> None:  # noqa: D102
         self._attr_native_value = data
 
 
 class EtaTextSensor(EtaSensorEntity[str]):
     """Representation of a Text Sensor."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: dict,
         hass: HomeAssistant,
@@ -231,7 +231,7 @@ class EtaTextSensor(EtaSensorEntity[str]):
 class EtaTimeWritableSensor(SensorEntity, EtaWritableSensorEntity):
     """Representation of a Text Sensor (displaying a time) with a coordinator."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: dict,
         hass: HomeAssistant,
@@ -245,7 +245,7 @@ class EtaTimeWritableSensor(SensorEntity, EtaWritableSensorEntity):
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
         )
 
-    def handle_data_updates(self, data: float) -> None:
+    def handle_data_updates(self, data: float) -> None:  # noqa: D102
         # the coordinator returns the minutes since midnight, not the textual representation
         # so we have to calculate the textual representation here
         total_minutes = int(data)
@@ -258,7 +258,7 @@ class EtaTimeWritableSensor(SensorEntity, EtaWritableSensorEntity):
 class EtaNbrErrorsSensor(SensorEntity, EtaErrorEntity):
     """Representation of a sensor showing the number of active errors."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self, config: dict, hass: HomeAssistant, coordinator: ETAErrorUpdateCoordinator
     ) -> None:
         super().__init__(
@@ -276,14 +276,14 @@ class EtaNbrErrorsSensor(SensorEntity, EtaErrorEntity):
 
         self.handle_data_updates(self.coordinator.data)
 
-    def handle_data_updates(self, data: list):
+    def handle_data_updates(self, data: list):  # noqa: D102
         self._attr_native_value = len(data)
 
 
 class EtaLatestErrorSensor(SensorEntity, EtaErrorEntity):
     """Representation of a sensor showing the latest active error."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self, config: dict, hass: HomeAssistant, coordinator: ETAErrorUpdateCoordinator
     ) -> None:
         super().__init__(coordinator, config, hass, ENTITY_ID_FORMAT, "_latest_error")
@@ -298,7 +298,7 @@ class EtaLatestErrorSensor(SensorEntity, EtaErrorEntity):
 
         self.handle_data_updates(self.coordinator.data)
 
-    def handle_data_updates(self, data: list[ETAError]):
+    def handle_data_updates(self, data: list[ETAError]):  # noqa: D102
         if len(data) == 0:
             self._attr_native_value = "-"
             return
