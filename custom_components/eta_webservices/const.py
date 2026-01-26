@@ -1,3 +1,5 @@
+"""Constants for the ETA integration."""
+
 NAME = "eta_webservices"
 DOMAIN = "eta_webservices"
 ISSUE_URL = "https://github.com/Tidone/homeassistant_eta_integration/issues"

@@ -1,22 +1,24 @@
+"""Binary Sensor platform for the ETA sensor integration in Home Assistant."""
+
 from __future__ import annotations
 
 import logging
 
-_LOGGER = logging.getLogger(__name__)
+from homeassistant import config_entries
+from homeassistant.components.binary_sensor import (
+    ENTITY_ID_FORMAT,
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
+from homeassistant.const import CONF_HOST
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import generate_entity_id
+
+from .const import DOMAIN, ERROR_UPDATE_COORDINATOR
 from .coordinator import ETAErrorUpdateCoordinator
 from .entity import EtaErrorEntity
 
-from homeassistant.components.binary_sensor import (
-    BinarySensorDeviceClass,
-    BinarySensorEntity,
-    ENTITY_ID_FORMAT,
-)
-
-from homeassistant.core import HomeAssistant
-from homeassistant import config_entries
-from homeassistant.helpers.entity import generate_entity_id
-from homeassistant.const import CONF_HOST
-from .const import DOMAIN, ERROR_UPDATE_COORDINATOR
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -24,7 +26,7 @@ async def async_setup_entry(
     config_entry: config_entries.ConfigEntry,
     async_add_entities,
 ):
-    """Setup error sensor"""
+    """Setup binary sensor."""
     config = hass.data[DOMAIN][config_entry.entry_id]
 
     error_coordinator = config[ERROR_UPDATE_COORDINATOR]
@@ -34,17 +36,11 @@ async def async_setup_entry(
 
 
 class EtaErrorSensor(BinarySensorEntity, EtaErrorEntity):
-    """Representation of a Sensor."""
+    """Representation of a Binary sensor."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self, config: dict, hass: HomeAssistant, coordinator: ETAErrorUpdateCoordinator
     ) -> None:
-        """
-        Initialize sensor.
-
-        To show all values: http://192.168.178.75:8080/user/errors
-
-        """
         _LOGGER.info("ETA Integration - init error sensor")
 
         super().__init__(coordinator, config, hass, ENTITY_ID_FORMAT, "_errors")
@@ -54,7 +50,7 @@ class EtaErrorSensor(BinarySensorEntity, EtaErrorEntity):
 
         self._attr_device_class = BinarySensorDeviceClass.PROBLEM
 
-        host = config.get(CONF_HOST)
+        host = config.get(CONF_HOST, "")
 
         # replace the unique id and entity id to keep the entity backwards compatible
         self._attr_unique_id = "eta_" + host.replace(".", "_") + "_errors"
@@ -64,5 +60,5 @@ class EtaErrorSensor(BinarySensorEntity, EtaErrorEntity):
 
         self.handle_data_updates(self.coordinator.data)
 
-    def handle_data_updates(self, data: list):
+    def handle_data_updates(self, data: list):  # noqa: D102
         self._attr_is_on = len(data) > 0

@@ -71,7 +71,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 elif user_input[FORCE_LEGACY_MODE]:
                     self._errors["base"] = "legacy_mode_selected"
 
-                if user_input[ENABLE_DEBUG_LOGGING]:
+                if user_input[ENABLE_DEBUG_LOGGING] and _LOGGER.parent is not None:
                     self._old_logging_level = _LOGGER.parent.getEffectiveLevel()
                     _LOGGER.parent.setLevel(logging.DEBUG)
 
@@ -89,10 +89,8 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 )
 
                 return await self.async_step_select_entities()
-            else:
-                self._errors["base"] = (
-                    "no_eta_endpoint" if valid == 0 else "unknown_host"
-                )
+
+            self._errors["base"] = "no_eta_endpoint" if valid == 0 else "unknown_host"
 
             return await self._show_config_form_user(user_input)
 
@@ -103,7 +101,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
 
         return await self._show_config_form_user(user_input)
 
-    async def async_step_select_entities(self, user_input: dict = None):
+    async def async_step_select_entities(self, user_input=None):
         """Second step in config flow to add a repo to watch."""
         if user_input is not None:
             # add chosen entities to data
@@ -115,7 +113,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             )
 
             # Restore old logging level
-            if self._old_logging_level != logging.NOTSET:
+            if self._old_logging_level != logging.NOTSET and _LOGGER.parent is not None:
                 _LOGGER.parent.setLevel(self._old_logging_level)
 
             # User is done, create the config entry.
@@ -127,7 +125,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry):
+    def async_get_options_flow(config_entry):  # noqa: D102
         return EtaOptionsFlowHandler()
 
     async def _show_config_form_user(self, user_input):  # pylint: disable=unused-argument
@@ -241,7 +239,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
 
         try:
             does_endpoint_exist = await eta_client.does_endpoint_exists()
-        except:
+        except:  # noqa: E722
             return -1
         return 1 if does_endpoint_exist else 0
 
@@ -256,7 +254,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
     """Blueprint config flow options handler."""
 
     @property
-    def config_entry(self):
+    def config_entry(self):  # noqa: D102
         return self.hass.config_entries.async_get_entry(self.handler)
 
     def __init__(self) -> None:
@@ -281,7 +279,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
         return float_dict, switches_dict, text_dict, writable_dict
 
-    async def async_step_init(self, user_input=None):
+    async def async_step_init(self, user_input=None):  # noqa: D102
         if user_input is not None:
             self.update_sensor_values = user_input[OPTIONS_UPDATE_SENSOR_VALUES]
             self.enumerate_new_endpoints = user_input[OPTIONS_ENUMERATE_NEW_ENDPOINTS]
@@ -493,12 +491,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
             FORCE_LEGACY_MODE,
         ]:
             self.data[key] = copy.copy(
-                self.hass.data[DOMAIN][self.config_entry.entry_id][key]
+                self.hass.data[DOMAIN][self.config_entry.entry_id][key]  # pyright: ignore[reportOptionalMemberAccess]
             )
         # ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION can be unset, so we have to handle it separately
         self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = self.hass.data[
             DOMAIN
-        ][self.config_entry.entry_id].get(
+        ][self.config_entry.entry_id].get(  # pyright: ignore[reportOptionalMemberAccess]
             ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
         )
 
@@ -538,7 +536,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
         """Manage the options."""
         entity_registry = er.async_get(self.hass)
         entries = er.async_entries_for_config_entry(
-            entity_registry, self.config_entry.entry_id
+            entity_registry,
+            self.config_entry.entry_id,  # pyright: ignore[reportOptionalMemberAccess]
         )
 
         entity_map_sensors = {

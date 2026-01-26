@@ -1,44 +1,39 @@
-"""
-Platform for ETA number integration in Home Assistant
-
-author Tidone
-
-"""
+"""Number platform for the ETA sensor integration in Home Assistant."""
 
 from __future__ import annotations
 
-import logging
-import voluptuous as vol
 from datetime import timedelta
+import logging
 
-from homeassistant.exceptions import HomeAssistantError
+import voluptuous as vol
 
-_LOGGER = logging.getLogger(__name__)
-from .api import EtaAPI, ETAEndpoint, ETAValidWritableValues
-from .entity import EtaWritableSensorEntity
-
+from homeassistant import config_entries
 from homeassistant.components.number import (
+    ENTITY_ID_FORMAT,
     NumberDeviceClass,
     NumberEntity,
     NumberMode,
-    ENTITY_ID_FORMAT,
 )
-
-from homeassistant.core import HomeAssistant
-from homeassistant import config_entries
 from homeassistant.const import EntityCategory
+from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import async_get_current_platform
 from homeassistant.helpers.typing import VolDictType
-from .coordinator import ETAWritableUpdateCoordinator
+
+from .api import EtaAPI, ETAEndpoint, ETAValidWritableValues
 from .const import (
-    DOMAIN,
+    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
     CHOSEN_WRITABLE_SENSORS,
+    DOMAIN,
+    INVISIBLE_UNITS,
     WRITABLE_DICT,
     WRITABLE_UPDATE_COORDINATOR,
-    INVISIBLE_UNITS,
-    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
 )
+from .coordinator import ETAWritableUpdateCoordinator
+from .entity import EtaWritableSensorEntity
+
+_LOGGER = logging.getLogger(__name__)
 
 SCAN_INTERVAL = timedelta(minutes=1)
 
@@ -78,7 +73,7 @@ async def async_setup_entry(
 class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
     """Representation of a Number Entity."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         config: dict,
         hass: HomeAssistant,
@@ -86,12 +81,6 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         endpoint_info: ETAEndpoint,
         coordinator: ETAWritableUpdateCoordinator,
     ) -> None:
-        """
-        Initialize sensor.
-
-        To show all values: http://192.168.178.75:8080/user/menu
-
-        """
         _LOGGER.info("ETA Integration - init writable number sensor")
 
         super().__init__(
@@ -102,7 +91,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
             ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
         )
         self._attr_device_class = self.determine_device_class(endpoint_info["unit"])
-        self.valid_values: ETAValidWritableValues = endpoint_info["valid_values"]
+        self.valid_values: ETAValidWritableValues = endpoint_info["valid_values"]  # pyright: ignore[reportAttributeAccessIssue]
 
         self._attr_native_unit_of_measurement = endpoint_info["unit"]
         if self._attr_native_unit_of_measurement == "":
@@ -122,7 +111,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
             # calculate the step size based on the number of decimal places
             self._attr_native_step = pow(10, self.valid_values["dec_places"] * -1)
 
-    def handle_data_updates(self, data: float) -> None:
+    def handle_data_updates(self, data: float) -> None:  # noqa: D102
         self._attr_native_value = data
 
     async def async_set_native_value(
@@ -149,6 +138,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
 
     @staticmethod
     def determine_device_class(unit):
+        """Determine the Entity device class based on the sensor's unit."""
         unit_dict_eta = {
             "°C": NumberDeviceClass.TEMPERATURE,
             "W": NumberDeviceClass.POWER,

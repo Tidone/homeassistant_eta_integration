@@ -1,6 +1,8 @@
+"""Button platform for the ETA sensor integration in Home Assistant."""
+
 from __future__ import annotations
 
-from homeassistant.components.button import ButtonEntity, ENTITY_ID_FORMAT
+from homeassistant.components.button import ENTITY_ID_FORMAT, ButtonEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT, EntityCategory
 from homeassistant.core import HomeAssistant
@@ -17,6 +19,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
+    """Setup button."""
     config = hass.data[DOMAIN][config_entry.entry_id]
     error_coordinator = config[ERROR_UPDATE_COORDINATOR]
 
@@ -28,14 +31,16 @@ async def async_setup_entry(
 
 
 class EtaResendErrorEventsButton(ButtonEntity):
+    """Representation of a Button."""
+
     _attr_has_entity_name = True
     _attr_should_poll = False
 
-    def __init__(
+    def __init__(  # noqa: D107
         self, config: dict, hass: HomeAssistant, coordinator: ETAErrorUpdateCoordinator
     ) -> None:
-        host = config.get(CONF_HOST)
-        port = config.get(CONF_PORT)
+        host = config.get(CONF_HOST, "")
+        port = config.get(CONF_PORT, "")
         self.coordinator = coordinator
 
         self._attr_translation_key = "send_error_events_btn"
@@ -49,7 +54,7 @@ class EtaResendErrorEventsButton(ButtonEntity):
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     async def async_press(self) -> None:
-        """Force the error update coordinator to resend all error events"""
+        """Force the error update coordinator to resend all error events."""
         # Delete the old error list to force the coordinator to resend all events
         self.coordinator.data = []
         await self.coordinator.async_refresh()

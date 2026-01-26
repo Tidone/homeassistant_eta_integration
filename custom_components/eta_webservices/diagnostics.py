@@ -1,16 +1,16 @@
 """Diagnostics support for ETA Sensors."""
+
 from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import DOMAIN
 from .api import EtaAPI
+from .const import DOMAIN
 
 
 async def async_get_config_entry_diagnostics(
