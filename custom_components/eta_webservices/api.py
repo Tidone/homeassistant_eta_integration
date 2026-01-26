@@ -1,6 +1,6 @@
-"""Handle all low-level API calls for ETA Sensors."""
-
+import asyncio
 from datetime import datetime
+import time
 import logging
 from typing import TypedDict
 
@@ -9,7 +9,6 @@ from packaging import version
 import xmltodict
 
 from .const import CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
-
 # Make sure to update _get_all_sensors_v12() if a new custom unit is added
 
 _LOGGER = logging.getLogger(__name__)
@@ -51,6 +50,9 @@ class EtaAPI:
         self._session: ClientSession = session
         self._host = host
         self._port = int(port)
+        # 5 concurrent requests seem to be the sweetpoint between speed and stability
+        # More requests are only very slightly faster (in the order of seconds), with the downside that the ETA user interface becomes very laggy
+        self._max_concurrent_requests = 5
 
         self._float_sensor_units = [
             "%",
@@ -163,6 +165,34 @@ class EtaAPI:
         data = xmltodict.parse(text)["eta"]["value"]
         return self._parse_data(data, force_number_handling)
 
+    async def get_all_data(self):
+        all_endpoints = await self._get_sensors_dict()
+        _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
+
+        # Deduplicate endpoints
+        deduplicated_uris = {}
+        for key, uri in all_endpoints.items():
+            if uri not in deduplicated_uris:
+                deduplicated_uris[uri] = key
+
+        _LOGGER.debug("Got %d unique endpoints", len(deduplicated_uris))
+
+        # Create a semaphore to limit concurrent requests
+        semaphore = asyncio.Semaphore(self._max_concurrent_requests)
+
+        async def fetch_data_limited(uri):
+            """Fetch data with concurrency limit."""
+            async with semaphore:
+                return await self.get_data(uri)
+
+        # Fetch all data concurrently with limit
+        data_tasks = [fetch_data_limited(uri) for uri in deduplicated_uris]
+
+        data_results = await asyncio.gather(*data_tasks, return_exceptions=True)
+
+        # Map results back to URIs
+        return dict(zip(deduplicated_uris.keys(), data_results, strict=False))
+
     async def _get_data_plus_raw(self, uri):
         data = await self._get_request("/user/var/" + str(uri))
         text = await data.text()
@@ -234,29 +264,66 @@ class EtaAPI:
         endpoint_info["valid_values"]["dec_places"] = int(raw_dict["@decPlaces"])
         endpoint_info["valid_values"]["scale_factor"] = int(raw_dict["@scaleFactor"])
 
+    # runlength w/o optimizations: 78s
+    # runlength w/ optimizations (sem=1): 77s
+    # runlength w/ optimizations (sem=2): 43s
+    # runlength w/ optimizations (sem=3): 25s
+    # runlength w/ optimizations (sem=4): 19s
+    # runlength w/ optimizations (sem=5): 15s
+    # runlength w/ optimizations (sem=10): 7s
+    #  len(writable_dict) = 149
+    #  len(float_dict) = 244
+    #  len(switches_dict) = 29
+    #  len(text_dict) = 241
+
     async def _get_all_sensors_v11(
         self, float_dict, switches_dict, text_dict, writable_dict
     ):
         all_endpoints = await self._get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
-        queried_endpoints = []
-        for key in all_endpoints:
+
+        start_time = time.time()
+
+        # Deduplicate endpoints
+        # INFO: The key and value fields are flipped between this and all_endpoints
+        # to be able to easily check if a uri is already in the dict
+        deduplicated_uris = {}
+        for key, uri in all_endpoints.items():
+            if uri not in deduplicated_uris:
+                deduplicated_uris[uri] = key
+
+        _LOGGER.debug("Got %d unique endpoints", len(deduplicated_uris))
+
+        # Create a semaphore to limit concurrent requests
+        semaphore = asyncio.Semaphore(self._max_concurrent_requests)
+
+        async def fetch_data_limited(uri):
+            """Fetch data with concurrency limit."""
+            async with semaphore:
+                return await self._get_data_plus_raw(uri)
+
+        # Fetch all data concurrently with limit
+        data_tasks = [fetch_data_limited(uri) for uri in deduplicated_uris]
+
+        data_results = await asyncio.gather(*data_tasks, return_exceptions=True)
+
+        # Map results back to URIs, filtering out exceptions
+        endpoint_data: dict[str, tuple[float | str, str, dict]] = {}
+        for uri, result in zip(deduplicated_uris.keys(), data_results, strict=False):
+            if isinstance(result, Exception):
+                _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
+            else:
+                endpoint_data[uri] = result  # pyright: ignore[reportArgumentType]
+
+        for uri, key in deduplicated_uris.items():
+            if uri not in endpoint_data:
+                continue
+
+            value, unit, raw_dict = endpoint_data[uri]
+
             try:
-                if all_endpoints[key] in queried_endpoints:
-                    _LOGGER.debug("Skipping duplicate endpoint %s", all_endpoints[key])
-                    # ignore duplicate endpoints
-                    continue
-
-                _LOGGER.debug("Querying endpoint %s", all_endpoints[key])
-
-                queried_endpoints.append(all_endpoints[key])
-
-                value, unit, raw_dict = await self._get_data_plus_raw(
-                    all_endpoints[key]
-                )
-
                 endpoint_info = ETAEndpoint(
-                    url=all_endpoints[key],
+                    url=uri,
                     valid_values=None,
                     friendly_name=self._get_friendly_name(key),
                     unit=unit,
@@ -274,29 +341,32 @@ class EtaAPI:
                 )
 
                 if self._is_writable_v11(endpoint_info):
-                    _LOGGER.debug("Adding as writable sensor")
+                    _LOGGER.debug("Adding %s as writable sensor", uri)
                     # this is checked separately because all writable sensors are registered as both a sensor entity and a number entity
                     # add a suffix to the unique id to make sure it is still unique in case the sensor is selected in the writable list and in the sensor list
                     self._parse_valid_writable_values_v11(endpoint_info, raw_dict)
                     writable_dict[unique_key + "_writable"] = endpoint_info
 
                 if self._is_float_sensor(endpoint_info):
-                    _LOGGER.debug("Adding as float sensor")
+                    _LOGGER.debug("Adding %s as float sensor", uri)
                     float_dict[unique_key] = endpoint_info
                 elif self._is_switch_v11(endpoint_info, raw_dict["#text"]):
-                    _LOGGER.debug("Adding as switch")
+                    _LOGGER.debug("Adding %s as switch", uri)
                     self._parse_switch_values_v11(endpoint_info)
                     switches_dict[unique_key] = endpoint_info
                 elif self._is_text_sensor(endpoint_info) and value != "":
-                    _LOGGER.debug("Adding as text sensor")
+                    _LOGGER.debug("Adding %s as text sensor", uri)
                     # Ignore enpoints with an empty value
                     # This has to be the last branch for the above fallback to work
                     text_dict[unique_key] = endpoint_info
                 else:
-                    _LOGGER.debug("Not adding endpoint: Unknown type")
+                    _LOGGER.debug("Not adding endpoint %s: Unknown type", uri)
 
             except Exception:
-                _LOGGER.debug("Invalid endpoint", exc_info=True)
+                _LOGGER.debug("Invalid endpoint %s", uri, exc_info=True)
+
+        end_time = time.time()
+        pass
 
     def _parse_switch_values(self, endpoint_info: ETAEndpoint):
         valid_values = ETAValidSwitchValues(on_value=0, off_value=0)
@@ -307,26 +377,103 @@ class EtaAPI:
                 valid_values["off_value"] = endpoint_info["valid_values"][key]
         endpoint_info["valid_values"] = valid_values
 
+    # runlength w/o optimizations: 326s
+    # runlength w/ optimizations (sem=1): 330s
+    # runlength w/ optimizations (sem=2): 218s
+    # runlength w/ optimizations (sem=3): 193s
+    # runlength w/ optimizations (sem=4): 187s
+    # runlength w/ optimizations (sem=5): 184s
+    # runlength w/ optimizations (sem=10): 177s
+    #  len(writable_dict) = 74
+    #  len(float_dict) = 244
+    #  len(switches_dict) = 40
+    #  len(text_dict) = 138
+
     async def _get_all_sensors_v12(
         self, float_dict, switches_dict, text_dict, writable_dict
     ):
         all_endpoints = await self._get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
-        queried_endpoints = []
-        for key in all_endpoints:
+
+        start_time = time.time()
+
+        # Deduplicate endpoints
+        # INFO: The key and value fields are flipped between this and all_endpoints
+        # to be able to easily check if a uri is already in the dict
+        deduplicated_uris = {}
+        for key, uri in all_endpoints.items():
+            if uri not in deduplicated_uris:
+                deduplicated_uris[uri] = key
+
+        _LOGGER.debug("Got %d unique endpoints", len(deduplicated_uris))
+
+        # Create a semaphore to limit concurrent requests
+        semaphore = asyncio.Semaphore(self._max_concurrent_requests)
+
+        async def fetch_varinfo_limited(uri, key):
+            async with semaphore:
+                return await self._get_varinfo(key.split("_")[1], uri)
+
+        # Fetch all varinfo with concurrency limit
+        varinfo_tasks = [
+            fetch_varinfo_limited(uri, key) for uri, key in deduplicated_uris.items()
+        ]
+
+        # This takes WAY longer than the calls to get_data() below
+        # Runtime for this section: 170s
+        # Runtime for the get_data() section below: 7s
+        varinfo_results = await asyncio.gather(*varinfo_tasks, return_exceptions=True)
+
+        # Map results back to URIs, filtering out exceptions
+        endpoint_infos: dict[str, ETAEndpoint] = {}
+        for uri, result in zip(deduplicated_uris.keys(), varinfo_results, strict=False):
+            if isinstance(result, Exception):
+                _LOGGER.debug("Failed to get varinfo for %s: %s", uri, str(result))
+            else:
+                endpoint_infos[uri] = result  # pyright: ignore[reportArgumentType]
+
+        # Determine which endpoints need secondary data fetch
+        needs_data = []
+        for uri, endpoint_info in endpoint_infos.items():
+            if (
+                self._is_float_sensor(endpoint_info)
+                or self._is_switch(endpoint_info)
+                or self._is_text_sensor(endpoint_info)
+                or (
+                    # the ETA API is not very consistent and some sensors show different units in their `varinfo` and `var` endpoints
+                    # all of those sensors have an empty unit in `varinfo` and have `DEFAULT` as their type
+                    # i.e. the Volllaststunden sensor shows up with an empty unit in `varinfo`, but with seconds in `var`
+                    endpoint_info["unit"] == ""
+                    and endpoint_info["endpoint_type"] == "DEFAULT"
+                )
+            ):
+                needs_data.append(uri)
+
+        async def fetch_data_limited(uri):
+            async with semaphore:
+                return await self.get_data(uri)
+
+        # Fetch all needed data concurrently
+        data_results: dict[str, tuple[float | str, str]] = {}
+        if needs_data:
+            data_tasks = [fetch_data_limited(uri) for uri in needs_data]
+            # runtime: 7 seconds for ~500 endpoints
+            data_values = await asyncio.gather(*data_tasks, return_exceptions=True)
+
+            # Filter out exceptions from data results
+            for uri, result in zip(needs_data, data_values, strict=False):
+                if isinstance(result, Exception):
+                    _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
+                else:
+                    data_results[uri] = result  # pyright: ignore[reportArgumentType]
+
+        for uri, key in deduplicated_uris.items():
+            if uri not in endpoint_infos:
+                continue
+
+            endpoint_info = endpoint_infos[uri]
+
             try:
-                if all_endpoints[key] in queried_endpoints:
-                    _LOGGER.debug("Skipping duplicate endpoint %s", all_endpoints[key])
-                    # ignore duplicate endpoints
-                    continue
-
-                _LOGGER.debug("Querying endpoint %s", all_endpoints[key])
-
-                queried_endpoints.append(all_endpoints[key])
-
-                fub = key.split("_")[1]
-                endpoint_info = await self._get_varinfo(fub, all_endpoints[key])
-
                 unique_key = (
                     "eta_"
                     + self._host.replace(".", "_")
@@ -334,19 +481,10 @@ class EtaAPI:
                     + key.lower().replace(" ", "_")
                 )
 
-                if (
-                    self._is_float_sensor(endpoint_info)
-                    or self._is_switch(endpoint_info)
-                    or self._is_text_sensor(endpoint_info)
-                    or (
-                        # the ETA API is not very consistent and some sensors show different units in their `varinfo` and `var` endpoints
-                        # all of those sensors have an empty unit in `varinfo` and have `DEFAULT` as their type
-                        # i.e. the Volllaststunden sensor shows up with an empty unit in `varinfo`, but with seconds in `var`
-                        endpoint_info["unit"] == ""
-                        and endpoint_info["endpoint_type"] == "DEFAULT"
-                    )
-                ):
-                    value, unit = await self.get_data(all_endpoints[key])
+                if uri in data_results:
+                    data_result = data_results[uri]
+
+                    value, unit = data_result
                     endpoint_info["value"] = value
                     if (
                         unit != endpoint_info["unit"]
@@ -361,26 +499,29 @@ class EtaAPI:
                         endpoint_info["unit"] = unit
 
                 if self._is_writable(endpoint_info):
-                    _LOGGER.debug("Adding as writable sensor")
+                    _LOGGER.debug("Adding %s as writable sensor", uri)
                     # this is checked separately because all writable sensors are registered as both a sensor entity and a number entity
                     # add a suffix to the unique id to make sure it is still unique in case the sensor is selected in the writable list and in the sensor list
                     writable_dict[unique_key + "_writable"] = endpoint_info
 
                 if self._is_float_sensor(endpoint_info):
-                    _LOGGER.debug("Adding as float sensor")
+                    _LOGGER.debug("Adding %s as float sensor", uri)
                     float_dict[unique_key] = endpoint_info
                 elif self._is_switch(endpoint_info):
-                    _LOGGER.debug("Adding as switch")
+                    _LOGGER.debug("Adding %s as switch", uri)
                     self._parse_switch_values(endpoint_info)
                     switches_dict[unique_key] = endpoint_info
                 elif self._is_text_sensor(endpoint_info):
-                    _LOGGER.debug("Adding as text sensor")
+                    _LOGGER.debug("Adding %s as text sensor", uri)
                     text_dict[unique_key] = endpoint_info
                 else:
-                    _LOGGER.debug("Not adding endpoint: Unknown type")
+                    _LOGGER.debug("Not adding endpoint %s: Unknown type", uri)
 
             except Exception:
-                _LOGGER.debug("Invalid endpoint", exc_info=True)
+                _LOGGER.debug("Invalid endpoint %s", uri, exc_info=True)
+
+        end_time = time.time()
+        pass
 
     def _is_writable(self, endpoint_info: ETAEndpoint):
         # TypedDict does not support isinstance(),
