@@ -1,0 +1,5014 @@
+{
+  "float_dict": {
+    "eta_192_168_0_25__ww_eing\u00e4nge_warmwasserspeicher": {
+      "valid_values": null,
+      "friendly_name": "WW > Eing\u00e4nge > Warmwasserspeicher",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/11129/0",
+      "value": 57.4
+    },
+    "eta_192_168_0_25__ww_eing\u00e4nge_warmwasserspeicher_kalibrierwert": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "WW > Eing\u00e4nge > Warmwasserspeicher > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/11129/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_eing\u00e4nge_warmwasserspeicher_fixwert": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Eing\u00e4nge > Warmwasserspeicher > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/11129/2054",
+      "value": 53.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Warmwasserspeicher",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/12271",
+      "value": 57.4
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_soll": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Warmwasserspeicher Soll",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/12132",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_solltemperatur_f\u00fcr_'sofort_laden'": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Solltemperatur f\u00fcr 'Sofort laden'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/14257",
+      "value": 50.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_einschaltdifferenz": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 30.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Einschaltdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/12133",
+      "value": 20.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_temperatur": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1110",
+      "value": 55.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_wert_au\u00dferhalb_der_zeitfenster": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1111",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_1": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1082",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_2": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 2",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1083",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_3": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 3",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1084",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_wert_au\u00dferhalb_der_zeitfenster": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1112",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_1": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1086",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_2": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 2",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1087",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_3": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 3",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1088",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_wert_au\u00dferhalb_der_zeitfenster": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1113",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_1": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1090",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_2": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 2",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1091",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_3": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 3",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1092",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_wert_au\u00dferhalb_der_zeitfenster": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1114",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_1": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1094",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_2": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 2",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1095",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_3": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 3",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1096",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_wert_au\u00dferhalb_der_zeitfenster": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1115",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_1": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1098",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_2": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 2",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1099",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_3": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 3",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1100",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_wert_au\u00dferhalb_der_zeitfenster": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1116",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_1": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1102",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_2": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 2",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1103",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_3": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 3",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1104",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_wert_au\u00dferhalb_der_zeitfenster": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1117",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_1": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1106",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_2": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 2",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1107",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_3": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 3",
+      "unit": "\u00b0C",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1108",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_registerleistung": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Registerleistung",
+      "unit": "kW",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/13150",
+      "value": 7.7
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_max.": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Warmwasserspeicher max.",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/12169",
+      "value": 75.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_laden_mit_anderen_verbrauchern_einschaltdifferenz": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 30.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Laden mit anderen Verbrauchern > Einschaltdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/13535",
+      "value": 5.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_temperaturwarnung_1_differenz_warnung": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 80.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Temperaturwarnung 1 > Differenz Warnung",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/13039",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_temperaturwarnung_1_dauer_bis_warnung": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Temperaturwarnung 1 > Dauer bis Warnung",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/13166",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_eing\u00e4nge_au\u00dfentemperatur": {
+      "valid_values": null,
+      "friendly_name": "HK > Eing\u00e4nge > Au\u00dfentemperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12197",
+      "value": 2.9
+    },
+    "eta_192_168_0_25__hk_heizkreis_r\u00fcckstellzeit_f._'kommen'-taste": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > R\u00fcckstellzeit f. 'Kommen'-Taste",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/13796",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_vorlauf_vorlauf_max": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Vorlauf > Vorlauf Max",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12108",
+      "value": 45.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Heizkurve",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12111",
+      "value": 24.8
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_schieber_position": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Schieber Position",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12240",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_vorlauf_bei_-10\u00b0c": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Vorlauf bei -10\u00b0C",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12104",
+      "value": 33.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_vorlauf_bei_+10\u00b0c": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Vorlauf bei +10\u00b0C",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12103",
+      "value": 25.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_vorlauf_absenkung": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Vorlauf Absenkung",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12107",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_aus_bei_heizkurve_unter": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Aus bei Heizkurve unter",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/14133",
+      "value": 22.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizlast": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Heizlast",
+      "unit": "W",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/13100",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizlast_spez._heizlast": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Heizlast > spez. Heizlast",
+      "unit": "W/m\u00b2",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/13098",
+      "value": 70.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizlast_gesamtfl\u00e4che": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Heizlast > Gesamtfl\u00e4che",
+      "unit": "m\u00b2",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/13096",
+      "value": 125.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizlast_nennheizlast": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Heizlast > Nennheizlast",
+      "unit": "W",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/13099",
+      "value": 8750.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizlast_heizlast_w\u00e4hrend_estrichtrocknung": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Heizlast > Heizlast w\u00e4hrend Estrichtrocknung",
+      "unit": "kW",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/13600",
+      "value": 8.8
+    },
+    "eta_192_168_0_25__hk_heizkreis_au\u00dfentemperatur_verz\u00f6gert": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Au\u00dfentemperatur verz\u00f6gert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/12095/0/0",
+      "value": 2.8
+    },
+    "eta_192_168_0_25__hk_heizkreis_au\u00dfentemperatur_verz\u00f6gert_lag_x": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Au\u00dfentemperatur verz\u00f6gert > Lag x",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/12095/0/1071",
+      "value": 2.9
+    },
+    "eta_192_168_0_25__hk_heizkreis_au\u00dfentemperatur_verz\u00f6gert_lag_tf": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Au\u00dfentemperatur verz\u00f6gert > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/12095/0/1074",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_au\u00dfentemperatur_verz\u00f6gert_lag_y": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Au\u00dfentemperatur verz\u00f6gert > Lag y",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/12095/0/1073",
+      "value": 2.8
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizgrenze_f\u00fcr_'heizen'": {
+      "valid_values": {
+        "scaled_min_value": -50.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "HK > Heizkreis > Heizgrenze f\u00fcr 'Heizen'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/14116",
+      "value": 21.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizgrenze_f\u00fcr_'absenken'": {
+      "valid_values": {
+        "scaled_min_value": -50.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "HK > Heizkreis > Heizgrenze f\u00fcr 'Absenken'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12097",
+      "value": 2.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_vorlauf_soll": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Vorlauf Soll",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12304",
+      "value": 15.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_letzte_\u00e4nderung": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Estrich > Letzte \u00c4nderung",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12311",
+      "value": 141861000.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_anstieg_um": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Anstieg um",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12305",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_anstieg_alle": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Estrich > Anstieg alle",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12306",
+      "value": 86400.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_max._temperatur": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Max. Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12307",
+      "value": 40.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_max._temp._halten": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Estrich > Max. Temp. halten",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12308",
+      "value": 345600.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_absenkung_um": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Absenkung um",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12309",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_absenkung_alle": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Estrich > Absenkung alle",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12310",
+      "value": 86400.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_anschlie\u00dfende_heizpause": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Estrich > anschlie\u00dfende Heizpause",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/14687",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_erneute_max._temperatur": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > erneute Max. Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/14688",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_erneute_max._temp._halten": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Estrich > erneute Max. Temp. halten",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/14689",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__fbh_eing\u00e4nge_vorlauf": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Eing\u00e4nge > Vorlauf",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11060/0",
+      "value": 31.4
+    },
+    "eta_192_168_0_25__fbh_eing\u00e4nge_vorlauf_kalibrierwert": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Fbh > Eing\u00e4nge > Vorlauf > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11060/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__fbh_eing\u00e4nge_vorlauf_fixwert": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Eing\u00e4nge > Vorlauf > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11060/2054",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__fbh_eing\u00e4nge_au\u00dfentemperatur": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Eing\u00e4nge > Au\u00dfentemperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12197",
+      "value": 2.9
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_heizkreismischer": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Heizkreismischer",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11125/0",
+      "value": 31.4
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_heizkreismischer_soll_temperatur": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Heizkreismischer > Soll Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11125/2120",
+      "value": 31.3
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_heizkreismischer_ist_temperatur": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Heizkreismischer > Ist Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11125/2121",
+      "value": 31.4
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_heizkreismischer_position": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Heizkreismischer > Position",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11125/2127",
+      "value": 18.1
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_heizkreismischer_laufzeit_mischer": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Heizkreismischer > Laufzeit Mischer",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11125/2124",
+      "value": 120.0
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_pumpe": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Pumpe",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11687/0",
+      "value": 60.0
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_pumpe_ausgang": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Pumpe > Ausgang",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11687/2130",
+      "value": 60.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_r\u00fcckstellzeit_f._'kommen'-taste": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > R\u00fcckstellzeit f. 'Kommen'-Taste",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/13796",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_vorlauf": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Vorlauf",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12241",
+      "value": 31.4
+    },
+    "eta_192_168_0_25__fbh_heizkreis_vorlauf_vorlauf_max": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Vorlauf > Vorlauf Max",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12108",
+      "value": 45.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizkurve",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12111",
+      "value": 31.3
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_schieber_position": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Schieber Position",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12240",
+      "value": 50.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_vorlauf_bei_-10\u00b0c": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Vorlauf bei -10\u00b0C",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12104",
+      "value": 33.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_vorlauf_bei_+10\u00b0c": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Vorlauf bei +10\u00b0C",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12103",
+      "value": 25.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_vorlauf_absenkung": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Vorlauf Absenkung",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12107",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_aus_bei_heizkurve_unter": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Aus bei Heizkurve unter",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/14133",
+      "value": 22.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizlast": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizlast",
+      "unit": "W",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/13100",
+      "value": 8331.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizlast_spez._heizlast": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizlast > spez. Heizlast",
+      "unit": "W/m\u00b2",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/13098",
+      "value": 70.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizlast_gesamtfl\u00e4che": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizlast > Gesamtfl\u00e4che",
+      "unit": "m\u00b2",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/13096",
+      "value": 171.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizlast_nennheizlast": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizlast > Nennheizlast",
+      "unit": "W",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/13099",
+      "value": 11970.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizlast_heizlast_w\u00e4hrend_estrichtrocknung": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizlast > Heizlast w\u00e4hrend Estrichtrocknung",
+      "unit": "kW",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/13600",
+      "value": 12.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_au\u00dfentemperatur_verz\u00f6gert": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Au\u00dfentemperatur verz\u00f6gert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/12095/0/0",
+      "value": 2.8
+    },
+    "eta_192_168_0_25__fbh_heizkreis_au\u00dfentemperatur_verz\u00f6gert_lag_x": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Au\u00dfentemperatur verz\u00f6gert > Lag x",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/12095/0/1071",
+      "value": 2.9
+    },
+    "eta_192_168_0_25__fbh_heizkreis_au\u00dfentemperatur_verz\u00f6gert_lag_tf": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Au\u00dfentemperatur verz\u00f6gert > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/12095/0/1074",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_au\u00dfentemperatur_verz\u00f6gert_lag_y": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Au\u00dfentemperatur verz\u00f6gert > Lag y",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/12095/0/1073",
+      "value": 2.8
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizgrenze_f\u00fcr_'heizen'": {
+      "valid_values": {
+        "scaled_min_value": -50.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizgrenze f\u00fcr 'Heizen'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/14116",
+      "value": 22.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizgrenze_f\u00fcr_'absenken'": {
+      "valid_values": {
+        "scaled_min_value": -50.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizgrenze f\u00fcr 'Absenken'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12097",
+      "value": 2.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_anforderungsdifferenz": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Anforderungsdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12109",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkreispumpe_pumpendrehzahl": {
+      "valid_values": {
+        "scaled_min_value": 10.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkreispumpe > Pumpendrehzahl",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12258",
+      "value": 60.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkreismischer": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizkreismischer",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/13620",
+      "value": 31.4
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_vorlauf_soll": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Vorlauf Soll",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12304",
+      "value": 15.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_letzte_\u00e4nderung": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Estrich > Letzte \u00c4nderung",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12311",
+      "value": 141831000.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_anstieg_um": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Anstieg um",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12305",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_anstieg_alle": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Estrich > Anstieg alle",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12306",
+      "value": 86400.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_max._temperatur": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Max. Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12307",
+      "value": 40.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_max._temp._halten": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Estrich > Max. Temp. halten",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12308",
+      "value": 345600.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_absenkung_um": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Absenkung um",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12309",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_absenkung_alle": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Estrich > Absenkung alle",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12310",
+      "value": 86400.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_anschlie\u00dfende_heizpause": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Estrich > anschlie\u00dfende Heizpause",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/14687",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_erneute_max._temperatur": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > erneute Max. Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/14688",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_erneute_max._temp._halten": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Estrich > erneute Max. Temp. halten",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/14689",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__sys_au\u00dfentemperatur": {
+      "valid_values": null,
+      "friendly_name": "Sys > Au\u00dfentemperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10241/0/0/12197",
+      "value": 2.9
+    },
+    "eta_192_168_0_25__sys_au\u00dfentemperatur_au\u00dfentemperaturf\u00fchler": {
+      "valid_values": null,
+      "friendly_name": "Sys > Au\u00dfentemperatur > Au\u00dfentemperaturf\u00fchler",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10241/0/11127/0",
+      "value": 2.9
+    },
+    "eta_192_168_0_25__sys_au\u00dfentemperatur_au\u00dfentemperaturf\u00fchler_kalibrierwert": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Sys > Au\u00dfentemperatur > Au\u00dfentemperaturf\u00fchler > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10241/0/11127/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__sys_au\u00dfentemperatur_au\u00dfentemperaturf\u00fchler_fixwert": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Sys > Au\u00dfentemperatur > Au\u00dfentemperaturf\u00fchler > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10241/0/11127/2054",
+      "value": -5.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_wassermangel_einschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Wassermangel > Einschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11031/2012",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_wassermangel_ausschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Wassermangel > Ausschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11031/2013",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_not-aus_schalter_einschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Not-Aus Schalter > Einschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11032/2012",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_not-aus_schalter_ausschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Not-Aus Schalter > Ausschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11032/2013",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_stb_einschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > STB > Einschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11033/2012",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_stb_ausschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > STB > Ausschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11033/2013",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_aschebox_einschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Aschebox > Einschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11034/2012",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_aschebox_ausschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Aschebox > Ausschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11034/2013",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_glutbett_einschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Glutbett > Einschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11036/2012",
+      "value": 5.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_glutbett_ausschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Glutbett > Ausschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11036/2013",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_pelletsbeh\u00e4lter_einschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Pelletsbeh\u00e4lter > Einschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11037/2012",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_pelletsbeh\u00e4lter_ausschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Pelletsbeh\u00e4lter > Ausschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11037/2013",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11108/0",
+      "value": 20.64
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_restsauerstoff": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Restsauerstoff",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11108/2060",
+      "value": 20.64
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_signal": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Signal",
+      "unit": "mV",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11108/2066",
+      "value": -11.7
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_verz\u00f6gerung_(tf)": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Verz\u00f6gerung (Tf)",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11108/2053",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_innenwiderstand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Innenwiderstand",
+      "unit": "Ohm",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11108/2058",
+      "value": 199.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_kalibrierwert": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Kalibrierwert",
+      "unit": "mV",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11108/2064",
+      "value": 2.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_korrigiertes_signal": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > korrigiertes Signal",
+      "unit": "mV",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11108/2065",
+      "value": -9.7
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_heizspannung_ist": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Heizspannung Ist",
+      "unit": "V",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11108/2069",
+      "value": 14.214
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_kalibrierung_kalibrier_intervall": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Kalibrierung > Kalibrier Intervall",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12246",
+      "value": 1800000.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_kalibrierung_letzte_kalibrierung_bei": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Kalibrierung > Letzte Kalibrierung bei",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12247",
+      "value": 51977500.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11109/0",
+      "value": 68.1
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_kalibrierwert": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11109/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_fixwert": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11109/2054",
+      "value": 70.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_vorlauf_1": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel Vorlauf 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11058/0",
+      "value": 60.4
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_vorlauf_1_kalibrierwert": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel Vorlauf 1 > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11058/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_vorlauf_1_fixwert": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel Vorlauf 1 > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11058/2054",
+      "value": 60.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_unten": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel unten",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11122/0",
+      "value": 61.7
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_unten_kalibrierwert": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel unten > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11122/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_unten_fixwert": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel unten > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11122/2054",
+      "value": 55.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_abgas": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Abgas",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11110/0",
+      "value": 75.4
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_abgas_kalibrierwert": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Abgas > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11110/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_abgas_fixwert": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Abgas > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11110/2054",
+      "value": 120.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kesseldruck": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Kesseldruck",
+      "unit": "bar",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12180",
+      "value": 1.36
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kesseldruck_kesseldruck": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Kesseldruck > Kesseldruck",
+      "unit": "V",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11135/0",
+      "value": 1.522
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_messblende": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Messblende",
+      "unit": "Pa",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12166",
+      "value": -1.5
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_messblende_messblende": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Messblende > Messblende",
+      "unit": "V",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11134/0",
+      "value": 0.541
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_messblende_offset": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Messblende > Offset",
+      "unit": "Pa",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12167",
+      "value": -4.5
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_messblende_mindestdruck": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Messblende > Mindestdruck",
+      "unit": "Pa",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12150",
+      "value": 10.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11030/0",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_taktrate": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Taktrate",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11030/2090",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_motor_strom": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Motor Strom",
+      "unit": "A",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11030/2091",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_motor_strom_mindest_strom": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Motor Strom > Mindest Strom",
+      "unit": "A",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11030/2097",
+      "value": 0.02
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_motor_strom_nennstrom": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Motor Strom > Nennstrom",
+      "unit": "A",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11030/2098",
+      "value": 0.165
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_motor_strom_maximal_strom": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Motor Strom > Maximal Strom",
+      "unit": "A",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11030/2096",
+      "value": 0.18
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_erw\u00e4rmung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Erw\u00e4rmung",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11030/2092",
+      "value": 33.3
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_schneckendrehzahl": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Schneckendrehzahl",
+      "unit": "U/min",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11030/2099",
+      "value": 2.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_abgasgebl\u00e4se": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Abgasgebl\u00e4se",
+      "unit": "U/min",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12165",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_abgasgebl\u00e4se_abgasgebl\u00e4se_soll_drehzahl": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Abgasgebl\u00e4se > Abgasgebl\u00e4se > Soll Drehzahl",
+      "unit": "U/min",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11120/2110",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_abgasgebl\u00e4se_abgasgebl\u00e4se_ist_drehzahl": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Abgasgebl\u00e4se > Abgasgebl\u00e4se > Ist Drehzahl",
+      "unit": "U/min",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11120/2111",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_kesselpumpe": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Kesselpumpe",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11123/0",
+      "value": 77.7
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_kesselpumpe_ausgang": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Kesselpumpe > Ausgang",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11123/2130",
+      "value": 77.6
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_vorlaufmischer_1": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Vorlaufmischer 1",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11121/0",
+      "value": 60.5
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_vorlaufmischer_1_soll_temperatur": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Vorlaufmischer 1 > Soll Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11121/2120",
+      "value": 61.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_vorlaufmischer_1_ist_temperatur": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Vorlaufmischer 1 > Ist Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11121/2121",
+      "value": 60.5
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_vorlaufmischer_1_position": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Vorlaufmischer 1 > Position",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11121/2127",
+      "value": 27.7
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_vorlaufmischer_1_laufzeit_mischer": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Vorlaufmischer 1 > Laufzeit Mischer",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11121/2124",
+      "value": 135.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_umschaltventil_laufzeit": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Umschaltventil > Laufzeit",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12040",
+      "value": 135.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_luftschieber": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Luftschieber",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11115/0",
+      "value": 0.6
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_luftschieber_soll_stellung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Luftschieber > Soll Stellung",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11115/2070",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_luftschieber_ist_stellung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Luftschieber > Ist Stellung",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11115/2071",
+      "value": 0.6
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_volllaststunden": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Volllaststunden",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12153",
+      "value": 24986500.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_laufzeit_abgasgebl\u00e4se": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Laufzeit Abgasgebl\u00e4se",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12299",
+      "value": 52803700.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_gesamtverbrauch": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Gesamtverbrauch",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12016",
+      "value": 13400.5
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_verbrauch_seit_wartung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Verbrauch seit Wartung",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12014",
+      "value": 1644.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_inhalt_pelletsbeh\u00e4lter": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 0.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Inhalt Pelletsbeh\u00e4lter",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12011",
+      "value": 28.5
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_verbrauch_seit_entaschung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Verbrauch seit Entaschung",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12012",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_verbrauch_seit_aschebox_leeren": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Verbrauch seit Aschebox leeren",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12013",
+      "value": 625.7
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_laufzeit_z\u00fcndung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Laufzeit Z\u00fcndung",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12156",
+      "value": 2097310.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_laufzeit_z\u00fcndung_dauer_der_letzten_z\u00fcndung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Laufzeit Z\u00fcndung > Dauer der letzten Z\u00fcndung",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/13346",
+      "value": 187.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_z\u00e4hler_sicherheitspumpenlauf_laufzeit_sicherheitspumpenlauf": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Z\u00e4hler Sicherheitspumpenlauf > Laufzeit Sicherheitspumpenlauf",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/13643",
+      "value": 52579.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_laufzeit_stoker": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Laufzeit Stoker",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12154",
+      "value": 7772550.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_laufzeit_entaschung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Laufzeit Entaschung",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12155",
+      "value": 357023.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_laufzeit_saugturbine": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Laufzeit Saugturbine",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12157",
+      "value": 54233.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kesseldruck_mindestdruck": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kesseldruck > Mindestdruck",
+      "unit": "bar",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12170",
+      "value": 0.8
+    },
+    "eta_192_168_0_25__kessel_kessel_kesseldruck_maximaler_wasserdruck": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kesseldruck > Maximaler Wasserdruck",
+      "unit": "bar",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12171",
+      "value": 2.8
+    },
+    "eta_192_168_0_25__kessel_kessel_kesseldruck_wasserdruck_nachf\u00fcllen_ab": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kesseldruck > Wasserdruck Nachf\u00fcllen ab",
+      "unit": "bar",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12172",
+      "value": 1.2
+    },
+    "eta_192_168_0_25__kessel_kessel_kessel": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kessel",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12161",
+      "value": 67.3
+    },
+    "eta_192_168_0_25__kessel_kessel_kessel_kessel_soll": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kessel > Kessel Soll",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12001",
+      "value": 66.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kessel_ausschaltdifferenz": {
+      "valid_values": {
+        "scaled_min_value": 3.0,
+        "scaled_max_value": 40.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Kessel > Ausschaltdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12141",
+      "value": 15.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kessel_kessel_min": {
+      "valid_values": {
+        "scaled_min_value": 50.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Kessel > Kessel Min",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12022",
+      "value": 55.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kessel_mindest_laufzeit": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kessel > Mindest Laufzeit",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12226",
+      "value": 1800.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kessel_unten": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kessel unten",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12300",
+      "value": 61.1
+    },
+    "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_leistung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Vorlaufregler 1 > Angeforderte Leistung",
+      "unit": "kW",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12077",
+      "value": 8.3
+    },
+    "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_temperatur": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Vorlaufregler 1 > Angeforderte Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12006",
+      "value": 61.0
+    },
+    "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_anforderungsdifferenz": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Vorlaufregler 1 > Anforderungsdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12020",
+      "value": 5.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kesselpumpe_maximal_drehzahl": {
+      "valid_values": {
+        "scaled_min_value": 10.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Kesselpumpe > Maximal Drehzahl",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12368",
+      "value": 100.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kesselpumpe_mindest_drehzahl": {
+      "valid_values": {
+        "scaled_min_value": 10.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Kesselpumpe > Mindest Drehzahl",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12227",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Abgas",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12162",
+      "value": 74.3
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_abgas_max": {
+      "valid_values": {
+        "scaled_min_value": 100.0,
+        "scaled_max_value": 300.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Abgas > Abgas Max",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12023",
+      "value": 180.0
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung_dauer_der_messung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Abgas > Emissionsmessung > Dauer der Messung",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12118",
+      "value": 2700.0
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung_verriegelungsdauer": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Abgas > Emissionsmessung > Verriegelungsdauer",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/13268",
+      "value": 14400.0
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung_vorw\u00e4rmdauer": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Abgas > Emissionsmessung > Vorw\u00e4rmdauer",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/13481",
+      "value": 1800.0
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Restsauerstoff",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12164",
+      "value": 20.64
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/0",
+      "value": 7.26
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin x",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1050",
+      "value": 92.9
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x1": {
+      "valid_values": {
+        "scaled_min_value": 30.0,
+        "scaled_max_value": 30.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin x1",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1051",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_y1": {
+      "valid_values": {
+        "scaled_min_value": 7.0,
+        "scaled_max_value": 15.0,
+        "scale_factor": 100,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin y1",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1052",
+      "value": 9.5
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x2": {
+      "valid_values": {
+        "scaled_min_value": 100.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin x2",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1053",
+      "value": 100.0
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_y2": {
+      "valid_values": {
+        "scaled_min_value": 6.0,
+        "scaled_max_value": 15.0,
+        "scale_factor": 100,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin y2",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1054",
+      "value": 7.0
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_y": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin y",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1055",
+      "value": 7.26
+    },
+    "eta_192_168_0_25__kessel_kessel_einschub": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Einschub",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12007",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_kessel_einschub_brennstoffverst\u00e4rkung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Einschub > Brennstoffverst\u00e4rkung",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12069",
+      "value": 100.0
+    },
+    "eta_192_168_0_25__kessel_kessel_einschub_stoker_sekunden_pro_kg": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Einschub > Stoker Sekunden pro kg",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12043",
+      "value": 580.0
+    },
+    "eta_192_168_0_25__kessel_kessel_z\u00fcndung_warmstart_zeit": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Z\u00fcndung > Warmstart Zeit",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12045",
+      "value": 1800.0
+    },
+    "eta_192_168_0_25__kessel_kessel_z\u00fcndung_heizversuch_max": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Z\u00fcndung > Heizversuch Max",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12046",
+      "value": 300.0
+    },
+    "eta_192_168_0_25__kessel_kessel_z\u00fcndung_maximale_z\u00fcnddauer": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Z\u00fcndung > Maximale Z\u00fcnddauer",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12048",
+      "value": 900.0
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_dauer_ruhezeit": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Entaschung > Dauer Ruhezeit",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12249",
+      "value": 36000.0
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_entaschen_nach_min.": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Entaschen nach min.",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12073",
+      "value": 15.0
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_entaschen_nach_max.": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Entaschen nach max.",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12074",
+      "value": 25.0
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_aschebox_leeren_nach": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 5000.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Aschebox leeren nach",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12120",
+      "value": 1000.0
+    },
+    "eta_192_168_0_25__kessel_kessel_pelletsbeh\u00e4lter_saugzeit_max": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Pelletsbeh\u00e4lter > Saugzeit Max",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12061",
+      "value": 360.0
+    },
+    "eta_192_168_0_25__kessel_kessel_pelletsbeh\u00e4lter_berechnete_saugzeit_max": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Pelletsbeh\u00e4lter > berechnete Saugzeit Max",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/14635",
+      "value": 189.0
+    },
+    "eta_192_168_0_25__kessel_kessel_pelletsbeh\u00e4lter_nachlauf_austragschnecke": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Pelletsbeh\u00e4lter > Nachlauf Austragschnecke",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12064",
+      "value": 2.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kessellaufmeldung_nachlaufzeit": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kessellaufmeldung > Nachlaufzeit",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12110",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__lagerum._eing\u00e4nge_nullpunktschalter_einschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Eing\u00e4nge > Nullpunktschalter > Einschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/11133/2012",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__lagerum._eing\u00e4nge_nullpunktschalter_ausschalt_verz.": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Eing\u00e4nge > Nullpunktschalter > Ausschalt Verz.",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/11133/2013",
+      "value": 1.0
+    },
+    "eta_192_168_0_25__lagerum._z\u00e4hlerst\u00e4nde_aktueller_saugvorgang": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Z\u00e4hlerst\u00e4nde > Aktueller Saugvorgang",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/0/13790",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__lagerum._z\u00e4hlerst\u00e4nde_dauer_des_letzten_saugvorganges": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Z\u00e4hlerst\u00e4nde > Dauer des letzten Saugvorganges",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/0/13791",
+      "value": 69.0
+    },
+    "eta_192_168_0_25__lagerum._austragung_sp\u00fcldauer": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Austragung > Sp\u00fcldauer",
+      "unit": "s",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/0/12261",
+      "value": 60.0
+    },
+    "eta_192_168_0_25__lagerum._vorrat": {
+      "valid_values": {
+        "scaled_min_value": -100000.0,
+        "scaled_max_value": 100000.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "LagerUm. > Vorrat",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/0/12015",
+      "value": 2678.4
+    },
+    "eta_192_168_0_25__lagerum._vorrat_vorrat_warngrenze": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100000.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "LagerUm. > Vorrat > Vorrat Warngrenze",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/0/12042",
+      "value": 1000.0
+    }
+  },
+  "switches_dict": {
+    "eta_192_168_0_25__ww_warmwasserspeicher_solar_absch\u00f6pfen": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Solar absch\u00f6pfen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/0/12652",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_laden_mit_anderen_verbrauchern": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Laden mit anderen Verbrauchern",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/0/12667",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__ww_sonstiges_warmwasser_sofort_laden": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "WW > Sonstiges > Warmwasser sofort laden",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/0/12134",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__ww_sonstiges_ein/aus_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "WW > Sonstiges > Ein/Aus Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/0/12080",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__hk_heizkreis_vorrang_warmwasser": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "HK > Heizkreis > Vorrang Warmwasser",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12178",
+      "value": "Ja"
+    },
+    "eta_192_168_0_25__hk_heizkreis_solar_absch\u00f6pfen": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "HK > Heizkreis > Solar absch\u00f6pfen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12652",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_start_estrich_ausheizen": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Start Estrich ausheizen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12303",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__hk_sonstiges_heizen_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "HK > Sonstiges > Heizen Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12125",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__hk_sonstiges_auto_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "HK > Sonstiges > Auto Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12126",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__hk_sonstiges_absenken_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "HK > Sonstiges > Absenken Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12230",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__hk_sonstiges_ein/aus_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "HK > Sonstiges > Ein/Aus Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12080",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__hk_sonstiges_kommen_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "HK > Sonstiges > Kommen Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12218",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__hk_sonstiges_gehen_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "HK > Sonstiges > Gehen Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12231",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_vorrang_warmwasser": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Fbh > Heizkreis > Vorrang Warmwasser",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12178",
+      "value": "Ja"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_solar_absch\u00f6pfen": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Fbh > Heizkreis > Solar absch\u00f6pfen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12652",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_start_estrich_ausheizen": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Start Estrich ausheizen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12303",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__fbh_sonstiges_heizen_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Fbh > Sonstiges > Heizen Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12125",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__fbh_sonstiges_auto_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Fbh > Sonstiges > Auto Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12126",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_sonstiges_absenken_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Fbh > Sonstiges > Absenken Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12230",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__fbh_sonstiges_ein/aus_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Fbh > Sonstiges > Ein/Aus Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12080",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_sonstiges_kommen_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Fbh > Sonstiges > Kommen Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12218",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__fbh_sonstiges_gehen_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Fbh > Sonstiges > Gehen Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12231",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__sys_st\u00f6rmeldung_anzeigen": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Sys > St\u00f6rmeldung > Anzeigen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/14870",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__sys_externe_st\u00f6rmeldung_anzeigen": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Sys > Externe St\u00f6rmeldung > Anzeigen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/14871",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_notbetrieb": {
+      "valid_values": {
+        "on_value": 1071,
+        "off_value": 1070
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Notbetrieb",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11108/2400",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_kalibrierung_extra_kalibrieren": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Kalibrierung > Extra Kalibrieren",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12301",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_kalibrierung_kalibrierung_abbrechen": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Kalibrierung > Kalibrierung abbrechen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13943",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kesseldruck_kesseldruck_notbetrieb": {
+      "valid_values": {
+        "on_value": 1071,
+        "off_value": 1070
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kesseldruck > Kesseldruck > Notbetrieb",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11135/2400",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_messblende_messblende_notbetrieb": {
+      "valid_values": {
+        "on_value": 1071,
+        "off_value": 1070
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Messblende > Messblende > Notbetrieb",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11134/2400",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_abgasgebl\u00e4se_abgasgebl\u00e4se_notbetrieb": {
+      "valid_values": {
+        "on_value": 1071,
+        "off_value": 1070
+      },
+      "friendly_name": "Kessel > Ausg\u00e4nge > Abgasgebl\u00e4se > Abgasgebl\u00e4se > Notbetrieb",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11120/2400",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_verbrauch_seit_wartung_z\u00e4hler_r\u00fccksetzen_?": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Verbrauch seit Wartung > Z\u00e4hler r\u00fccksetzen ?",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12257",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_kessel_einstellungen_brenner_verriegeln": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Kessel > Kessel > Einstellungen > Brenner verriegeln",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12651",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung_messung_deaktivieren": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Kessel > Kessel > Abgas > Emissionsmessung > Messung deaktivieren",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13277",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_extrapol": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Extrapol",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/12004/0/1056",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_glutabbrand_sofort_beenden": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Glutabbrand sofort beenden",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13951",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_kessel_pelletsbeh\u00e4lter_pelletsbeh\u00e4lter_auff\u00fcllen": {
+      "valid_values": {
+        "on_value": 1801,
+        "off_value": 1800
+      },
+      "friendly_name": "Kessel > Kessel > Pelletsbeh\u00e4lter > Pelletsbeh\u00e4lter auff\u00fcllen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12071",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_sonstiges_ein/aus_taste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Kessel > Sonstiges > Ein/Aus Taste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12080",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_sonstiges_entaschentaste": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "Kessel > Sonstiges > Entaschentaste",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12112",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_taste_vor": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Taste Vor",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12883",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_taste_zur\u00fcck": {
+      "valid_values": {
+        "on_value": 1803,
+        "off_value": 1802
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Taste Zur\u00fcck",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12884",
+      "value": "xxx"
+    }
+  },
+  "text_dict": {
+    "eta_192_168_0_25__ww_eing\u00e4nge_warmwasserspeicher_zustand": {
+      "valid_values": null,
+      "friendly_name": "WW > Eing\u00e4nge > Warmwasserspeicher > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/11129/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__ww_eing\u00e4nge_warmwasserspeicher_sensor_typ": {
+      "valid_values": {
+        "Pt1000": 1111,
+        "Pt1000 Abgasf\u00fchler": 1112,
+        "Pt1000 Au\u00dfenf\u00fchler": 1113,
+        "KTY": 1114,
+        "KTY Au\u00dfenf\u00fchler": 1115,
+        "Analoger Raumf\u00fchler": 1116
+      },
+      "friendly_name": "WW > Eing\u00e4nge > Warmwasserspeicher > Sensor Typ",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/11129/2011",
+      "value": "Pt1000"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/0/19406",
+      "value": "Bereit"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_erg\u00e4nzung": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Erg\u00e4nzung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/0/19391",
+      "value": "Au\u00dferhalb der Ladezeiten"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/12130/0/0",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_schaltzustand": {
+      "valid_values": null,
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Schaltzustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/12130/0/1109",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_laden_mit_erzeuger": {
+      "valid_values": {
+        "Nein": 6530,
+        "mit jedem Erzeuger": 6531,
+        "nur mit St\u00fcckholzkessel": 6532,
+        "nicht mit Brenner": 6533
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Laden mit Erzeuger",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/0/12932",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__ww_sonstiges_warmwasserspeicher": {
+      "valid_values": null,
+      "friendly_name": "WW > Sonstiges > Warmwasserspeicher",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10111/0/0/12129",
+      "value": "Aus Schaltuhr"
+    },
+    "eta_192_168_0_25__hk_heizkreistyp": {
+      "valid_values": {
+        "Fussbodenheizung": 1806,
+        "Radiatorenheizung": 1807,
+        "Allgemein": 1808
+      },
+      "friendly_name": "HK > Heizkreistyp",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12476",
+      "value": "Allgemein"
+    },
+    "eta_192_168_0_25__hk_heizkreis": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/19404",
+      "value": "Ausgeschaltet"
+    },
+    "eta_192_168_0_25__hk_heizkreis_erg\u00e4nzung": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Erg\u00e4nzung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/19391",
+      "value": "0_4067"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Heizzeiten",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/12113/0/0",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_schaltzustand": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Schaltzustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/12113/0/1109",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_bei_niedriger_heizkurve": {
+      "valid_values": {
+        "Abschalten": 6080,
+        "Vorlauf Min halten": 6081
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > bei niedriger Heizkurve",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/14052",
+      "value": "Abschalten"
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich": {
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Estrich",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12302",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_am_ende": {
+      "valid_values": {
+        "ausschalten": 6610,
+        "Automatikbetrieb": 6611,
+        "Absenkbetrieb": 6612
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > am Ende",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/14686",
+      "value": "Automatikbetrieb"
+    },
+    "eta_192_168_0_25__hk_sonstiges_heizkreis": {
+      "valid_values": null,
+      "friendly_name": "HK > Sonstiges > Heizkreis",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10101/0/0/12090",
+      "value": "Aus Sommer"
+    },
+    "eta_192_168_0_25__fbh_heizkreistyp": {
+      "valid_values": {
+        "Fussbodenheizung": 1806,
+        "Radiatorenheizung": 1807,
+        "Allgemein": 1808
+      },
+      "friendly_name": "Fbh > Heizkreistyp",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12476",
+      "value": "Fussbodenheizung"
+    },
+    "eta_192_168_0_25__fbh_eing\u00e4nge_vorlauf_zustand": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Eing\u00e4nge > Vorlauf > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/11060/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_eing\u00e4nge_vorlauf_sensor_typ": {
+      "valid_values": {
+        "Pt1000": 1111,
+        "Pt1000 Abgasf\u00fchler": 1112,
+        "Pt1000 Au\u00dfenf\u00fchler": 1113,
+        "KTY": 1114,
+        "KTY Au\u00dfenf\u00fchler": 1115,
+        "Analoger Raumf\u00fchler": 1116
+      },
+      "friendly_name": "Fbh > Eing\u00e4nge > Vorlauf > Sensor Typ",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/11060/2011",
+      "value": "Pt1000"
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_heizkreismischer_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Heizkreismischer > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/11125/2001",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_heizkreismischer_zustand": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Heizkreismischer > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/11125/2002",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_pumpe_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Pumpe > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/11687/2001",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_pumpe_zustand": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Pumpe > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/11687/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_ausg\u00e4nge_pumpe_drehzahlsteuerung": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Ausg\u00e4nge > Pumpe > Drehzahlsteuerung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/11687/2133",
+      "value": "Heizungspumpe (siehe Infotaste!)"
+    },
+    "eta_192_168_0_25__fbh_heizkreis": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/19404",
+      "value": "Heizen"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_erg\u00e4nzung": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Erg\u00e4nzung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/19391",
+      "value": "0_4067"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/12113/0/0",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_schaltzustand": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Schaltzustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/12113/0/1109",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_bei_niedriger_heizkurve": {
+      "valid_values": {
+        "Abschalten": 6080,
+        "Vorlauf Min halten": 6081
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > bei niedriger Heizkurve",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/14052",
+      "value": "Abschalten"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkreispumpe": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Heizkreispumpe",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/13922",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Estrich",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12302",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_am_ende": {
+      "valid_values": {
+        "ausschalten": 6610,
+        "Automatikbetrieb": 6611,
+        "Absenkbetrieb": 6612
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > am Ende",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/14686",
+      "value": "Automatikbetrieb"
+    },
+    "eta_192_168_0_25__fbh_sonstiges_heizkreis": {
+      "valid_values": null,
+      "friendly_name": "Fbh > Sonstiges > Heizkreis",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10102/0/0/12090",
+      "value": "Ein Heizen"
+    },
+    "eta_192_168_0_25__sys_au\u00dfentemperatur_au\u00dfentemperaturf\u00fchler_zustand": {
+      "valid_values": null,
+      "friendly_name": "Sys > Au\u00dfentemperatur > Au\u00dfentemperaturf\u00fchler > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/11127/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__sys_au\u00dfentemperatur_au\u00dfentemperaturf\u00fchler_sensor_typ": {
+      "valid_values": {
+        "Pt1000": 1111,
+        "Pt1000 Abgasf\u00fchler": 1112,
+        "Pt1000 Au\u00dfenf\u00fchler": 1113,
+        "KTY": 1114,
+        "KTY Au\u00dfenf\u00fchler": 1115,
+        "Analoger Raumf\u00fchler": 1116
+      },
+      "friendly_name": "Sys > Au\u00dfentemperatur > Au\u00dfentemperaturf\u00fchler > Sensor Typ",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/11127/2011",
+      "value": "Pt1000 Au\u00dfenf\u00fchler"
+    },
+    "eta_192_168_0_25__sys_st\u00f6rmeldung": {
+      "valid_values": null,
+      "friendly_name": "Sys > St\u00f6rmeldung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/14262",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__sys_st\u00f6rmeldung_st\u00f6rmeldung_f\u00fcr_schnittstellen": {
+      "valid_values": null,
+      "friendly_name": "Sys > St\u00f6rmeldung > St\u00f6rmeldung f\u00fcr Schnittstellen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/14264",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__sys_st\u00f6rmeldung_ab_priorit\u00e4t": {
+      "valid_values": {
+        "Meldung": 3250,
+        "Warnung": 3251,
+        "Fehler": 3252,
+        "Alarm": 3253
+      },
+      "friendly_name": "Sys > St\u00f6rmeldung > ab Priorit\u00e4t",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/13353",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__sys_externe_st\u00f6rmeldung": {
+      "valid_values": null,
+      "friendly_name": "Sys > Externe St\u00f6rmeldung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/14259",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__sys_externe_st\u00f6rmeldung_externe_st\u00f6rmeldung_von_schnittstellen": {
+      "valid_values": {
+        "Fehler": 1050,
+        "OK": 1051
+      },
+      "friendly_name": "Sys > Externe St\u00f6rmeldung > Externe St\u00f6rmeldung von Schnittstellen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/14261",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__sys_antiblockierschutz_zeitpunkt": {
+      "valid_values": {
+        "fix": 6360,
+        "einstellbar": 6361
+      },
+      "friendly_name": "Sys > Antiblockierschutz > Zeitpunkt",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/14242",
+      "value": "fix"
+    },
+    "eta_192_168_0_25__sys_antiblockierschutz_an_welchem_tag?": {
+      "valid_values": {
+        "Sonntag": 6350,
+        "Montag": 6351,
+        "Dienstag": 6352,
+        "Mittwoch": 6353,
+        "Donnerstag": 6354,
+        "Freitag": 6355,
+        "Samstag": 6356
+      },
+      "friendly_name": "Sys > Antiblockierschutz > an welchem Tag?",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/120/10241/0/0/14243",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__sys_antiblockierschutz_zu_welcher_uhrzeit?": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1439.0,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Sys > Antiblockierschutz > zu welcher Uhrzeit?",
+      "unit": "minutes_since_midnight",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10241/0/0/14244",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_wassermangel": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Wassermangel",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11031/0",
+      "value": "OK"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_wassermangel_eingang": {
+      "valid_values": {
+        "Nicht invertiert": 3450,
+        "Invertiert": 3451
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Wassermangel > Eingang",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11031/2017",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_not-aus_schalter": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Not-Aus Schalter",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11032/0",
+      "value": "OK"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_not-aus_schalter_eingang": {
+      "valid_values": {
+        "Nicht invertiert": 3450,
+        "Invertiert": 3451
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Not-Aus Schalter > Eingang",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11032/2017",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_stb": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > STB",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11033/0",
+      "value": "OK"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_stb_eingang": {
+      "valid_values": {
+        "Nicht invertiert": 3450,
+        "Invertiert": 3451
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > STB > Eingang",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11033/2017",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_aschebox": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Aschebox",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11034/0",
+      "value": "Ja"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_aschebox_eingang": {
+      "valid_values": {
+        "Nicht invertiert": 3450,
+        "Invertiert": 3451
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Aschebox > Eingang",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11034/2017",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_rost_geschlossen?": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Rost geschlossen?",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12251",
+      "value": "Ja"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_glutbett": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Glutbett",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11036/0",
+      "value": "OK"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_glutbett_eingang": {
+      "valid_values": {
+        "Nicht invertiert": 3450,
+        "Invertiert": 3451
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Glutbett > Eingang",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11036/2017",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_pelletsbeh\u00e4lter": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Pelletsbeh\u00e4lter",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11037/0",
+      "value": "Nicht voll"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_pelletsbeh\u00e4lter_eingang": {
+      "valid_values": {
+        "Nicht invertiert": 3450,
+        "Invertiert": 3451
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Pelletsbeh\u00e4lter > Eingang",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11037/2017",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11108/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11108/2001",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_sensor_typ": {
+      "valid_values": {
+        "LSU4": 1121,
+        "HuS 118": 1122,
+        "NGK ZFAS": 1123
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Sensor Typ",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11108/2011",
+      "value": "HuS 118"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_restsauerstoff_kalibrierung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Restsauerstoff > Kalibrierung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13944",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11109/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_sensor_typ": {
+      "valid_values": {
+        "Pt1000": 1111,
+        "Pt1000 Abgasf\u00fchler": 1112,
+        "Pt1000 Au\u00dfenf\u00fchler": 1113,
+        "KTY": 1114,
+        "KTY Au\u00dfenf\u00fchler": 1115,
+        "Analoger Raumf\u00fchler": 1116
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel > Sensor Typ",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11109/2011",
+      "value": "Pt1000"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_vorlauf_1_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel Vorlauf 1 > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11058/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_vorlauf_1_sensor_typ": {
+      "valid_values": {
+        "Pt1000": 1111,
+        "Pt1000 Abgasf\u00fchler": 1112,
+        "Pt1000 Au\u00dfenf\u00fchler": 1113,
+        "KTY": 1114,
+        "KTY Au\u00dfenf\u00fchler": 1115,
+        "Analoger Raumf\u00fchler": 1116
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel Vorlauf 1 > Sensor Typ",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11058/2011",
+      "value": "Pt1000"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_unten_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel unten > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11122/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_unten_sensor_typ": {
+      "valid_values": {
+        "Pt1000": 1111,
+        "Pt1000 Abgasf\u00fchler": 1112,
+        "Pt1000 Au\u00dfenf\u00fchler": 1113,
+        "KTY": 1114,
+        "KTY Au\u00dfenf\u00fchler": 1115,
+        "Analoger Raumf\u00fchler": 1116
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel unten > Sensor Typ",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11122/2011",
+      "value": "Pt1000"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_abgas_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Abgas > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11110/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_abgas_sensor_typ": {
+      "valid_values": {
+        "Pt1000": 1111,
+        "Pt1000 Abgasf\u00fchler": 1112,
+        "Pt1000 Au\u00dfenf\u00fchler": 1113,
+        "KTY": 1114,
+        "KTY Au\u00dfenf\u00fchler": 1115,
+        "Analoger Raumf\u00fchler": 1116
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Abgas > Sensor Typ",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11110/2011",
+      "value": "Pt1000 Abgasf\u00fchler"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_messblende_versorgung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Messblende > Versorgung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11181/0",
+      "value": "Vor"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_messblende_versorgung_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Eing\u00e4nge > Messblende > Versorgung > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11181/2001",
+      "value": "Vor"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11030/2001",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_stokerschnecke_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Stokerschnecke > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11030/2002",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_entaschung_und_rost": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Entaschung und Rost",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11048/0",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_entaschung_und_rost_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Entaschung und Rost > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11048/2001",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_entaschung_und_rost_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Entaschung und Rost > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11048/2002",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_entaschung_und_rost_schalter": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Entaschung und Rost > Schalter",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11048/2083",
+      "value": "Ja"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_z\u00fcndung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Z\u00fcndung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11041/0",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_z\u00fcndung_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Z\u00fcndung > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11041/2001",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_saugturbine": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Saugturbine",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11042/0",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_saugturbine_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Saugturbine > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11042/2001",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_abgasgebl\u00e4se_abgasgebl\u00e4se": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Abgasgebl\u00e4se > Abgasgebl\u00e4se",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11120/0",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_abgasgebl\u00e4se_abgasgebl\u00e4se_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Abgasgebl\u00e4se > Abgasgebl\u00e4se > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11120/2001",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_abgasgebl\u00e4se_abgasgebl\u00e4se_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Abgasgebl\u00e4se > Abgasgebl\u00e4se > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11120/2002",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_abgasgebl\u00e4se_abgasgebl\u00e4se_drehzahlsteuerung": {
+      "valid_values": {
+        "Phasenanschnitt": 1270,
+        "Pulspaket": 1271
+      },
+      "friendly_name": "Kessel > Ausg\u00e4nge > Abgasgebl\u00e4se > Abgasgebl\u00e4se > Drehzahlsteuerung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11120/2133",
+      "value": "Phasenanschnitt"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_kesselpumpe_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Kesselpumpe > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11123/2001",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_kesselpumpe_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Kesselpumpe > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11123/2002",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_kesselpumpe_drehzahlsteuerung": {
+      "valid_values": {
+        "Ein/Aus": 1280,
+        "Pulspaket f\u00fcr NICHT elektronisch geregelte Pumpe": 1281,
+        "Laing/Lowara Kesselpumpe f\u00fcr PU/PC": 1282,
+        "Heizungspumpe (siehe Infotaste!)": 1283,
+        "Solarpumpe (siehe Infotaste!)": 1284,
+        "0-10V analog": 1285
+      },
+      "friendly_name": "Kessel > Ausg\u00e4nge > Kesselpumpe > Drehzahlsteuerung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11123/2133",
+      "value": "Heizungspumpe (siehe Infotaste!)"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_vorlaufmischer_1_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Vorlaufmischer 1 > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11121/2001",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_vorlaufmischer_1_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Vorlaufmischer 1 > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11121/2002",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_umschaltventil": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Umschaltventil",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11128/0",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_umschaltventil_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Umschaltventil > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11128/2001",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_luftschieber_anforderung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Luftschieber > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11115/2001",
+      "value": "Ein"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_luftschieber_zustand": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Luftschieber > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11115/2002",
+      "value": "Fehler"
+    },
+    "eta_192_168_0_25__kessel_ausg\u00e4nge_luftschieber_schlie\u00dft_nach": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Ausg\u00e4nge > Luftschieber > Schlie\u00dft nach",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/11115/2417",
+      "value": "Links"
+    },
+    "eta_192_168_0_25__kessel_kessel": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/19402",
+      "value": "Bereit"
+    },
+    "eta_192_168_0_25__kessel_kessel_erg\u00e4nzung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Erg\u00e4nzung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/19391",
+      "value": "0_4200"
+    },
+    "eta_192_168_0_25__kessel_kessel_vorlaufregler_1": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Vorlaufregler 1",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12078",
+      "value": "Regeln"
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Abgas > Emissionsmessung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13266",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung_art_der_messung": {
+      "valid_values": {
+        "Nennlast": 1960,
+        "Teillast": 1961,
+        "Kombination": 1962
+      },
+      "friendly_name": "Kessel > Kessel > Abgas > Emissionsmessung > Art der Messung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12116",
+      "value": "Nennlast"
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung_jetzt_starten": {
+      "valid_values": {
+        "Nein": 3930,
+        "Ja, zuerst Entaschen": 3931,
+        "Ja, gleich Messen": 3932
+      },
+      "friendly_name": "Kessel > Kessel > Abgas > Emissionsmessung > Jetzt starten",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13269",
+      "value": "Nein"
+    },
+    "eta_192_168_0_25__kessel_kessel_z\u00fcndung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Z\u00fcndung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12163",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Entaschung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12050",
+      "value": "Bereit"
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_beginn_ruhezeit": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1439.0,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Beginn Ruhezeit",
+      "unit": "minutes_since_midnight",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12248",
+      "value": "21:00"
+    },
+    "eta_192_168_0_25__kessel_kessel_pelletsbeh\u00e4lter": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Pelletsbeh\u00e4lter",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12005",
+      "value": "Nicht voll"
+    },
+    "eta_192_168_0_25__kessel_kessel_pelletsbeh\u00e4lter_saugzeitpunkt": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1439.0,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Pelletsbeh\u00e4lter > Saugzeitpunkt",
+      "unit": "minutes_since_midnight",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12152",
+      "value": "19:00"
+    },
+    "eta_192_168_0_25__kessel_kessel_kesselst\u00f6rmeldung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kesselst\u00f6rmeldung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/14265",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_kessel_kesselst\u00f6rmeldung_kesselst\u00f6rmeldung_f\u00fcr_schnittstellen": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kesselst\u00f6rmeldung > Kesselst\u00f6rmeldung f\u00fcr Schnittstellen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/14267",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_kessel_kesselst\u00f6rmeldung_ab_priorit\u00e4t": {
+      "valid_values": {
+        "Meldung": 3250,
+        "Warnung": 3251,
+        "Fehler": 3252
+      },
+      "friendly_name": "Kessel > Kessel > Kesselst\u00f6rmeldung > ab Priorit\u00e4t",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13353",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_kessel_kessellaufmeldung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kessellaufmeldung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/14268",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_kessel_kessellaufmeldung_laufmeldung_von_schnittstellen": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Kessellaufmeldung > Laufmeldung von Schnittstellen",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/14275",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_kessel_kessellaufmeldung_aktiv_wenn": {
+      "valid_values": {
+        "Abgasgebl\u00e4se ein": 3000,
+        "Brennstofff\u00f6rderung ein": 3001,
+        "Ein/Aus Taste ein": 3002,
+        "Kesselzustand ist Heizen": 3003
+      },
+      "friendly_name": "Kessel > Kessel > Kessellaufmeldung > Aktiv wenn",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13161",
+      "value": "Abgasgebl\u00e4se ein"
+    },
+    "eta_192_168_0_25__kessel_sonstiges_designvariante": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Sonstiges > Designvariante",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/13603",
+      "value": "ab 2016"
+    },
+    "eta_192_168_0_25__kessel_sonstiges_kessel": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Sonstiges > Kessel",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10021/0/0/12000",
+      "value": "Bereit"
+    },
+    "eta_192_168_0_25__lagerum._typ_der_umschalteinheit": {
+      "valid_values": {
+        "3-fach": 6001,
+        "4-fach": 6002,
+        "8-fach linear": 6003,
+        "8-fach drehend": 6004
+      },
+      "friendly_name": "LagerUm. > Typ der Umschalteinheit",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/13986",
+      "value": "4-fach"
+    },
+    "eta_192_168_0_25__lagerum._eing\u00e4nge_nullpunktschalter": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Eing\u00e4nge > Nullpunktschalter",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/11133/0",
+      "value": "Aus"
+    },
+    "eta_192_168_0_25__lagerum._eing\u00e4nge_nullpunktschalter_eingang": {
+      "valid_values": {
+        "Nicht invertiert": 3450,
+        "Invertiert": 3451
+      },
+      "friendly_name": "LagerUm. > Eing\u00e4nge > Nullpunktschalter > Eingang",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/11133/2017",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__lagerum._eing\u00e4nge_positionsschalter": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Eing\u00e4nge > Positionsschalter",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12266",
+      "value": "Ja"
+    },
+    "eta_192_168_0_25__lagerum._ausg\u00e4nge_umschalteinheit": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Ausg\u00e4nge > Umschalteinheit",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/11132/0",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__lagerum._ausg\u00e4nge_umschalteinheit_anforderung": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Ausg\u00e4nge > Umschalteinheit > Anforderung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/11132/2001",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__lagerum._ausg\u00e4nge_umschalteinheit_zustand": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Ausg\u00e4nge > Umschalteinheit > Zustand",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/11132/2002",
+      "value": "Halt"
+    },
+    "eta_192_168_0_25__lagerum._ausg\u00e4nge_umschalteinheit_schalter": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Ausg\u00e4nge > Umschalteinheit > Schalter",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/11132/2083",
+      "value": "Ja"
+    },
+    "eta_192_168_0_25__lagerum._austragung": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Austragung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/19417",
+      "value": "Bereit"
+    },
+    "eta_192_168_0_25__lagerum._austragung_erg\u00e4nzung": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Austragung > Erg\u00e4nzung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/19391",
+      "value": "0_4500"
+    },
+    "eta_192_168_0_25__lagerum._austragung_umschalteinheit_8-fach": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Austragung > Umschalteinheit 8-fach",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12877",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__lagerum._austragung_sp\u00fclposition_?": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Austragung > Sp\u00fclposition ?",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12876",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__lagerum._austragung_pos._ist_sp\u00fclposition_?": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Austragung > Pos. ist Sp\u00fclposition ?",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12878",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__lagerum._austragung_umschalteinheit": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Austragung > Umschalteinheit",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12136",
+      "value": "Position 3"
+    },
+    "eta_192_168_0_25__lagerum._austragung_soll_position": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Austragung > Soll Position",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12145",
+      "value": "Position 3"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_position_1": {
+      "valid_values": {
+        "Frei": 1804,
+        "Gesperrt": 1805
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Position 1",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12262",
+      "value": "Frei"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_position_2": {
+      "valid_values": {
+        "Frei": 1804,
+        "Gesperrt": 1805
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Position 2",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12263",
+      "value": "Frei"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_position_3": {
+      "valid_values": {
+        "Frei": 1804,
+        "Gesperrt": 1805
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Position 3",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12264",
+      "value": "Frei"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_position_4": {
+      "valid_values": {
+        "Frei": 1804,
+        "Gesperrt": 1805
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Position 4",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12539",
+      "value": "Frei"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_position_5": {
+      "valid_values": {
+        "Frei": 1804,
+        "Gesperrt": 1805
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Position 5",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12879",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_position_6": {
+      "valid_values": {
+        "Frei": 1804,
+        "Gesperrt": 1805
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Position 6",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12880",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_position_7": {
+      "valid_values": {
+        "Frei": 1804,
+        "Gesperrt": 1805
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Position 7",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12881",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_position_8": {
+      "valid_values": {
+        "Frei": 1804,
+        "Gesperrt": 1805
+      },
+      "friendly_name": "LagerUm. > Sonstiges > Position 8",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12882",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__lagerum._sonstiges_austragung": {
+      "valid_values": null,
+      "friendly_name": "LagerUm. > Sonstiges > Austragung",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "url": "/40/10211/0/0/12058",
+      "value": "Bereit"
+    }
+  },
+  "writable_dict": {
+    "eta_192_168_0_25__ww_eing\u00e4nge_warmwasserspeicher_kalibrierwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "WW > Eing\u00e4nge > Warmwasserspeicher > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/11129/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__ww_eing\u00e4nge_warmwasserspeicher_fixwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Eing\u00e4nge > Warmwasserspeicher > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/11129/2054",
+      "value": 53.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_soll_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Warmwasserspeicher Soll",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/12132",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_solltemperatur_f\u00fcr_'sofort_laden'_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Solltemperatur f\u00fcr 'Sofort laden'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/14257",
+      "value": 50.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_einschaltdifferenz_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 30.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Einschaltdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/12133",
+      "value": 20.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_wert_au\u00dferhalb_der_zeitfenster_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1111",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_wert_au\u00dferhalb_der_zeitfenster_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1112",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_wert_au\u00dferhalb_der_zeitfenster_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1113",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_wert_au\u00dferhalb_der_zeitfenster_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1114",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_wert_au\u00dferhalb_der_zeitfenster_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1115",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_wert_au\u00dferhalb_der_zeitfenster_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1116",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_wert_au\u00dferhalb_der_zeitfenster_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Wert au\u00dferhalb der Zeitfenster",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/12130/0/1117",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_max._writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Warmwasserspeicher max.",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/12169",
+      "value": 75.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_laden_mit_anderen_verbrauchern_einschaltdifferenz_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 30.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Laden mit anderen Verbrauchern > Einschaltdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/13535",
+      "value": 5.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_temperaturwarnung_1_differenz_warnung_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 80.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Temperaturwarnung 1 > Differenz Warnung",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/13039",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_vorlauf_vorlauf_max_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Vorlauf > Vorlauf Max",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12108",
+      "value": 45.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_schieber_position_writable": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Schieber Position",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12240",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_vorlauf_bei_-10\u00b0c_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Vorlauf bei -10\u00b0C",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12104",
+      "value": 33.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_vorlauf_bei_+10\u00b0c_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Vorlauf bei +10\u00b0C",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12103",
+      "value": 25.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_vorlauf_absenkung_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Vorlauf Absenkung",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12107",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizkurve_aus_bei_heizkurve_unter_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizkurve > Aus bei Heizkurve unter",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/14133",
+      "value": 22.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizgrenze_f\u00fcr_'heizen'_writable": {
+      "valid_values": {
+        "scaled_min_value": -50.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "HK > Heizkreis > Heizgrenze f\u00fcr 'Heizen'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/14116",
+      "value": 21.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizgrenze_f\u00fcr_'absenken'_writable": {
+      "valid_values": {
+        "scaled_min_value": -50.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "HK > Heizkreis > Heizgrenze f\u00fcr 'Absenken'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12097",
+      "value": 2.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_vorlauf_soll_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Vorlauf Soll",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12304",
+      "value": 15.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_anstieg_um_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Anstieg um",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12305",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_max._temperatur_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Max. Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12307",
+      "value": 40.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_absenkung_um_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > Absenkung um",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/12309",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_estrich_erneute_max._temperatur_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Estrich > erneute Max. Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/14688",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__fbh_eing\u00e4nge_vorlauf_kalibrierwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Fbh > Eing\u00e4nge > Vorlauf > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11060/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__fbh_eing\u00e4nge_vorlauf_fixwert_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Eing\u00e4nge > Vorlauf > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/11060/2054",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_vorlauf_vorlauf_max_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Vorlauf > Vorlauf Max",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12108",
+      "value": 45.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_schieber_position_writable": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Schieber Position",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12240",
+      "value": 50.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_vorlauf_bei_-10\u00b0c_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Vorlauf bei -10\u00b0C",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12104",
+      "value": 33.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_vorlauf_bei_+10\u00b0c_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Vorlauf bei +10\u00b0C",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12103",
+      "value": 25.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_vorlauf_absenkung_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Vorlauf Absenkung",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12107",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkurve_aus_bei_heizkurve_unter_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkurve > Aus bei Heizkurve unter",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/14133",
+      "value": 22.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizgrenze_f\u00fcr_'heizen'_writable": {
+      "valid_values": {
+        "scaled_min_value": -50.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizgrenze f\u00fcr 'Heizen'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/14116",
+      "value": 22.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizgrenze_f\u00fcr_'absenken'_writable": {
+      "valid_values": {
+        "scaled_min_value": -50.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizgrenze f\u00fcr 'Absenken'",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12097",
+      "value": 2.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_anforderungsdifferenz_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 50.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Anforderungsdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12109",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizkreispumpe_pumpendrehzahl_writable": {
+      "valid_values": {
+        "scaled_min_value": 10.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizkreispumpe > Pumpendrehzahl",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12258",
+      "value": 60.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_vorlauf_soll_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Vorlauf Soll",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12304",
+      "value": 15.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_anstieg_um_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Anstieg um",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12305",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_max._temperatur_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Max. Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12307",
+      "value": 40.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_absenkung_um_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > Absenkung um",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/12309",
+      "value": 3.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_estrich_erneute_max._temperatur_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 60.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Estrich > erneute Max. Temperatur",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/14688",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__sys_au\u00dfentemperatur_au\u00dfentemperaturf\u00fchler_kalibrierwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Sys > Au\u00dfentemperatur > Au\u00dfentemperaturf\u00fchler > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10241/0/11127/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__sys_au\u00dfentemperatur_au\u00dfentemperaturf\u00fchler_fixwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Sys > Au\u00dfentemperatur > Au\u00dfentemperaturf\u00fchler > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10241/0/11127/2054",
+      "value": -5.0
+    },
+    "eta_192_168_0_25__sys_antiblockierschutz_zu_welcher_uhrzeit?_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1439.0,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Sys > Antiblockierschutz > zu welcher Uhrzeit?",
+      "unit": "minutes_since_midnight",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10241/0/0/14244",
+      "value": "xxx"
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_kalibrierwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11109/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_fixwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11109/2054",
+      "value": 70.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_vorlauf_1_kalibrierwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel Vorlauf 1 > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11058/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_vorlauf_1_fixwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel Vorlauf 1 > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11058/2054",
+      "value": 60.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_unten_kalibrierwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel unten > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11122/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_kessel_unten_fixwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Kessel unten > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11122/2054",
+      "value": 55.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_abgas_kalibrierwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -5.0,
+        "scaled_max_value": 5.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Abgas > Kalibrierwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11110/2049",
+      "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_eing\u00e4nge_abgas_fixwert_writable": {
+      "valid_values": {
+        "scaled_min_value": -100.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Eing\u00e4nge > Abgas > Fixwert",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/11110/2054",
+      "value": 120.0
+    },
+    "eta_192_168_0_25__kessel_z\u00e4hlerst\u00e4nde_inhalt_pelletsbeh\u00e4lter_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 0.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Z\u00e4hlerst\u00e4nde > Inhalt Pelletsbeh\u00e4lter",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12011",
+      "value": 28.5
+    },
+    "eta_192_168_0_25__kessel_kessel_kessel_ausschaltdifferenz_writable": {
+      "valid_values": {
+        "scaled_min_value": 3.0,
+        "scaled_max_value": 40.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Kessel > Ausschaltdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12141",
+      "value": 15.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kessel_kessel_min_writable": {
+      "valid_values": {
+        "scaled_min_value": 50.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Kessel > Kessel Min",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12022",
+      "value": 55.0
+    },
+    "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_anforderungsdifferenz_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 20.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Vorlaufregler 1 > Anforderungsdifferenz",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12020",
+      "value": 5.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kesselpumpe_maximal_drehzahl_writable": {
+      "valid_values": {
+        "scaled_min_value": 10.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Kesselpumpe > Maximal Drehzahl",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12368",
+      "value": 100.0
+    },
+    "eta_192_168_0_25__kessel_kessel_kesselpumpe_mindest_drehzahl_writable": {
+      "valid_values": {
+        "scaled_min_value": 10.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Kesselpumpe > Mindest Drehzahl",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12227",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_abgas_max_writable": {
+      "valid_values": {
+        "scaled_min_value": 100.0,
+        "scaled_max_value": 300.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Abgas > Abgas Max",
+      "unit": "\u00b0C",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12023",
+      "value": 180.0
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x1_writable": {
+      "valid_values": {
+        "scaled_min_value": 30.0,
+        "scaled_max_value": 30.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin x1",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1051",
+      "value": 30.0
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_y1_writable": {
+      "valid_values": {
+        "scaled_min_value": 7.0,
+        "scaled_max_value": 15.0,
+        "scale_factor": 100,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin y1",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1052",
+      "value": 9.5
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x2_writable": {
+      "valid_values": {
+        "scaled_min_value": 100.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin x2",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1053",
+      "value": 100.0
+    },
+    "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_y2_writable": {
+      "valid_values": {
+        "scaled_min_value": 6.0,
+        "scaled_max_value": 15.0,
+        "scale_factor": 100,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin y2",
+      "unit": "%",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/12004/0/1054",
+      "value": 7.0
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_beginn_ruhezeit_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1439.0,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Beginn Ruhezeit",
+      "unit": "minutes_since_midnight",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12248",
+      "value": "21:00"
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_entaschen_nach_min._writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Entaschen nach min.",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12073",
+      "value": 15.0
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_entaschen_nach_max._writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Entaschen nach max.",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12074",
+      "value": 25.0
+    },
+    "eta_192_168_0_25__kessel_kessel_entaschung_aschebox_leeren_nach_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 5000.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Entaschung > Aschebox leeren nach",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12120",
+      "value": 1000.0
+    },
+    "eta_192_168_0_25__kessel_kessel_pelletsbeh\u00e4lter_saugzeitpunkt_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1439.0,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Pelletsbeh\u00e4lter > Saugzeitpunkt",
+      "unit": "minutes_since_midnight",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10021/0/0/12152",
+      "value": "19:00"
+    },
+    "eta_192_168_0_25__lagerum._vorrat_writable": {
+      "valid_values": {
+        "scaled_min_value": -100000.0,
+        "scaled_max_value": 100000.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "LagerUm. > Vorrat",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/0/12015",
+      "value": 2678.4
+    },
+    "eta_192_168_0_25__lagerum._vorrat_vorrat_warngrenze_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100000.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "LagerUm. > Vorrat > Vorrat Warngrenze",
+      "unit": "kg",
+      "endpoint_type": "DEFAULT",
+      "url": "/40/10211/0/0/12042",
+      "value": 1000.0
+    }
+  }
+}
