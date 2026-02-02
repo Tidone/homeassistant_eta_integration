@@ -122,6 +122,38 @@
                     "description": "If enabled, decimal places will be preserved even if the ETA API does not support them for this endpoint (may lead to errors!)"
                 }
             }
+        },
+        "write_timeslot": {
+            "name": "Update a timeslot",
+            "description": "Update the begin and end of a timeslot endpoint",
+            "fields": {
+                "begin": {
+                    "name": "Begin",
+                    "description": "The start time of the timeslot"
+                },
+                "end": {
+                    "name": "End",
+                    "description": "The end time of the timeslot"
+                }
+            }
+        },
+        "write_timeslot_plus_temperature": {
+            "name": "Update a timeslot and its target temperature",
+            "description": "Update the begin, end and temperature of a timeslot endpoint",
+            "fields": {
+                "begin": {
+                    "name": "Begin",
+                    "description": "The start time of the timeslot"
+                },
+                "end": {
+                    "name": "End",
+                    "description": "The end time of the timeslot"
+                },
+                "temperature": {
+                    "name": "Temperature",
+                    "description": "The target temperature within the timeslot"
+                }
+            }
         }
     }
 }

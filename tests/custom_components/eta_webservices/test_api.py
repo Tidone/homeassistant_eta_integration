@@ -119,6 +119,9 @@ async def test_get_all_sensors_v12(load_fixture):
         assert actual_entry["unit"] == expected_value["unit"], (
             f"Unit mismatch for {expected_key}"
         )
+        assert actual_entry["value"] == expected_value["value"], (
+            f"Data mismatch for {expected_key}"
+        )
         
         # Check valid_values structure for writable entries
         if expected_value.get("valid_values") is not None:
@@ -155,6 +158,9 @@ async def test_get_all_sensors_v12(load_fixture):
         assert actual_entry["unit"] == expected_value["unit"], (
             f"Unit mismatch for {expected_key}"
         )
+        assert actual_entry["value"] == expected_value["value"], (
+            f"Data mismatch for {expected_key}"
+        )
         
         # Check switch valid_values (on_value and off_value)
         assert actual_entry.get("valid_values") is not None, (
@@ -180,6 +186,9 @@ async def test_get_all_sensors_v12(load_fixture):
         )
         assert actual_entry["unit"] == expected_value["unit"], (
             f"Unit mismatch for {expected_key}"
+        )
+        assert actual_entry["value"] == expected_value["value"], (
+            f"Data mismatch for {expected_key}"
         )
 
 

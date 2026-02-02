@@ -6,6 +6,7 @@ from typing import Generic, TypeVar, cast
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity import Entity, generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -50,6 +51,12 @@ class EtaSensorEntity(SensorEntity, EtaEntity, Generic[_EntityT]):
         eta_client = EtaAPI(self.session, self.host, self.port)
         value, _ = await eta_client.get_data(self.uri)
         self._attr_native_value = cast(_EntityT, value)  # pyright: ignore[reportAttributeAccessIssue]
+
+    async def async_update_timeslot_service(self, begin, end, temperature=None) -> None:
+        """Handle the write_timeslot service call. Raises an error if it is not overwritten by the entity."""
+        raise HomeAssistantError(
+            f"Entity {self.entity_id} does not support setting a timeslot"
+        )
 
 
 class EtaWritableSensorEntity(

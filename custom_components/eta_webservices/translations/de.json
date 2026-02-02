@@ -122,6 +122,38 @@
                     "description": "Wenn aktiviert, werden Dezimalstellen beibehalten, auch wenn die ETA API sie für diesen Endpunkt nicht unterstützt (kann zu Fehlern führen!)"
                 }
             }
+        },
+        "write_timeslot": {
+            "name": "Aktualisiere eine Zeitspanne",
+            "description": "Setze die Startzeit und Endzeit eines Zeitspannen-Endpunkts",
+            "fields": {
+                "begin": {
+                    "name": "Beginn",
+                    "description": "Die Startzeit der Zeitspanne"
+                },
+                "end": {
+                    "name": "Ende",
+                    "description": "Die Endzeit der Zeitspanne"
+                }
+            }
+        },
+        "write_timeslot_plus_temperature": {
+            "name": "Aktualisiere eine Zeitspanne und die Zieltemperatur",
+            "description": "Setze die Startzeit, Endzeit und Zieltemperatur eines Zeitspannen-Endpunkts",
+            "fields": {
+                "begin": {
+                    "name": "Beginn",
+                    "description": "Die Startzeit der Zeitspanne"
+                },
+                "end": {
+                    "name": "Ende",
+                    "description": "Die Endzeit der Zeitspanne"
+                },
+                "temperature": {
+                    "name": "Temperatur",
+                    "description": "Die Zieltemperatur innerhalb der Zeitspanne"
+                }
+            }
         }
     }
 }

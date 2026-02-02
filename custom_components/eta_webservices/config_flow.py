@@ -20,7 +20,7 @@ from .const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
-    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNITS,
     DOMAIN,
     ENABLE_DEBUG_LOGGING,
     FLOAT_DICT,
@@ -308,8 +308,24 @@ class EtaOptionsFlowHandler(OptionsFlow):
         session = async_get_clientsession(self.hass)
         eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
 
+        sensor_list = {value["url"]: False for value in self.data[FLOAT_DICT].values()}
+        sensor_list.update(
+            {value["url"]: False for value in self.data[SWITCHES_DICT].values()}
+        )
+        sensor_list.update(
+            {
+                value["url"]: (value["unit"] in CUSTOM_UNITS)
+                for value in self.data[TEXT_DICT].values()
+            }
+        )
+        sensor_list.update(
+            {
+                value["url"]: (value["unit"] in CUSTOM_UNITS)
+                for value in self.data[WRITABLE_DICT].values()
+            }
+        )
         # first request the values for all possible sensors
-        all_data = await eta_client.get_all_data()
+        all_data = await eta_client.get_all_data(sensor_list)
 
         # then loop through our lists of sensors and update the values
         for entity in list(self.data[FLOAT_DICT].keys()):
@@ -605,8 +621,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.advanced_options_writable_sensors = [
                 entity
                 for entity in data[CHOSEN_WRITABLE_SENSORS]
-                if data[WRITABLE_DICT][entity]["unit"]
-                != CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+                if data[WRITABLE_DICT][entity]["unit"] not in CUSTOM_UNITS
             ]
 
             # If the user selected at least one writable sensor, show

@@ -1,5 +1,7 @@
 """Constants for the ETA integration."""
 
+from homeassistant.components import calendar
+
 NAME = "eta_webservices"
 DOMAIN = "eta_webservices"
 ISSUE_URL = "https://github.com/Tidone/homeassistant_eta_integration/issues"
@@ -27,7 +29,24 @@ ERROR_UPDATE_COORDINATOR = "error_update_coordinator"
 WRITABLE_UPDATE_COORDINATOR = "writable_update_coordinator"
 
 CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT = "minutes_since_midnight"
-INVISIBLE_UNITS = [CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT]
+CUSTOM_UNIT_TIMESLOT = "timeslot"
+CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE = "timeslot_plus_temperature"
+CUSTOM_UNITS = [
+    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNIT_TIMESLOT,
+    CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
+]
+
+# Supported features for ETA entities
+# We have to use pre-defined events here because otherwise the services wouldn't show up in the UI
+SUPPORT_WRITE_TIMESLOT = calendar.CalendarEntityFeature.CREATE_EVENT
+SUPPORT_WRITE_TIMESLOT_WITH_TEMPERATURE = calendar.CalendarEntityFeature.DELETE_EVENT
+
+INVISIBLE_UNITS = [
+    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNIT_TIMESLOT,
+    CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
+]
 
 # Defaults
 DEFAULT_NAME = DOMAIN

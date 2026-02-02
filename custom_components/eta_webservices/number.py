@@ -129,11 +129,20 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
             raw_value = round(value, self.valid_values["dec_places"])
             raw_value *= self.valid_values["scale_factor"]
             raw_value = round(raw_value, 0)
+            if (
+                raw_value < self.valid_values["scaled_min_value"]
+                or raw_value > self.valid_values["scaled_max_value"]
+            ):
+                raise HomeAssistantError(
+                    f"Temperature value out of bounds for entity {self.entity_id}"
+                )
 
         eta_client = EtaAPI(self.session, self.host, self.port)
         success = await eta_client.write_endpoint(self.uri, raw_value)
         if not success:
-            raise HomeAssistantError("Could not write value, see log for details")
+            raise HomeAssistantError(
+                f"Could not write value for entity {self.entity_id}, see log for details"
+            )
         await self.coordinator.async_refresh()
 
     @staticmethod
