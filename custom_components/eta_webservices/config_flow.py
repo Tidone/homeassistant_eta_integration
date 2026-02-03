@@ -20,7 +20,7 @@ from .const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
-    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNITS,
     DOMAIN,
     ENABLE_DEBUG_LOGGING,
     FLOAT_DICT,
@@ -308,8 +308,24 @@ class EtaOptionsFlowHandler(OptionsFlow):
         session = async_get_clientsession(self.hass)
         eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
 
+        sensor_list = {value["url"]: False for value in self.data[FLOAT_DICT].values()}
+        sensor_list.update(
+            {value["url"]: False for value in self.data[SWITCHES_DICT].values()}
+        )
+        sensor_list.update(
+            {
+                value["url"]: (value["unit"] in CUSTOM_UNITS)
+                for value in self.data[TEXT_DICT].values()
+            }
+        )
+        sensor_list.update(
+            {
+                value["url"]: (value["unit"] in CUSTOM_UNITS)
+                for value in self.data[WRITABLE_DICT].values()
+            }
+        )
         # first request the values for all possible sensors
-        all_data = await eta_client.get_all_data()
+        all_data = await eta_client.get_all_data(sensor_list)
 
         # then loop through our lists of sensors and update the values
         for entity in list(self.data[FLOAT_DICT].keys()):
@@ -540,6 +556,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.config_entry.entry_id,  # pyright: ignore[reportOptionalMemberAccess]
         )
 
+        # If a sensor has been moved to a different category when updating the lists of sensors, it will is deleted from the chosen_*_sensors lists.
+        # However, if the entity id is still the same the sensor may be moved to the correct category here.
         entity_map_sensors = {
             e.unique_id: e for e in entries if e.unique_id in self.data[FLOAT_DICT]
         }
@@ -605,8 +623,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.advanced_options_writable_sensors = [
                 entity
                 for entity in data[CHOSEN_WRITABLE_SENSORS]
-                if data[WRITABLE_DICT][entity]["unit"]
-                != CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+                if data[WRITABLE_DICT][entity]["unit"] not in CUSTOM_UNITS
             ]
 
             # If the user selected at least one writable sensor, show
@@ -639,6 +656,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _show_advanced_options_screen(self):
         """Show the extra options form for writable sensors."""
+
+        # don't show errors from previous pages here
+        self._errors = {}
 
         return self.async_show_form(
             step_id="advanced_options",

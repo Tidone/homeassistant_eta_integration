@@ -102,30 +102,6 @@
       "url": "/120/10111/12130/0/1111",
       "value": 30.0
     },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_1": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 1",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1082",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_2": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 2",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1083",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_3": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 3",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1084",
-      "value": 0.0
-    },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_wert_au\u00dferhalb_der_zeitfenster": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -138,30 +114,6 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10111/12130/0/1112",
       "value": 30.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_1": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 1",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1086",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_2": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 2",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1087",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_3": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 3",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1088",
-      "value": 0.0
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_wert_au\u00dferhalb_der_zeitfenster": {
       "valid_values": {
@@ -176,30 +128,6 @@
       "url": "/120/10111/12130/0/1113",
       "value": 30.0
     },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_1": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 1",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1090",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_2": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 2",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1091",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_3": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 3",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1092",
-      "value": 0.0
-    },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_wert_au\u00dferhalb_der_zeitfenster": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -212,30 +140,6 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10111/12130/0/1114",
       "value": 30.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_1": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 1",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1094",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_2": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 2",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1095",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_3": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 3",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1096",
-      "value": 0.0
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_wert_au\u00dferhalb_der_zeitfenster": {
       "valid_values": {
@@ -250,30 +154,6 @@
       "url": "/120/10111/12130/0/1115",
       "value": 30.0
     },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_1": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 1",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1098",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_2": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 2",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1099",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_3": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 3",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1100",
-      "value": 0.0
-    },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_wert_au\u00dferhalb_der_zeitfenster": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -287,30 +167,6 @@
       "url": "/120/10111/12130/0/1116",
       "value": 30.0
     },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_1": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 1",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1102",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_2": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 2",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1103",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_3": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 3",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1104",
-      "value": 0.0
-    },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_wert_au\u00dferhalb_der_zeitfenster": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -323,30 +179,6 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10111/12130/0/1117",
       "value": 30.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_1": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 1",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1106",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_2": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 2",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1107",
-      "value": 0.0
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_3": {
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 3",
-      "unit": "\u00b0C",
-      "endpoint_type": "TIMESLOT",
-      "url": "/120/10111/12130/0/1108",
-      "value": 0.0
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_registerleistung": {
       "valid_values": null,
@@ -2806,6 +2638,279 @@
       "url": "/120/10111/12130/0/1109",
       "value": "Aus"
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1082",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1083",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1084",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1086",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1087",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1088",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1090",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1091",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1092",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1094",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1095",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1096",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1098",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1099",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1100",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1102",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1103",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1104",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1106",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1107",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1108",
+      "value": "00:00 - 00:00 0"
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_laden_mit_erzeuger": {
       "valid_values": {
         "Nein": 6530,
@@ -2870,6 +2975,279 @@
       "endpoint_type": "TEXT",
       "url": "/120/10101/12113/0/1109",
       "value": "Ein"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_montag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Montag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1082",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_montag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Montag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1083",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_montag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Montag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1084",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_dienstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1086",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_dienstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1087",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_dienstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1088",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_mittwoch_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1090",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_mittwoch_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1091",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_mittwoch_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1092",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_donnerstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1094",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_donnerstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1095",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_donnerstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1096",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_freitag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Freitag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1098",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_freitag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Freitag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1099",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_freitag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Freitag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1100",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_samstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Samstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1102",
+      "value": "06:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_samstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Samstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1103",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_samstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Samstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1104",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_sonntag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1106",
+      "value": "06:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_sonntag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1107",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_sonntag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1108",
+      "value": "00:00 - 00:00"
     },
     "eta_192_168_0_25__hk_heizkreis_heizkurve_bei_niedriger_heizkurve": {
       "valid_values": {
@@ -3016,6 +3394,279 @@
       "endpoint_type": "TEXT",
       "url": "/120/10102/12113/0/1109",
       "value": "Ein"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_montag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Montag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1082",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_montag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Montag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1083",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_montag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Montag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1084",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_dienstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1086",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_dienstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1087",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_dienstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1088",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_mittwoch_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1090",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_mittwoch_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1091",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_mittwoch_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1092",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_donnerstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1094",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_donnerstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1095",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_donnerstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1096",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_freitag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Freitag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1098",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_freitag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Freitag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1099",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_freitag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Freitag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1100",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_samstag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Samstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1102",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_samstag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Samstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1103",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_samstag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Samstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1104",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_sonntag_zeitfenster_1": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1106",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_sonntag_zeitfenster_2": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1107",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_sonntag_zeitfenster_3": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1108",
+      "value": "00:00 - 00:00"
     },
     "eta_192_168_0_25__fbh_heizkreis_heizkurve_bei_niedriger_heizkurve": {
       "valid_values": {
@@ -4126,6 +4777,45 @@
       "url": "/120/10111/12130/0/1111",
       "value": 30.0
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1082",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1083",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_montag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Montag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1084",
+      "value": "00:00 - 00:00 0"
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_wert_au\u00dferhalb_der_zeitfenster_writable": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -4138,6 +4828,45 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10111/12130/0/1112",
       "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1086",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1087",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_dienstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Dienstag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1088",
+      "value": "00:00 - 00:00 0"
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_wert_au\u00dferhalb_der_zeitfenster_writable": {
       "valid_values": {
@@ -4152,6 +4881,45 @@
       "url": "/120/10111/12130/0/1113",
       "value": 30.0
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1090",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1091",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_mittwoch_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Mittwoch > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1092",
+      "value": "00:00 - 00:00 0"
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_wert_au\u00dferhalb_der_zeitfenster_writable": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -4164,6 +4932,45 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10111/12130/0/1114",
       "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1094",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1095",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_donnerstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Donnerstag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1096",
+      "value": "00:00 - 00:00 0"
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_wert_au\u00dferhalb_der_zeitfenster_writable": {
       "valid_values": {
@@ -4178,6 +4985,45 @@
       "url": "/120/10111/12130/0/1115",
       "value": 30.0
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1098",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1099",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_freitag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Freitag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1100",
+      "value": "00:00 - 00:00 0"
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_wert_au\u00dferhalb_der_zeitfenster_writable": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -4191,6 +5037,45 @@
       "url": "/120/10111/12130/0/1116",
       "value": 30.0
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1102",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1103",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_samstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Samstag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1104",
+      "value": "00:00 - 00:00 0"
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_wert_au\u00dferhalb_der_zeitfenster_writable": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -4203,6 +5088,45 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10111/12130/0/1117",
       "value": 30.0
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 1",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1106",
+      "value": "15:30 - 18:00 55"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 2",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1107",
+      "value": "00:00 - 00:00 0"
+    },
+    "eta_192_168_0_25__ww_warmwasserspeicher_ladezeiten_sonntag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 90.0,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Ladezeiten > Sonntag > Zeitfenster 3",
+      "unit": "timeslot_plus_temperature",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10111/12130/0/1108",
+      "value": "00:00 - 00:00 0"
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_max._writable": {
       "valid_values": {
@@ -4242,6 +5166,279 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10111/0/0/13039",
       "value": 0.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_montag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Montag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1082",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_montag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Montag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1083",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_montag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Montag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1084",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_dienstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1086",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_dienstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1087",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_dienstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1088",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_mittwoch_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1090",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_mittwoch_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1091",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_mittwoch_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1092",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_donnerstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1094",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_donnerstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1095",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_donnerstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1096",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_freitag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Freitag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1098",
+      "value": "15:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_freitag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Freitag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1099",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_freitag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Freitag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1100",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_samstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Samstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1102",
+      "value": "06:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_samstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Samstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1103",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_samstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Samstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1104",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_sonntag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1106",
+      "value": "06:00 - 22:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_sonntag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1107",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizzeiten_sonntag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "HK > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10101/12113/0/1108",
+      "value": "00:00 - 00:00"
     },
     "eta_192_168_0_25__hk_heizkreis_vorlauf_vorlauf_max_writable": {
       "valid_values": {
@@ -4437,6 +5634,279 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10102/0/11060/2054",
       "value": 30.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_montag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Montag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1082",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_montag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Montag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1083",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_montag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Montag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1084",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_dienstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1086",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_dienstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1087",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_dienstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Dienstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1088",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_mittwoch_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1090",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_mittwoch_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1091",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_mittwoch_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Mittwoch > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1092",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_donnerstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1094",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_donnerstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1095",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_donnerstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Donnerstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1096",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_freitag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Freitag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1098",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_freitag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Freitag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1099",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_freitag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Freitag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1100",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_samstag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Samstag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1102",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_samstag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Samstag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1103",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_samstag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Samstag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1104",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_sonntag_zeitfenster_1_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 1",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1106",
+      "value": "00:00 - 24:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_sonntag_zeitfenster_2_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 2",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1107",
+      "value": "00:00 - 00:00"
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_sonntag_zeitfenster_3_writable": {
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 96,
+        "scale_factor": 1,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Sonntag > Zeitfenster 3",
+      "unit": "timeslot",
+      "endpoint_type": "TIMESLOT",
+      "url": "/120/10102/12113/0/1108",
+      "value": "00:00 - 00:00"
     },
     "eta_192_168_0_25__fbh_heizkreis_vorlauf_vorlauf_max_writable": {
       "valid_values": {

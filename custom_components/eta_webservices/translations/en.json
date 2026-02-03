@@ -63,7 +63,7 @@
         "error": {
             "wrong_api_version": "API version of ETA terminal is too low. Some entities may not be detected. Please consider updating the firmware of your ETA terminal to the latest version.",
             "value_update_error": "At least one endpoint could not be updated. You may have to update the list of available sensors.",
-            "unavailable_sensors": "One or more selected sensors are not available any more. You have to manually add their replacements, if available. Please check the list at the bottom."
+            "unavailable_sensors": "One or more selected sensors are not available any more or have been moved to a different category. Please check the lists of selected sensors for any missing or wrong sensors. You can find a list of affected sensors at the bottom."
         }
     },
     "entity": {
@@ -120,6 +120,38 @@
                 "force_decimals": {
                     "name": "Force decimals",
                     "description": "If enabled, decimal places will be preserved even if the ETA API does not support them for this endpoint (may lead to errors!)"
+                }
+            }
+        },
+        "write_timeslot": {
+            "name": "Update a timeslot",
+            "description": "Update the begin and end of a timeslot endpoint",
+            "fields": {
+                "begin": {
+                    "name": "Begin",
+                    "description": "The start time of the timeslot"
+                },
+                "end": {
+                    "name": "End",
+                    "description": "The end time of the timeslot"
+                }
+            }
+        },
+        "write_timeslot_plus_temperature": {
+            "name": "Update a timeslot and its target temperature",
+            "description": "Update the begin, end and temperature of a timeslot endpoint",
+            "fields": {
+                "begin": {
+                    "name": "Begin",
+                    "description": "The start time of the timeslot"
+                },
+                "end": {
+                    "name": "End",
+                    "description": "The end time of the timeslot"
+                },
+                "temperature": {
+                    "name": "Temperature",
+                    "description": "The target temperature within the timeslot"
                 }
             }
         }

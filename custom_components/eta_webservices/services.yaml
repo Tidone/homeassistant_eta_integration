@@ -37,3 +37,48 @@ write_value_scaled:
       required: true
       selector:
         boolean:
+write_timeslot:
+  target:
+    entity:
+      integration: eta_webservices
+      domain: sensor
+      supported_features:
+        # unfortunately we can't define our own features, and using the integer values also doesn't work
+        # so we have to use the pre-defined values misuse their values
+        # calendar.CalendarEntityFeature.CREATE_EVENT is 1, which is SUPPORT_WRITE_TIMESLOT in our case
+        # calendar.CalendarEntityFeature.DELETE_EVENT is 2, which is SUPPORT_WRITE_TIMESLOT_WITH_TEMPERATURE in our case
+        - calendar.CalendarEntityFeature.CREATE_EVENT
+  fields:
+    begin:
+      required: true
+      selector:
+        time:
+    end:
+      required: true
+      selector:
+        time:
+write_timeslot_plus_temperature:
+  target:
+    entity:
+      integration: eta_webservices
+      domain: sensor
+      supported_features:
+        # unfortunately we can't define our own features, and using the integer values also doesn't work
+        # so we have to use the pre-defined values misuse their values
+        # calendar.CalendarEntityFeature.CREATE_EVENT is 1, which is SUPPORT_WRITE_TIMESLOT in our case
+        # calendar.CalendarEntityFeature.DELETE_EVENT is 2, which is SUPPORT_WRITE_TIMESLOT_WITH_TEMPERATURE in our case
+        - calendar.CalendarEntityFeature.DELETE_EVENT
+  fields:
+    begin:
+      required: true
+      selector:
+        time:
+    end:
+      required: true
+      selector:
+        time:
+    temperature:
+      required: true
+      selector:
+        number:
+          step: 0.1

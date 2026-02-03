@@ -9,9 +9,13 @@ from aiohttp import ClientSession
 from packaging import version
 import xmltodict
 
-from .const import CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
-
 # Make sure to update _get_all_sensors_v12() if a new custom unit is added
+from .const import (
+    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNIT_TIMESLOT,
+    CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
+    CUSTOM_UNITS,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -160,10 +164,14 @@ class EtaAPI:
 
         return eta_version >= required_version
 
-    def _parse_data(self, data, force_number_handling=False):
+    def _parse_data(
+        self, data, force_number_handling=False, force_string_handling=False
+    ):
         _LOGGER.debug("Parsing data %s", data)
         unit = data["@unit"]
-        if unit in self._float_sensor_units or force_number_handling:
+        if not force_string_handling and (
+            unit in self._float_sensor_units or force_number_handling
+        ):
             scale_factor = int(data["@scaleFactor"])
             # ignore the decPlaces to avoid removing any additional precision the API values have
             # i.e. the API may send a value of 444 with scaleFactor=10, but set decPlaces=0,
@@ -175,51 +183,50 @@ class EtaAPI:
             value = data["@strValue"]
         return value, unit
 
-    async def get_data(self, uri, force_number_handling=False):
+    async def get_data(
+        self, uri, force_number_handling=False, force_string_handling=False
+    ):
         """Request the data from a API URL.
 
         :param uri: ETA API url suffix, like /120/1/123
         :param force_number_handling: Set to true if the data should be treated as a number even if its unit is not in the list of valid float sensors
+        :param force_string_handling: Set to true if the data should be treated as a string regardless of its unit
         :return: Parsed data as a Tuple[Value, Unit]
         :rtype: Tuple[Any,str]
         """
         data = await self._get_request("/user/var/" + str(uri))
         text = await data.text()
         data = xmltodict.parse(text)["eta"]["value"]
-        return self._parse_data(data, force_number_handling)
+        return self._parse_data(data, force_number_handling, force_string_handling)
 
-    async def get_all_data(self):
+    async def get_all_data(self, sensor_list: dict[str, bool]):
         """Get all data from all endpoints.
 
+        :param sensor_list: Dict[url, force_string_handling] of sensors to query the data for
         :return: List of all data
         :rtype: Dict[str, Any]
         """
-        all_endpoints = await self._get_sensors_dict()
-        _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
-
-        # Deduplicate endpoints
-        deduplicated_uris = {}
-        for key, uri in all_endpoints.items():
-            if uri not in deduplicated_uris:
-                deduplicated_uris[uri] = key
-
-        _LOGGER.debug("Got %d unique endpoints", len(deduplicated_uris))
 
         # Create a semaphore to limit concurrent requests
         semaphore = asyncio.Semaphore(self._max_concurrent_requests)
 
-        async def fetch_data_limited(uri):
+        async def fetch_data_limited(uri, force_string_handling):
             """Fetch data with concurrency limit."""
             async with semaphore:
-                return await self.get_data(uri)
+                return await self.get_data(
+                    uri, force_string_handling=force_string_handling
+                )
 
         # Fetch all data concurrently with limit
-        data_tasks = [fetch_data_limited(uri) for uri in deduplicated_uris]
+        data_tasks = [
+            fetch_data_limited(uri, force_string_handling)
+            for uri, force_string_handling in sensor_list.items()
+        ]
 
         data_results = await asyncio.gather(*data_tasks, return_exceptions=True)
 
         # Map results back to URIs
-        return dict(zip(deduplicated_uris.keys(), data_results, strict=False))
+        return dict(zip(sensor_list.keys(), data_results, strict=False))
 
     async def _get_data_plus_raw(self, uri):
         data = await self._get_request("/user/var/" + str(uri))
@@ -483,14 +490,23 @@ class EtaAPI:
             ):
                 needs_data.append(uri)
 
-        async def fetch_data_limited(uri):
+        async def fetch_data_limited(uri, force_string_handling):
             async with semaphore:
-                return await self.get_data(uri)
+                return await self.get_data(
+                    uri, force_string_handling=force_string_handling
+                )
 
         # Fetch all needed data concurrently
         data_results: dict[str, tuple[float | str, str]] = {}
         if needs_data:
-            data_tasks = [fetch_data_limited(uri) for uri in needs_data]
+            data_tasks = [
+                fetch_data_limited(
+                    uri,
+                    # all custom units should be treated as text sensors
+                    force_string_handling=endpoint_infos[uri]["unit"] in CUSTOM_UNITS,
+                )
+                for uri in needs_data
+            ]
             # runtime: 7 seconds for ~500 endpoints
             data_values = await asyncio.gather(*data_tasks, return_exceptions=True)
 
@@ -522,7 +538,7 @@ class EtaAPI:
                     endpoint_info["value"] = value
                     if (
                         unit != endpoint_info["unit"]
-                        and endpoint_info["unit"] != CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+                        and endpoint_info["unit"] not in CUSTOM_UNITS
                         # update the unit of the sensor if they are different, but only if we didn't assign a custom unit to the sensor
                     ):
                         _LOGGER.debug(
@@ -564,7 +580,8 @@ class EtaAPI:
         )
 
     def _is_text_sensor(self, endpoint_info: ETAEndpoint):
-        return endpoint_info["unit"] == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT or (
+        # all custom units are text sensors right now
+        return endpoint_info["unit"] in CUSTOM_UNITS or (
             endpoint_info["unit"] == "" and endpoint_info["endpoint_type"] == "TEXT"
         )
 
@@ -586,24 +603,60 @@ class EtaAPI:
 
     def _parse_unit(self, data):
         unit = data["@unit"]
-        if unit == "":
-            if (
-                "validValues" in data
-                and data["validValues"] is not None
-                and "min" in data["validValues"]
-                and "max" in data["validValues"]
-                and "#text" in data["validValues"]["min"]
-                and int(data["@scaleFactor"]) == 1
-                and int(data["@decPlaces"]) == 0
-            ):
-                _LOGGER.debug("Found time endpoint")
-                min_value = int(data["validValues"]["min"]["#text"])
-                max_value = int(data["validValues"]["max"]["#text"])
-                if min_value == 0 and max_value == 24 * 60 - 1:
-                    # time endpoints have a min value of 0 and max value of 1439
-                    # it may be better to parse the strValue and check if it is in the format "00:00"
-                    unit = CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+        if (
+            unit == ""
+            and "validValues" in data
+            and data["validValues"] is not None
+            and "min" in data["validValues"]
+            and "max" in data["validValues"]
+            and "#text" in data["validValues"]["min"]
+            and int(data["@scaleFactor"]) == 1
+            and int(data["@decPlaces"]) == 0
+        ):
+            _LOGGER.debug("Found time endpoint")
+            min_value = int(data["validValues"]["min"]["#text"])
+            max_value = int(data["validValues"]["max"]["#text"])
+            if min_value == 0 and max_value == 24 * 60 - 1:
+                # time endpoints have a min value of 0 and max value of 1439
+                # it may be better to parse the strValue and check if it is in the format "00:00"
+                unit = CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+        elif (
+            unit in ["", "°C"]
+            and "validValues" in data
+            and data["validValues"] is not None
+            and "min" in data["validValues"]
+            and "max" in data["validValues"]
+            and "begin" in data["validValues"]["min"]
+            and "end" in data["validValues"]["min"]
+        ):
+            min_value = int(data["validValues"]["min"]["begin"])
+            max_value = int(data["validValues"]["max"]["end"])
+            if min_value == 0 and max_value == 24 * 60 / 15:
+                # time endpoints have a min value of 0 and max value of 96
+                # it may be better to parse the strValue and check if it is in the format "00:00 - 00:00"
+                if "value" in data["validValues"]["min"]:
+                    _LOGGER.debug("Found timeslot endpoint with temperature")
+                    unit = CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE
+                else:
+                    _LOGGER.debug("Found timeslot endpoint")
+                    unit = CUSTOM_UNIT_TIMESLOT
         return unit
+
+    def _createETAValidWritableValues(
+        self,
+        raw_min_value: float,
+        raw_max_value: float,
+        scale_factor: int,
+        dec_places: int,
+    ):
+        min_value = round(float(raw_min_value) / scale_factor, dec_places)
+        max_value = round(float(raw_max_value) / scale_factor, dec_places)
+        return ETAValidWritableValues(
+            scaled_min_value=min_value,
+            scaled_max_value=max_value,
+            scale_factor=scale_factor,
+            dec_places=dec_places,
+        )
 
     def _parse_varinfo(self, data, fub: str, uri: str):
         _LOGGER.debug("Parsing varinfo %s", data)
@@ -631,24 +684,39 @@ class EtaAPI:
         ):
             min_value = data["validValues"]["min"]["#text"]
             max_value = data["validValues"]["max"]["#text"]
-            scale_factor = int(data["@scaleFactor"])
-            dec_places = int(data["@decPlaces"])
-
-            min_value = round(float(min_value) / scale_factor, dec_places)
-            max_value = round(float(max_value) / scale_factor, dec_places)
+            valid_values = self._createETAValidWritableValues(
+                raw_min_value=min_value,
+                raw_max_value=max_value,
+                scale_factor=int(data["@scaleFactor"]),
+                dec_places=int(data["@decPlaces"]),
+            )
+        if unit == CUSTOM_UNIT_TIMESLOT:
+            # store the min and max value of the timeslots for this unit
             valid_values = ETAValidWritableValues(
-                scaled_min_value=min_value,
-                scaled_max_value=max_value,
-                scale_factor=scale_factor,
-                dec_places=dec_places,
+                scaled_min_value=0,
+                scaled_max_value=96,
+                scale_factor=1,
+                dec_places=0,
+            )
+        elif unit == CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE:
+            # store the min and max value of the temperature for this unit
+            # the min and max values for the timeslots can be assumed to be 0 and 96 respectively,
+            # otherwise we wouldn't have assigned this unit in the first place
+            min_value = data["validValues"]["min"]["value"]
+            max_value = data["validValues"]["max"]["value"]
+            valid_values = self._createETAValidWritableValues(
+                raw_min_value=min_value,
+                raw_max_value=max_value,
+                scale_factor=int(data["@scaleFactor"]),
+                dec_places=int(data["@decPlaces"]),
             )
 
         return ETAEndpoint(
-            url=uri,
             valid_values=valid_values,
             friendly_name=f"{fub} > {data['@fullName']}",
             unit=unit,
             endpoint_type=data["type"],
+            url=uri,
             value=0,
         )
 
@@ -695,7 +763,7 @@ class EtaAPI:
         )
         return False
 
-    async def write_endpoint(self, uri, value, begin=None, end=None):
+    async def write_endpoint(self, uri, value=None, begin=None, end=None):
         """Writa a raw value to a writable sensor.
 
         :param uri: URL suffix of the writable sensor
@@ -705,7 +773,9 @@ class EtaAPI:
         :return: True on success
         :rtype: boolean
         """
-        payload = {"value": value}
+        payload = {}
+        if value is not None:
+            payload["value"] = value
         if begin is not None:
             payload["begin"] = begin
             payload["end"] = end

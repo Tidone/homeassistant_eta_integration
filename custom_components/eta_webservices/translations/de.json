@@ -63,7 +63,7 @@
         "error": {
             "wrong_api_version": "API Version des ETA Geräts ist zu alt. Einige Entitäten werden möglicherweise nicht oder falsch erkannt. Aktualisiere die Firmware deines ETA Geräts auf die aktuellste Firmware, falls möglich.",
             "value_update_error": "Mindestens ein Endpunkt konnte nicht aktualisiert werden. Du musst die Liste der verfügbaren Sensoren eventuell aktualisieren..",
-            "unavailable_sensors": "Mindestens ein ausgewählter Sensor ist nicht mehr verfügbar. Du musst den Ersatz für sie manuell hinzufügen, falls verfügbar. Bitte prüfe die Liste am Ende."
+            "unavailable_sensors": "Mindestens ein ausgewählter Sensor ist nicht mehr verfügbar oder wurde verschoben. Bitte überprüfe die Listen der ausgewählten Sensoren auf fehlende oder falsch detektierte Sensoren. Du findest eine Liste der betroffenen Sensoren am Ende."
         }
     },
     "entity": {
@@ -120,6 +120,38 @@
                 "force_decimals": {
                     "name": "Dezimalstellen erzwingen",
                     "description": "Wenn aktiviert, werden Dezimalstellen beibehalten, auch wenn die ETA API sie für diesen Endpunkt nicht unterstützt (kann zu Fehlern führen!)"
+                }
+            }
+        },
+        "write_timeslot": {
+            "name": "Aktualisiere eine Zeitspanne",
+            "description": "Setze die Startzeit und Endzeit eines Zeitspannen-Endpunkts",
+            "fields": {
+                "begin": {
+                    "name": "Beginn",
+                    "description": "Die Startzeit der Zeitspanne"
+                },
+                "end": {
+                    "name": "Ende",
+                    "description": "Die Endzeit der Zeitspanne"
+                }
+            }
+        },
+        "write_timeslot_plus_temperature": {
+            "name": "Aktualisiere eine Zeitspanne und die Zieltemperatur",
+            "description": "Setze die Startzeit, Endzeit und Zieltemperatur eines Zeitspannen-Endpunkts",
+            "fields": {
+                "begin": {
+                    "name": "Beginn",
+                    "description": "Die Startzeit der Zeitspanne"
+                },
+                "end": {
+                    "name": "Ende",
+                    "description": "Die Endzeit der Zeitspanne"
+                },
+                "temperature": {
+                    "name": "Temperatur",
+                    "description": "Die Zieltemperatur innerhalb der Zeitspanne"
                 }
             }
         }
