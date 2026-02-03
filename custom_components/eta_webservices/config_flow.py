@@ -556,6 +556,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.config_entry.entry_id,  # pyright: ignore[reportOptionalMemberAccess]
         )
 
+        # If a sensor has been moved to a different category when updating the lists of sensors, it will is deleted from the chosen_*_sensors lists.
+        # However, if the entity id is still the same the sensor may be moved to the correct category here.
         entity_map_sensors = {
             e.unique_id: e for e in entries if e.unique_id in self.data[FLOAT_DICT]
         }
@@ -654,6 +656,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _show_advanced_options_screen(self):
         """Show the extra options form for writable sensors."""
+
+        # don't show errors from previous pages here
+        self._errors = {}
 
         return self.async_show_form(
             step_id="advanced_options",

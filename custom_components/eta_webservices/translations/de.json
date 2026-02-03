@@ -63,7 +63,7 @@
         "error": {
             "wrong_api_version": "API Version des ETA Geräts ist zu alt. Einige Entitäten werden möglicherweise nicht oder falsch erkannt. Aktualisiere die Firmware deines ETA Geräts auf die aktuellste Firmware, falls möglich.",
             "value_update_error": "Mindestens ein Endpunkt konnte nicht aktualisiert werden. Du musst die Liste der verfügbaren Sensoren eventuell aktualisieren..",
-            "unavailable_sensors": "Mindestens ein ausgewählter Sensor ist nicht mehr verfügbar. Du musst den Ersatz für sie manuell hinzufügen, falls verfügbar. Bitte prüfe die Liste am Ende."
+            "unavailable_sensors": "Mindestens ein ausgewählter Sensor ist nicht mehr verfügbar oder wurde verschoben. Bitte überprüfe die Listen der ausgewählten Sensoren auf fehlende oder falsch detektierte Sensoren. Du findest eine Liste der betroffenen Sensoren am Ende."
         }
     },
     "entity": {

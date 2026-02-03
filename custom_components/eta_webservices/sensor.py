@@ -344,13 +344,14 @@ class EtaTimeslotSensor(EtaSensorEntity[str]):
         self, begin: time, end: time, temperature: float | None = None
     ) -> None:
         """Handle the write_timeslot service call."""
-        # If temperature is provided, validate that the entity supports it
+        # If a temperature is provided validate that the entity supports it
         if temperature is not None and not (
             self._attr_supported_features
             and (
                 self._attr_supported_features & SUPPORT_WRITE_TIMESLOT_WITH_TEMPERATURE
             )
         ):
+            # We should not get here, but it's better to be safe than sorry
             raise HomeAssistantError(
                 f"Entity {self.entity_id} does not support setting the temperature for the timeslot"
             )
