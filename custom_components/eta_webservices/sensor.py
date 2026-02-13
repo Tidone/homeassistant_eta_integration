@@ -372,8 +372,8 @@ class EtaTimeslotSensor(EtaSensorEntity[str]):
             raw_value *= self.valid_values["scale_factor"]
             raw_value = round(raw_value, 0)
             if (
-                raw_value < self.valid_values["scaled_min_value"]
-                or raw_value > self.valid_values["scaled_max_value"]
+                temperature < self.valid_values["scaled_min_value"]
+                or temperature > self.valid_values["scaled_max_value"]
             ):
                 raise HomeAssistantError(
                     f"Temperature value out of bounds for entity {self.entity_id}"
