@@ -589,8 +589,8 @@ Examples:
     parser.add_argument(
         "--fixture",
         type=Path,
-        default=Path("tests/fixtures/api_endpoint_data.json"),
-        help="Path to fixture file (default: tests/fixtures/api_endpoint_data.json)",
+        default=Path("fixtures/api_endpoint_data.json"),
+        help="Path to fixture file (default: fixtures/api_endpoint_data.json)",
     )
     parser.add_argument(
         "--mode",
