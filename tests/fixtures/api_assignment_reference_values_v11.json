@@ -468,6 +468,19 @@
       "endpoint_type": "TEXT",
       "value": 0.0
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_anforderungsdifferenz": {
+      "url": "/120/10111/0/0/12109",
+      "valid_values": {
+        "scaled_min_value": -100,
+        "scaled_max_value": 200,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Anforderungsdifferenz",
+      "unit": "°C",
+      "endpoint_type": "TEXT",
+      "value": 20.0
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_registerleistung": {
       "url": "/120/10111/0/0/13150",
       "valid_values": null,
@@ -702,12 +715,12 @@
       "value": 2.9
     },
     "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_tf": {
-      "url": "/120/10101/12095/0/1074",
+      "url": "/120/10101/12095/0/1072",
       "valid_values": null,
       "friendly_name": "HK > Heizkreis > Außentemperatur verzögert > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 0.0
+      "value": 1800.0
     },
     "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_y": {
       "url": "/120/10101/12095/0/1073",
@@ -1178,12 +1191,12 @@
       "value": 2.9
     },
     "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_tf": {
-      "url": "/120/10102/12095/0/1074",
+      "url": "/120/10102/12095/0/1072",
       "valid_values": null,
       "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 0.0
+      "value": 1800.0
     },
     "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_y": {
       "url": "/120/10102/12095/0/1073",
@@ -1223,6 +1236,19 @@
       "unit": "°C",
       "endpoint_type": "TEXT",
       "value": 2.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_freigabe_temperatur": {
+      "url": "/120/10102/0/0/12215",
+      "valid_values": {
+        "scaled_min_value": -100,
+        "scaled_max_value": 200,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Freigabe Temperatur",
+      "unit": "°C",
+      "endpoint_type": "TEXT",
+      "value": 58.0
     },
     "eta_192_168_0_25__fbh_heizkreis_anforderungsdifferenz": {
       "url": "/120/10102/0/0/12109",
@@ -2366,6 +2392,19 @@
       "endpoint_type": "TEXT",
       "value": 180.0
     },
+    "eta_192_168_0_25__kessel_kessel_abgas_abgas_min": {
+      "url": "/40/10021/0/0/12024",
+      "valid_values": {
+        "scaled_min_value": -100,
+        "scaled_max_value": 200,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Abgas > Abgas Min",
+      "unit": "°C",
+      "endpoint_type": "TEXT",
+      "value": 80.0
+    },
     "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung_dauer_der_messung": {
       "url": "/40/10021/0/0/12118",
       "valid_values": null,
@@ -3052,16 +3091,8 @@
       "endpoint_type": "TEXT",
       "value": "Außerhalb der Ladezeiten"
     },
-    "eta_192_168_0_25__ww_warmwasserspeicher_anforderungsdifferenz": {
-      "url": "/120/10111/0/0/14789",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Anforderungsdifferenz",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx"
-    },
     "eta_192_168_0_25__ww_warmwasserspeicher_freigabe_temperatur": {
-      "url": "/120/10111/0/0/14788",
+      "url": "/120/10111/0/0/12100",
       "valid_values": null,
       "friendly_name": "WW > Warmwasserspeicher > Freigabe Temperatur",
       "unit": "",
@@ -3373,7 +3404,7 @@
       "value": "Abschalten"
     },
     "eta_192_168_0_25__hk_heizkreis_heizkurve_vorlauf_min": {
-      "url": "/120/10101/0/0/14134",
+      "url": "/120/10101/0/0/14051",
       "valid_values": null,
       "friendly_name": "HK > Heizkreis > Heizkurve > Vorlauf Min",
       "unit": "",
@@ -3381,7 +3412,7 @@
       "value": "xxx"
     },
     "eta_192_168_0_25__hk_heizkreis_freigabe_temperatur": {
-      "url": "/120/10101/0/0/14788",
+      "url": "/120/10101/0/0/12100",
       "valid_values": null,
       "friendly_name": "HK > Heizkreis > Freigabe Temperatur",
       "unit": "",
@@ -3749,17 +3780,9 @@
       "value": "Abschalten"
     },
     "eta_192_168_0_25__fbh_heizkreis_heizkurve_vorlauf_min": {
-      "url": "/120/10102/0/0/14134",
+      "url": "/120/10102/0/0/14051",
       "valid_values": null,
       "friendly_name": "Fbh > Heizkreis > Heizkurve > Vorlauf Min",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx"
-    },
-    "eta_192_168_0_25__fbh_heizkreis_freigabe_temperatur": {
-      "url": "/120/10102/0/0/14788",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Freigabe Temperatur",
       "unit": "",
       "endpoint_type": "TEXT",
       "value": "xxx"
@@ -3941,7 +3964,7 @@
       "value": "OK"
     },
     "eta_192_168_0_25__kessel_eingänge_wassermangel_eingang": {
-      "url": "/40/10021/0/11031/2017",
+      "url": "/40/10021/0/11031/2016",
       "valid_values": null,
       "friendly_name": "Kessel > Eingänge > Wassermangel > Eingang",
       "unit": "",
@@ -3957,7 +3980,7 @@
       "value": "OK"
     },
     "eta_192_168_0_25__kessel_eingänge_not-aus_schalter_eingang": {
-      "url": "/40/10021/0/11032/2017",
+      "url": "/40/10021/0/11032/2016",
       "valid_values": null,
       "friendly_name": "Kessel > Eingänge > Not-Aus Schalter > Eingang",
       "unit": "",
@@ -3973,7 +3996,7 @@
       "value": "OK"
     },
     "eta_192_168_0_25__kessel_eingänge_stb_eingang": {
-      "url": "/40/10021/0/11033/2017",
+      "url": "/40/10021/0/11033/2016",
       "valid_values": null,
       "friendly_name": "Kessel > Eingänge > STB > Eingang",
       "unit": "",
@@ -3989,7 +4012,7 @@
       "value": "Ja"
     },
     "eta_192_168_0_25__kessel_eingänge_aschebox_eingang": {
-      "url": "/40/10021/0/11034/2017",
+      "url": "/40/10021/0/11034/2016",
       "valid_values": null,
       "friendly_name": "Kessel > Eingänge > Aschebox > Eingang",
       "unit": "",
@@ -4013,7 +4036,7 @@
       "value": "OK"
     },
     "eta_192_168_0_25__kessel_eingänge_glutbett_eingang": {
-      "url": "/40/10021/0/11036/2017",
+      "url": "/40/10021/0/11036/2016",
       "valid_values": null,
       "friendly_name": "Kessel > Eingänge > Glutbett > Eingang",
       "unit": "",
@@ -4029,7 +4052,7 @@
       "value": "Nicht voll"
     },
     "eta_192_168_0_25__kessel_eingänge_pelletsbehälter_eingang": {
-      "url": "/40/10021/0/11037/2017",
+      "url": "/40/10021/0/11037/2016",
       "valid_values": null,
       "friendly_name": "Kessel > Eingänge > Pelletsbehälter > Eingang",
       "unit": "",
@@ -4500,14 +4523,6 @@
       "endpoint_type": "TEXT",
       "value": "Regeln"
     },
-    "eta_192_168_0_25__kessel_kessel_abgas_abgas_min": {
-      "url": "/40/10021/0/0/14163",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Abgas > Abgas Min",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx"
-    },
     "eta_192_168_0_25__kessel_kessel_abgas_emissionsmessung": {
       "url": "/40/10021/0/0/13266",
       "valid_values": null,
@@ -4709,7 +4724,7 @@
       "value": "Aus"
     },
     "eta_192_168_0_25__lagerum._eingänge_nullpunktschalter_eingang": {
-      "url": "/40/10211/0/11133/2017",
+      "url": "/40/10211/0/11133/2016",
       "valid_values": null,
       "friendly_name": "LagerUm. > Eingänge > Nullpunktschalter > Eingang",
       "unit": "",
@@ -5418,6 +5433,19 @@
       "endpoint_type": "TEXT",
       "value": 0.0
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_anforderungsdifferenz_writable": {
+      "url": "/120/10111/0/0/12109",
+      "valid_values": {
+        "scaled_min_value": -100,
+        "scaled_max_value": 200,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Anforderungsdifferenz",
+      "unit": "°C",
+      "endpoint_type": "TEXT",
+      "value": 20.0
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_max._writable": {
       "url": "/120/10111/0/0/12169",
       "valid_values": {
@@ -5989,6 +6017,19 @@
       "unit": "°C",
       "endpoint_type": "TEXT",
       "value": 2.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_freigabe_temperatur_writable": {
+      "url": "/120/10102/0/0/12215",
+      "valid_values": {
+        "scaled_min_value": -100,
+        "scaled_max_value": 200,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Fbh > Heizkreis > Freigabe Temperatur",
+      "unit": "°C",
+      "endpoint_type": "TEXT",
+      "value": 58.0
     },
     "eta_192_168_0_25__fbh_heizkreis_anforderungsdifferenz_writable": {
       "url": "/120/10102/0/0/12109",
@@ -6691,6 +6732,19 @@
       "unit": "°C",
       "endpoint_type": "TEXT",
       "value": 180.0
+    },
+    "eta_192_168_0_25__kessel_kessel_abgas_abgas_min_writable": {
+      "url": "/40/10021/0/0/12024",
+      "valid_values": {
+        "scaled_min_value": -100,
+        "scaled_max_value": 200,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Kessel > Abgas > Abgas Min",
+      "unit": "°C",
+      "endpoint_type": "TEXT",
+      "value": 80.0
     },
     "eta_192_168_0_25__kessel_kessel_restsauerstoff_writable": {
       "url": "/40/10021/0/0/12164",

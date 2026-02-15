@@ -14,6 +14,7 @@ from .const import (
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     CUSTOM_UNIT_TIMESLOT,
     CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
+    CUSTOM_UNIT_UNITLESS,
     CUSTOM_UNITS,
 )
 
@@ -69,6 +70,7 @@ class EtaAPI:
         # 5 concurrent requests seem to be the sweetspot between speed and stability
         # More parallel requests are only very slightly faster (in the order of seconds), with the downside that the ETA user interface becomes very laggy
         self._max_concurrent_requests = 5
+        self._num_duplicates = 0
 
         self._float_sensor_units = [
             "%",
@@ -91,6 +93,7 @@ class EtaAPI:
             "s",
             "°C",
             "%rH",
+            CUSTOM_UNIT_UNITLESS,
         ]
 
         self._writable_sensor_units = [
@@ -98,6 +101,9 @@ class EtaAPI:
             "°C",
             "kg",
             CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+            CUSTOM_UNIT_TIMESLOT,
+            CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
+            CUSTOM_UNIT_UNITLESS,
         ]
         self._default_valid_writable_values = {
             "%": ETAValidWritableValues(
@@ -130,11 +136,21 @@ class EtaAPI:
         elif "object" in xml_dict:
             child = xml_dict["object"]
             new_prefix = f"{prefix}_{xml_dict['@name']}"
-            # add parent to uri_dict and evaluate childs then
-            uri_dict[f"{prefix}_{xml_dict['@name']}"] = xml_dict["@uri"]
+            # Store multiple URIs per key
+            if new_prefix not in uri_dict:
+                uri_dict[new_prefix] = []
+            else:
+                self._num_duplicates += 1
+            # add parent to uri_dict and then evaluate the children
+            uri_dict[new_prefix].append(xml_dict["@uri"])
             self._evaluate_xml_dict(child, uri_dict, new_prefix)
         else:
-            uri_dict[f"{prefix}_{xml_dict['@name']}"] = xml_dict["@uri"]
+            key = f"{prefix}_{xml_dict['@name']}"
+            if key not in uri_dict:
+                uri_dict[key] = []
+            else:
+                self._num_duplicates += 1
+            uri_dict[key].append(xml_dict["@uri"])
 
     async def _get_request(self, suffix):
         return await self._session.get(self._build_uri(suffix))
@@ -322,18 +338,31 @@ class EtaAPI:
     async def _get_all_sensors_v11(
         self, float_dict, switches_dict, text_dict, writable_dict
     ):
+        self._num_duplicates = 0  # Reset counter for this enumeration
         all_endpoints = await self._get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
 
-        # Deduplicate endpoints
-        # INFO: The key and value fields are flipped between this and all_endpoints
-        # to be able to easily check if a uri is already in the dict
+        # Flatten the multi-URI structure and track duplicates
+        # INFO: The key and value fields are flipped to check if a uri is already in the dict
         deduplicated_uris = {}
-        for key, uri in all_endpoints.items():
-            if uri not in deduplicated_uris:
-                deduplicated_uris[uri] = key
+        total_uris = 0
+        for key, uri_list in all_endpoints.items():
+            for uri in uri_list:
+                total_uris += 1
+                if uri not in deduplicated_uris:
+                    deduplicated_uris[uri] = key
+                else:
+                    _LOGGER.debug(
+                        "Skipping duplicate URI %s (key: %s, already have key: %s)",
+                        uri,
+                        key,
+                        deduplicated_uris[uri],
+                    )
 
-        _LOGGER.debug("Got %d unique endpoints", len(deduplicated_uris))
+        _LOGGER.debug(
+            "Got %d endpoints total, %d unique URIs", total_uris, len(deduplicated_uris)
+        )
+        _LOGGER.debug("Found %d duplicate keys with multiple URIs", self._num_duplicates)
 
         # Create a semaphore to limit concurrent requests
         semaphore = asyncio.Semaphore(self._max_concurrent_requests)
@@ -355,6 +384,11 @@ class EtaAPI:
                 _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
             else:
                 endpoint_data[uri] = result  # pyright: ignore[reportArgumentType]
+
+        # Sanitize duplicate nodes by checking which URIs return valid data
+        removed_count = self._sanitize_duplicate_nodes_v11(all_endpoints, endpoint_data)
+        if removed_count > 0:
+            _LOGGER.info("Removed %d invalid URIs from duplicate nodes", removed_count)
 
         for uri, key in deduplicated_uris.items():
             if uri not in endpoint_data:
@@ -385,26 +419,71 @@ class EtaAPI:
                     _LOGGER.debug("Adding %s as writable sensor", uri)
                     # this is checked separately because all writable sensors are registered as both a sensor entity and a number entity
                     # add a suffix to the unique id to make sure it is still unique in case the sensor is selected in the writable list and in the sensor list
-                    self._parse_valid_writable_values_v11(endpoint_info, raw_dict)
-                    writable_dict[unique_key + "_writable"] = endpoint_info
+                    writable_key = unique_key + "_writable"
+                    if writable_key in writable_dict:
+                        _LOGGER.debug(
+                            "Skipping duplicate writable sensor %s (URI: %s, existing URI: %s)",
+                            writable_key,
+                            uri,
+                            writable_dict[writable_key]["url"],
+                        )
+                    else:
+                        self._parse_valid_writable_values_v11(endpoint_info, raw_dict)
+                        writable_dict[writable_key] = endpoint_info
 
                 if self._is_float_sensor(endpoint_info):
                     _LOGGER.debug("Adding %s as float sensor", uri)
-                    float_dict[unique_key] = endpoint_info
+                    if unique_key in float_dict:
+                        _LOGGER.debug(
+                            "Skipping duplicate float sensor %s (URI: %s, existing URI: %s)",
+                            unique_key,
+                            uri,
+                            float_dict[unique_key]["url"],
+                        )
+                    else:
+                        float_dict[unique_key] = endpoint_info
                 elif self._is_switch_v11(endpoint_info, raw_dict["#text"]):
                     _LOGGER.debug("Adding %s as switch", uri)
-                    self._parse_switch_values_v11(endpoint_info)
-                    switches_dict[unique_key] = endpoint_info
+                    if unique_key in switches_dict:
+                        _LOGGER.debug(
+                            "Skipping duplicate switch %s (URI: %s, existing URI: %s)",
+                            unique_key,
+                            uri,
+                            switches_dict[unique_key]["url"],
+                        )
+                    else:
+                        self._parse_switch_values_v11(endpoint_info)
+                        switches_dict[unique_key] = endpoint_info
                 elif self._is_text_sensor(endpoint_info) and value != "":
                     _LOGGER.debug("Adding %s as text sensor", uri)
                     # Ignore enpoints with an empty value
                     # This has to be the last branch for the above fallback to work
-                    text_dict[unique_key] = endpoint_info
+                    if unique_key in text_dict:
+                        _LOGGER.debug(
+                            "Skipping duplicate text sensor %s (URI: %s, existing URI: %s)",
+                            unique_key,
+                            uri,
+                            text_dict[unique_key]["url"],
+                        )
+                    else:
+                        text_dict[unique_key] = endpoint_info
                 else:
                     _LOGGER.debug("Not adding endpoint %s: Unknown type", uri)
 
             except Exception:  # noqa: BLE001
                 _LOGGER.debug("Invalid endpoint %s", uri, exc_info=True)
+
+        # Log final statistics
+        valid_endpoints = (
+            len(float_dict) + len(switches_dict) + len(text_dict) + len(writable_dict)
+        )
+        _LOGGER.info(
+            "Sensor enumeration complete: %d valid sensors from %d unique URIs (%d total URIs, %d duplicate keys)",
+            valid_endpoints,
+            len(deduplicated_uris),
+            total_uris,
+            self._num_duplicates,
+        )
 
     def _parse_switch_values(self, endpoint_info: ETAEndpoint):
         valid_values = ETAValidSwitchValues(on_value=0, off_value=0)
@@ -435,18 +514,31 @@ class EtaAPI:
     async def _get_all_sensors_v12(
         self, float_dict, switches_dict, text_dict, writable_dict
     ):
+        self._num_duplicates = 0  # Reset counter for this enumeration
         all_endpoints = await self._get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
 
-        # Deduplicate endpoints
-        # INFO: The key and value fields are flipped between this and all_endpoints
-        # to be able to easily check if a uri is already in the dict
+        # Flatten the multi-URI structure and track duplicates
+        # INFO: The key and value fields are flipped to check if a uri is already in the dict
         deduplicated_uris = {}
-        for key, uri in all_endpoints.items():
-            if uri not in deduplicated_uris:
-                deduplicated_uris[uri] = key
+        total_uris = 0
+        for key, uri_list in all_endpoints.items():
+            for uri in uri_list:
+                total_uris += 1
+                if uri not in deduplicated_uris:
+                    deduplicated_uris[uri] = key
+                else:
+                    _LOGGER.debug(
+                        "Skipping duplicate URI %s (key: %s, already have key: %s)",
+                        uri,
+                        key,
+                        deduplicated_uris[uri],
+                    )
 
-        _LOGGER.debug("Got %d unique endpoints", len(deduplicated_uris))
+        _LOGGER.debug(
+            "Got %d endpoints total, %d unique URIs", total_uris, len(deduplicated_uris)
+        )
+        _LOGGER.debug("Found %d duplicate keys with multiple URIs", self._num_duplicates)
 
         # Create a semaphore to limit concurrent requests
         semaphore = asyncio.Semaphore(self._max_concurrent_requests)
@@ -472,6 +564,11 @@ class EtaAPI:
                 _LOGGER.debug("Failed to get varinfo for %s: %s", uri, str(result))
             else:
                 endpoint_infos[uri] = result  # pyright: ignore[reportArgumentType]
+
+        # Sanitize duplicate nodes by testing which URIs return valid data
+        removed_count = await self._sanitize_duplicate_nodes(all_endpoints, endpoint_infos)
+        if removed_count > 0:
+            _LOGGER.info("Removed %d invalid URIs from duplicate nodes", removed_count)
 
         # Determine which endpoints need secondary data fetch
         needs_data = []
@@ -542,39 +639,95 @@ class EtaAPI:
                         # update the unit of the sensor if they are different, but only if we didn't assign a custom unit to the sensor
                     ):
                         _LOGGER.debug(
-                            "Correcting unit for sensor from '%s' to '%s'",
+                            "Correcting unit for sensor %s from '%s' to '%s'",
+                            unique_key,
                             endpoint_info["unit"],
                             unit,
                         )
                         endpoint_info["unit"] = unit
+                    if endpoint_info["endpoint_type"] == "DEFAULT" and endpoint_info["unit"] == "" and str(value).isnumeric():
+                        # some sensors have an empty unit and a type of DEFAULT in the varinfo endpoint, but show a numeric value in the var endpoint
+                        # those sensors are most likely unitless float sensors, so we set the unit to unitless and let the normal float sensor detection handle the rest
+                        _LOGGER.debug(
+                            "Updating unit for sensor %s to UNITLESS based on its value and type",
+                            unique_key,
+                        )
+                        endpoint_info["unit"] = CUSTOM_UNIT_UNITLESS
+                        endpoint_info["value"] = float(value)
 
                 if self._is_writable(endpoint_info):
                     _LOGGER.debug("Adding %s as writable sensor", uri)
                     # this is checked separately because all writable sensors are registered as both a sensor entity and a number entity
                     # add a suffix to the unique id to make sure it is still unique in case the sensor is selected in the writable list and in the sensor list
-                    writable_dict[unique_key + "_writable"] = endpoint_info
+                    writable_key = unique_key + "_writable"
+                    if writable_key in writable_dict:
+                        _LOGGER.debug(
+                            "Skipping duplicate writable sensor %s (URI: %s, existing URI: %s)",
+                            writable_key,
+                            uri,
+                            writable_dict[writable_key]["url"],
+                        )
+                    else:
+                        writable_dict[writable_key] = endpoint_info
 
                 if self._is_float_sensor(endpoint_info):
                     _LOGGER.debug("Adding %s as float sensor", uri)
-                    float_dict[unique_key] = endpoint_info
+                    if unique_key in float_dict:
+                        _LOGGER.debug(
+                            "Skipping duplicate float sensor %s (URI: %s, existing URI: %s)",
+                            unique_key,
+                            uri,
+                            float_dict[unique_key]["url"],
+                        )
+                    else:
+                        float_dict[unique_key] = endpoint_info
                 elif self._is_switch(endpoint_info):
                     _LOGGER.debug("Adding %s as switch", uri)
-                    self._parse_switch_values(endpoint_info)
-                    switches_dict[unique_key] = endpoint_info
+                    if unique_key in switches_dict:
+                        _LOGGER.debug(
+                            "Skipping duplicate switch %s (URI: %s, existing URI: %s)",
+                            unique_key,
+                            uri,
+                            switches_dict[unique_key]["url"],
+                        )
+                    else:
+                        self._parse_switch_values(endpoint_info)
+                        switches_dict[unique_key] = endpoint_info
                 elif self._is_text_sensor(endpoint_info):
                     _LOGGER.debug("Adding %s as text sensor", uri)
-                    text_dict[unique_key] = endpoint_info
+                    if unique_key in text_dict:
+                        _LOGGER.debug(
+                            "Skipping duplicate text sensor %s (URI: %s, existing URI: %s)",
+                            unique_key,
+                            uri,
+                            text_dict[unique_key]["url"],
+                        )
+                    else:
+                        text_dict[unique_key] = endpoint_info
                 else:
                     _LOGGER.debug("Not adding endpoint %s: Unknown type", uri)
 
             except Exception:  # noqa: BLE001
                 _LOGGER.debug("Invalid endpoint %s", uri, exc_info=True)
 
+        # Log final statistics
+        valid_endpoints = (
+            len(float_dict) + len(switches_dict) + len(text_dict) + len(writable_dict)
+        )
+        _LOGGER.info(
+            "Sensor enumeration complete: %d valid sensors from %d unique URIs (%d total URIs, %d duplicate keys)",
+            valid_endpoints,
+            len(deduplicated_uris),
+            total_uris,
+            self._num_duplicates,
+        )
+
     def _is_writable(self, endpoint_info: ETAEndpoint):
         # TypedDict does not support isinstance(),
         # so we have to manually check if we hace the correct dict type
         # based on the presence of a known key
         return (
+            endpoint_info["unit"] in self._writable_sensor_units and
             endpoint_info["valid_values"] is not None
             and "scaled_min_value" in endpoint_info["valid_values"]
         )
@@ -680,7 +833,9 @@ class EtaAPI:
             and data["validValues"] is not None
             and "min" in data["validValues"]
             and "#text" in data["validValues"]["min"]
-            and unit in self._writable_sensor_units
+            # check if the unit is in the list of writable sensor units or if the type is DEFAULT with an empty unit, which is an indicator of a unitless writable sensor
+            # this check may be inaccurate, but we can reject invalid writable sensors later when we have determined the final unit (thi is done in _is_writable)
+            and (unit in self._writable_sensor_units or ("type" in data and data["type"] == "DEFAULT" and unit == ""))
         ):
             min_value = data["validValues"]["min"]["#text"]
             max_value = data["validValues"]["max"]["#text"]
@@ -725,6 +880,210 @@ class EtaAPI:
         text = await data.text()
         data = xmltodict.parse(text)["eta"]["varInfo"]["variable"]
         return self._parse_varinfo(data, fub, uri)
+
+    def _sanitize_duplicate_nodes_v11(
+        self,
+        all_endpoints: dict[str, list[str]],
+        endpoint_data: dict[str, tuple[float | str, str, dict]],
+    ) -> int:
+        """
+        Sanitize duplicate nodes by removing URIs that return invalid data.
+
+        For nodes with multiple URIs, this function checks each URI's data value
+        (already fetched and stored in endpoint_data). If exactly one URI has valid
+        data and all others have 'xxx', the invalid URIs are removed from endpoint_data.
+
+        Args:
+            all_endpoints: Maps sensor keys to lists of URIs
+            endpoint_data: Maps URIs to their fetched data (value, unit, raw_dict) - modified in-place
+
+        Returns:
+            Number of URIs removed
+        """
+        # Phase 1: Identify nodes to process
+        nodes_to_check: list[tuple[str, list[str]]] = []
+        for key, uris in all_endpoints.items():
+            # Skip single-URI nodes
+            if len(uris) <= 1:
+                continue
+
+            # Find URIs that exist in endpoint_data
+            uris_in_data = [uri for uri in uris if uri in endpoint_data]
+
+            # Skip if fewer than 2 URIs are in endpoint_data
+            if len(uris_in_data) < 2:
+                continue
+
+            nodes_to_check.append((key, uris_in_data))
+
+        # Early return if no nodes to check
+        if not nodes_to_check:
+            return 0
+
+        _LOGGER.debug(
+            "Sanitizing duplicate nodes: found %d nodes with 2+ URIs in endpoint_data",
+            len(nodes_to_check),
+        )
+
+        # Phase 2: Evaluate each node (no data fetching needed - data already in endpoint_data)
+        uris_to_remove = []
+        for key, uris in nodes_to_check:
+            valid_uris = []
+            invalid_uris = []
+
+            for uri in uris:
+                # Get the value from endpoint_data (first element of tuple)
+                value = endpoint_data[uri][0]
+
+                if value == "xxx":
+                    invalid_uris.append(uri)
+                else:
+                    valid_uris.append(uri)
+
+            # Apply removal logic
+            if len(valid_uris) == 1 and len(invalid_uris) > 0:
+                # If exactly one valid URI and at least one invalid URI, remove the invalid ones
+                uris_to_remove.extend(invalid_uris)
+                _LOGGER.debug(
+                    "Node %s: keeping URI %s, removing %d invalid URIs: %s",
+                    key,
+                    valid_uris[0],
+                    len(invalid_uris),
+                    invalid_uris,
+                )
+            elif len(valid_uris) == 0:
+                # If no valid URIs, keep them all (can't determine which one is correct)
+                _LOGGER.debug(
+                    "Node %s: all %d URIs invalid, keeping all", key, len(invalid_uris)
+                )
+            elif len(valid_uris) > 1:
+                # If multiple valid URIs, keep them all (data inconsistency can't be resolved)
+                _LOGGER.debug(
+                    "Node %s: multiple valid URIs (%d), keeping all",
+                    key,
+                    len(valid_uris),
+                )
+
+        # Remove invalid URIs from endpoint_data
+        for uri in uris_to_remove:
+            del endpoint_data[uri]
+
+        return len(uris_to_remove)
+
+    async def _sanitize_duplicate_nodes(
+        self,
+        all_endpoints: dict[str, list[str]],
+        endpoint_infos: dict[str, ETAEndpoint],
+    ) -> int:
+        """
+        Sanitize duplicate nodes by removing URIs that return invalid data.
+
+        For nodes with multiple URIs, this function tests each URI by fetching
+        its data. If exactly one URI returns valid data and all others return
+        'xxx' or raise exceptions, the invalid URIs are removed from endpoint_infos.
+
+        Args:
+            all_endpoints: Maps sensor keys to lists of URIs
+            endpoint_infos: Maps URIs to their endpoint metadata (modified in-place)
+
+        Returns:
+            Number of URIs removed
+        """
+        # Phase 1: Identify nodes to process
+        nodes_to_check: list[tuple[str, list[str]]] = []
+        for key, uris in all_endpoints.items():
+            # Skip single-URI nodes
+            if len(uris) <= 1:
+                continue
+
+            # Find URIs that exist in endpoint_infos
+            uris_in_infos = [uri for uri in uris if uri in endpoint_infos]
+
+            # Skip if fewer than 2 URIs are in endpoint_infos
+            if len(uris_in_infos) < 2:
+                continue
+
+            nodes_to_check.append((key, uris_in_infos))
+
+        # Early return if no nodes to check
+        if not nodes_to_check:
+            return 0
+
+        _LOGGER.debug(
+            "Sanitizing duplicate nodes: found %d nodes with 2+ URIs in endpoint_infos",
+            len(nodes_to_check),
+        )
+
+        # Phase 2: Gather data from all duplicate URIs
+        all_uris_to_test = [uri for _, uris in nodes_to_check for uri in uris]
+        _LOGGER.debug("Gathering data from %d URIs for validation", len(all_uris_to_test))
+
+        semaphore = asyncio.Semaphore(self._max_concurrent_requests)
+
+        async def fetch_data_limited(uri):
+            async with semaphore:
+                return await self.get_data(uri, force_string_handling=True)
+
+        data_tasks = [fetch_data_limited(uri) for uri in all_uris_to_test]
+        data_results_list = await asyncio.gather(*data_tasks, return_exceptions=True)
+
+        # Map results back to URIs
+        uri_to_result = dict(zip(all_uris_to_test, data_results_list, strict=False))
+
+        # Phase 3: Evaluate each node and remove invalid URIs
+        uris_to_remove = []
+        for key, uris in nodes_to_check:
+            valid_uris = []
+            invalid_uris = []
+
+            for uri in uris:
+                result = uri_to_result[uri]
+
+                # Check if result is an exception
+                if isinstance(result, BaseException):
+                    _LOGGER.debug(
+                        "URI %s raised exception during data fetch: %s",
+                        uri,
+                        str(result),
+                    )
+                    invalid_uris.append(uri)
+                elif not isinstance(result, Exception):
+                    # Result is a tuple (value, unit)
+                    value, _ = result
+                    if value == "xxx":
+                        invalid_uris.append(uri)
+                    else:
+                        valid_uris.append(uri)
+
+            # Apply removal logic
+            if len(valid_uris) == 1 and len(invalid_uris) > 0:
+                # If exactly one valid URI and at least one invalid URI, remove the invalid ones
+                uris_to_remove.extend(invalid_uris)
+                _LOGGER.debug(
+                    "Node %s: keeping URI %s, removing %d invalid URIs: %s",
+                    key,
+                    valid_uris[0],
+                    len(invalid_uris),
+                    invalid_uris,
+                )
+            elif len(valid_uris) == 0:
+                # If no valid URIs, keep them all (can't determine which one is correct)
+                _LOGGER.debug(
+                    "Node %s: all %d URIs invalid, keeping all", key, len(invalid_uris)
+                )
+            elif len(valid_uris) > 1:
+                # If multiple valid URIs, keep them all (data inconsistency can't be resolved)
+                _LOGGER.debug(
+                    "Node %s: multiple valid URIs (%d), keeping all",
+                    key,
+                    len(valid_uris),
+                )
+
+        # Remove invalid URIs from endpoint_infos
+        for uri in uris_to_remove:
+            del endpoint_infos[uri]
+
+        return len(uris_to_remove)
 
     def _parse_switch_state(self, data):
         return int(data["#text"])
