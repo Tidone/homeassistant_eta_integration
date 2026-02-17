@@ -41,8 +41,8 @@ CUSTOM_UNITS = [
 
 # Supported features for ETA entities
 # We have to use pre-defined events here because otherwise the services wouldn't show up in the UI
-SUPPORT_WRITE_TIMESLOT = calendar.CalendarEntityFeature.CREATE_EVENT
-SUPPORT_WRITE_TIMESLOT_WITH_TEMPERATURE = calendar.CalendarEntityFeature.DELETE_EVENT
+SUPPORT_WRITE_TIMESLOT = calendar.const.CalendarEntityFeature.CREATE_EVENT
+SUPPORT_WRITE_TIMESLOT_WITH_TEMPERATURE = calendar.const.CalendarEntityFeature.DELETE_EVENT
 
 # Internal units which should not be shown to the user
 INVISIBLE_UNITS = [

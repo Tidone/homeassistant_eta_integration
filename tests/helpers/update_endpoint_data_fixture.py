@@ -20,6 +20,9 @@ from time import time
 import aiohttp
 import xmltodict
 
+# Add parent's parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
 from custom_components.eta_webservices.api import EtaAPI
 
 
@@ -589,8 +592,8 @@ Examples:
     parser.add_argument(
         "--fixture",
         type=Path,
-        default=Path("fixtures/api_endpoint_data.json"),
-        help="Path to fixture file (default: fixtures/api_endpoint_data.json)",
+        default=Path("../fixtures/api_endpoint_data.json"),
+        help="Path to fixture file (default: ../fixtures/api_endpoint_data.json)",
     )
     parser.add_argument(
         "--mode",
