@@ -37,6 +37,7 @@ from .const import (
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     CUSTOM_UNIT_TIMESLOT,
     CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
+    CUSTOM_UNIT_UNITLESS,
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
@@ -234,6 +235,8 @@ def _get_native_unit(unit):
     if unit == "%rH":
         return "%"
     if unit == "":
+        return None
+    if unit == CUSTOM_UNIT_UNITLESS:
         return None
     return unit
 

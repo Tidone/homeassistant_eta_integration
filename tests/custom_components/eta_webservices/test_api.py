@@ -813,7 +813,8 @@ async def test_get_all_sensors_v12_respects_concurrent_request_limit():
         max_concurrent = max(max_concurrent, current_concurrent)
 
         # Simulate work
-        await asyncio.sleep(0.01)
+        # This sleep is necessary to give control back to the event loop and allow other requests to start, which is essential for testing concurrency limits
+        await asyncio.sleep(0.02)
 
         current_concurrent -= 1
         completed_count += 1
@@ -906,7 +907,8 @@ async def test_get_all_sensors_v11_respects_concurrent_request_limit():
         max_concurrent = max(max_concurrent, current_concurrent)
 
         # Simulate work
-        await asyncio.sleep(0.01)
+        # This sleep is necessary to give control back to the event loop and allow other requests to start, which is essential for testing concurrency limits
+        await asyncio.sleep(0.02)
 
         current_concurrent -= 1
         completed_count += 1
@@ -1634,7 +1636,8 @@ async def test_get_all_data_respects_concurrent_request_limit():
         max_concurrent = max(max_concurrent, current_concurrent)
 
         # Simulate some work with a small delay
-        await asyncio.sleep(0.01)
+        # This sleep is necessary to give control back to the event loop and allow other requests to start, which is essential for testing concurrency limits
+        await asyncio.sleep(0.02)
 
         # Decrement concurrent counter
         current_concurrent -= 1

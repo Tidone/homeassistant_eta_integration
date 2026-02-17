@@ -74,6 +74,9 @@ FLOAT_SENSOR_UNITS = [
     "%rH",
     CUSTOM_UNIT_UNITLESS,
 ]
+# The inclusion of CUSTOM_UNIT_UNITLESS in FLOAT_SENSOR_UNITS will also detect the serial number as a float sensor,
+# but there is no way to exclude only this single endpoint without hardcoding it
+# If you want to handle it as a string you can add a template helper in HA to convert it to a string
 
 WRITABLE_SENSOR_UNITS = [
     "%",
