@@ -308,19 +308,21 @@ class EtaOptionsFlowHandler(OptionsFlow):
         session = async_get_clientsession(self.hass)
         eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
 
-        sensor_list = {value["url"]: False for value in self.data[FLOAT_DICT].values()}
+        sensor_list: dict[str, dict[str, bool]] = {
+            value["url"]: {} for value in self.data[FLOAT_DICT].values()
+        }
         sensor_list.update(
-            {value["url"]: False for value in self.data[SWITCHES_DICT].values()}
+            {value["url"]: {} for value in self.data[SWITCHES_DICT].values()}
         )
         sensor_list.update(
             {
-                value["url"]: (value["unit"] in CUSTOM_UNITS)
+                value["url"]: {"force_string_handling": value["unit"] in CUSTOM_UNITS}
                 for value in self.data[TEXT_DICT].values()
             }
         )
         sensor_list.update(
             {
-                value["url"]: (value["unit"] in CUSTOM_UNITS)
+                value["url"]: {"force_string_handling": value["unit"] in CUSTOM_UNITS}
                 for value in self.data[WRITABLE_DICT].values()
             }
         )
@@ -329,9 +331,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
         # then loop through our lists of sensors and update the values
         for entity in list(self.data[FLOAT_DICT].keys()):
-            if self.data[FLOAT_DICT][entity]["url"] not in all_data or isinstance(
-                all_data[self.data[FLOAT_DICT][entity]["url"]], Exception
-            ):
+            if self.data[FLOAT_DICT][entity]["url"] not in all_data:
                 _LOGGER.exception(
                     "Exception while updating the value for endpoint '%s' (%s)",
                     self.data[FLOAT_DICT][entity]["friendly_name"],
@@ -339,14 +339,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 )
                 self._errors["base"] = "value_update_error"
             else:
-                self.data[FLOAT_DICT][entity]["value"], _ = all_data[
+                self.data[FLOAT_DICT][entity]["value"] = all_data[
                     self.data[FLOAT_DICT][entity]["url"]
-                ]  # pyright: ignore[reportGeneralTypeIssues]
+                ]
 
         for entity in list(self.data[SWITCHES_DICT].keys()):
-            if self.data[SWITCHES_DICT][entity]["url"] not in all_data or isinstance(
-                all_data[self.data[SWITCHES_DICT][entity]["url"]], Exception
-            ):
+            if self.data[SWITCHES_DICT][entity]["url"] not in all_data:
                 _LOGGER.exception(
                     "Exception while updating the value for endpoint '%s' (%s)",
                     self.data[SWITCHES_DICT][entity]["friendly_name"],
@@ -354,14 +352,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 )
                 self._errors["base"] = "value_update_error"
             else:
-                self.data[SWITCHES_DICT][entity]["value"], _ = all_data[
+                self.data[SWITCHES_DICT][entity]["value"] = all_data[
                     self.data[SWITCHES_DICT][entity]["url"]
-                ]  # pyright: ignore[reportGeneralTypeIssues]
+                ]
 
         for entity in list(self.data[TEXT_DICT].keys()):
-            if self.data[TEXT_DICT][entity]["url"] not in all_data or isinstance(
-                all_data[self.data[TEXT_DICT][entity]["url"]], Exception
-            ):
+            if self.data[TEXT_DICT][entity]["url"] not in all_data:
                 _LOGGER.exception(
                     "Exception while updating the value for endpoint '%s' (%s)",
                     self.data[TEXT_DICT][entity]["friendly_name"],
@@ -369,14 +365,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 )
                 self._errors["base"] = "value_update_error"
             else:
-                self.data[TEXT_DICT][entity]["value"], _ = all_data[
+                self.data[TEXT_DICT][entity]["value"] = all_data[
                     self.data[TEXT_DICT][entity]["url"]
-                ]  # pyright: ignore[reportGeneralTypeIssues]
+                ]
 
         for entity in list(self.data[WRITABLE_DICT].keys()):
-            if self.data[WRITABLE_DICT][entity]["url"] not in all_data or isinstance(
-                all_data[self.data[WRITABLE_DICT][entity]["url"]], Exception
-            ):
+            if self.data[WRITABLE_DICT][entity]["url"] not in all_data:
                 _LOGGER.exception(
                     "Exception while updating the value for endpoint '%s' (%s)",
                     self.data[WRITABLE_DICT][entity]["friendly_name"],
@@ -384,9 +378,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 )
                 self._errors["base"] = "value_update_error"
             else:
-                self.data[WRITABLE_DICT][entity]["value"], _ = all_data[
+                self.data[WRITABLE_DICT][entity]["value"] = all_data[
                     self.data[WRITABLE_DICT][entity]["url"]
-                ]  # pyright: ignore[reportGeneralTypeIssues]
+                ]
 
     def _handle_new_sensors(
         self,

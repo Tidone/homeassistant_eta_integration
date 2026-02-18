@@ -113,10 +113,10 @@ class EtaAPI:
             force_string_handling=force_string_handling,
         )
 
-    async def get_all_data(self, sensor_list: dict[str, bool]):
+    async def get_all_data(self, sensor_list: dict[str, dict[str, bool]]):
         """Get all data from all endpoints.
 
-        :param sensor_list: Dict[url, force_string_handling] of sensors to query the data for
+        :param sensor_list: Dict[url, Dict[str, bool]] of sensors to query the data for
         :return: List of all data
         :rtype: Dict[str, Any]
         """
@@ -135,10 +135,6 @@ class EtaAPI:
         data = await self._http.get_request("/user/errors")
         text = await data.text()
         data = xmltodict.parse(text)["eta"]["errors"]["fub"]
-
-        # Handle case where there are no errors (empty response)
-        if data is None:
-            return []
 
         return self._http.parse_errors(data)
 

@@ -37,7 +37,6 @@ from .const import (
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     CUSTOM_UNIT_TIMESLOT,
     CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
-    CUSTOM_UNIT_UNITLESS,
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
@@ -49,6 +48,7 @@ from .const import (
 )
 from .coordinator import ETAErrorUpdateCoordinator, ETAWritableUpdateCoordinator
 from .entity import EtaErrorEntity, EtaSensorEntity, EtaWritableSensorEntity
+from .utils import get_native_unit
 
 _LOGGER = logging.getLogger(__name__)
 SCAN_INTERVAL = timedelta(minutes=1)
@@ -231,16 +231,6 @@ def _determine_device_class(unit):
     return None
 
 
-def _get_native_unit(unit):
-    if unit == "%rH":
-        return "%"
-    if unit == "":
-        return None
-    if unit == CUSTOM_UNIT_UNITLESS:
-        return None
-    return unit
-
-
 class EtaFloatSensor(EtaSensorEntity[float]):
     """Representation of a Float Sensor."""
 
@@ -257,7 +247,7 @@ class EtaFloatSensor(EtaSensorEntity[float]):
 
         self._attr_device_class = _determine_device_class(endpoint_info["unit"])
 
-        self._attr_native_unit_of_measurement = _get_native_unit(endpoint_info["unit"])
+        self._attr_native_unit_of_measurement = get_native_unit(endpoint_info["unit"])
 
         if self._attr_device_class == SensorDeviceClass.ENERGY:
             self._attr_state_class = SensorStateClass.TOTAL_INCREASING
@@ -286,7 +276,7 @@ class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
 
         self._attr_device_class = _determine_device_class(endpoint_info["unit"])
 
-        self._attr_native_unit_of_measurement = _get_native_unit(endpoint_info["unit"])
+        self._attr_native_unit_of_measurement = get_native_unit(endpoint_info["unit"])
 
         if self._attr_device_class == SensorDeviceClass.ENERGY:
             self._attr_state_class = SensorStateClass.TOTAL_INCREASING

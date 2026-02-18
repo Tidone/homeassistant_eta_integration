@@ -25,6 +25,7 @@ from .api import EtaAPI, ETAEndpoint, ETAValidWritableValues
 from .const import (
     ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
     CHOSEN_WRITABLE_SENSORS,
+    CUSTOM_UNIT_UNITLESS,
     DOMAIN,
     INVISIBLE_UNITS,
     WRITABLE_DICT,
@@ -32,6 +33,7 @@ from .const import (
 )
 from .coordinator import ETAWritableUpdateCoordinator
 from .entity import EtaWritableSensorEntity
+from .utils import get_native_unit
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -61,6 +63,8 @@ async def async_setup_entry(
         for entity in chosen_writable_sensors
         if config[WRITABLE_DICT][entity]["unit"]
         not in INVISIBLE_UNITS  # exclude all endpoints with a custom unit (e.g. time endpoints)
+        or config[WRITABLE_DICT][entity]["unit"]
+        == CUSTOM_UNIT_UNITLESS  # except unitless endpoints
     ]
     async_add_entities(sensors, update_before_add=True)
 
@@ -93,9 +97,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         self._attr_device_class = self.determine_device_class(endpoint_info["unit"])
         self.valid_values: ETAValidWritableValues = endpoint_info["valid_values"]  # pyright: ignore[reportAttributeAccessIssue]
 
-        self._attr_native_unit_of_measurement = endpoint_info["unit"]
-        if self._attr_native_unit_of_measurement == "":
-            self._attr_native_unit_of_measurement = None
+        self._attr_native_unit_of_measurement = get_native_unit(endpoint_info["unit"])
 
         self._attr_entity_category = EntityCategory.CONFIG
 

@@ -1,0 +1,15 @@
+{
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "[json][jsonc][yaml]": {
+       "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "files.trimTrailingWhitespace": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "pylint.importStrategy": "fromEnvironment"
+}

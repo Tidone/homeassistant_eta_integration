@@ -43,7 +43,7 @@ class ETAErrorUpdateCoordinator(DataUpdateCoordinator[list[ETAError]]):
             update_interval=ERROR_SCAN_INTERVAL,
         )
 
-    def _handle_error_events(self, new_errors):
+    def _handle_error_events(self, new_errors: list[ETAError]):
         old_errors = self.data
         if old_errors is None:
             old_errors = []
@@ -95,20 +95,15 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
 
     async def _async_update_data(self) -> dict:
         """Update data via library."""
-        data = {}
         eta_client = EtaAPI(self.session, self.host, self.port)
 
-        for sensor in self.chosen_writable_sensors:
-            async with timeout(10):
-                value, _ = await eta_client.get_data(
-                    self.all_writable_sensors[sensor]["url"],
-                    # force the api to return the number value instead of the text value, even if the eta endpoint returns an invalid unit
-                    # This is the case for e.g. time endpoints, which have an empty unit, but we still need the number value (minutes since midnight), instead of the text value ("19:00")
-                    self._should_force_number_handling(
-                        self.all_writable_sensors[sensor]["unit"]
-                    ),
+        sensor_list = {
+            self.all_writable_sensors[sensor]["url"]: {
+                "force_number_handling": self._should_force_number_handling(
+                    self.all_writable_sensors[sensor]["unit"]
                 )
-                data[sensor] = value
-                data[sensor.removesuffix("_writable")] = value
+            }
+            for sensor in self.chosen_writable_sensors
+        }
 
-        return data
+        return await eta_client.get_all_data(sensor_list)

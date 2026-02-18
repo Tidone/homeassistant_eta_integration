@@ -3,6 +3,7 @@
 import asyncio
 from datetime import datetime
 import logging
+from typing import Any
 
 from aiohttp import ClientSession
 import xmltodict
@@ -87,7 +88,7 @@ class APIClient:
         data: dict,
         force_number_handling: bool = False,
         force_string_handling: bool = False,
-    ) -> tuple:
+    ) -> tuple[float | str, str]:
         """Parse data from ETA API response.
 
         :param data: XML data dict
@@ -111,7 +112,7 @@ class APIClient:
             value = data["@strValue"]
         return value, unit
 
-    async def get_data_plus_raw(self, uri: str):
+    async def get_data_plus_raw(self, uri: str) -> tuple[Any, str, dict]:
         """Get data with raw XML dict.
 
         :param uri: URI suffix
@@ -126,7 +127,7 @@ class APIClient:
 
     async def get_data(
         self, uri, force_number_handling=False, force_string_handling=False
-    ):
+    ) -> tuple[float | str, str]:
         """Request the data from a API URL.
 
         :param uri: ETA API url suffix, like /120/1/123
@@ -144,39 +145,52 @@ class APIClient:
             force_string_handling=force_string_handling,
         )
 
-    async def get_all_data(self, sensor_list: dict[str, bool]):
+    async def get_all_data(self, sensor_list: dict[str, dict[str, bool]]):
         """Get all data from all endpoints.
 
-        :param sensor_list: Dict[url, force_string_handling] of sensors to query the data for
+        :param sensor_list: Dict[url, Dict[str, bool]] of sensors to query the data for
         :return: List of all data
         :rtype: Dict[str, Any]
         """
         # Create a semaphore to limit concurrent requests
         semaphore = asyncio.Semaphore(self.max_concurrent_requests)
 
-        async def fetch_data_limited(uri, force_string_handling):
+        async def fetch_data_limited(
+            uri: str, force_number_handling: bool, force_string_handling: bool
+        ):
             """Fetch data with concurrency limit."""
             async with semaphore:
-                return await self.get_data(
-                    uri, force_string_handling=force_string_handling
+                result, _ = await self.get_data(
+                    uri,
+                    force_number_handling=force_number_handling,
+                    force_string_handling=force_string_handling,
                 )
+                return result
 
         tasks = [
-            fetch_data_limited(uri, force_string_handling)
-            for uri, force_string_handling in sensor_list.items()
+            fetch_data_limited(
+                uri,
+                force_number_handling=force_handlings.get(
+                    "force_number_handling", False
+                ),
+                force_string_handling=force_handlings.get(
+                    "force_string_handling", False
+                ),
+            )
+            for uri, force_handlings in sensor_list.items()
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        data_dict = {}
+        data_dict: dict[str, float | str] = {}
         for uri, result in zip(sensor_list.keys(), results, strict=False):
-            if isinstance(result, Exception):
+            if isinstance(result, BaseException):
                 _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
             else:
                 data_dict[uri] = result
 
         return data_dict
 
-    def parse_errors(self, data) -> list:
+    def parse_errors(self, data) -> list[ETAError]:
         """Parse error data from ETA API.
 
         :param data: Error data from API
@@ -184,7 +198,7 @@ class APIClient:
         :param port: Port for error dict
         :return: List of ETAError dicts
         """
-        errors = []
+        errors: list[ETAError] = []
         if isinstance(data, dict):
             data = [data]
 

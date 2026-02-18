@@ -2,7 +2,7 @@
 
 from homeassistant.helpers.device_registry import DeviceInfo
 
-from .const import DOMAIN
+from .const import CUSTOM_UNIT_UNITLESS, DOMAIN
 
 
 def create_device_info(host: str, port: str):
@@ -13,3 +13,14 @@ def create_device_info(host: str, port: str):
         manufacturer="ETA",
         configuration_url="https://www.meineta.at",
     )
+
+
+def get_native_unit(unit):
+    """Convert ETA API units to Home Assistant native units."""
+    if unit == "%rH":
+        return "%"
+    if unit == "":
+        return None
+    if unit == CUSTOM_UNIT_UNITLESS:
+        return None
+    return unit

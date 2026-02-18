@@ -1488,8 +1488,8 @@ async def test_get_all_data_fetches_multiple_sensors(load_fixture):
 
     # Test with multiple sensors
     sensor_list = {
-        "/120/10101/0/0/12197": False,
-        "/120/10101/0/0/12080": False,
+        "/120/10101/0/0/12197": {},
+        "/120/10101/0/0/12080": {},
     }
 
     result = await api.get_all_data(sensor_list)
@@ -1500,7 +1500,7 @@ async def test_get_all_data_fetches_multiple_sensors(load_fixture):
     # Check that URIs are in the results
     for uri in sensor_list.keys():
         if uri in result:
-            assert isinstance(result[uri], tuple), f"Result for {uri} should be a tuple"
+            assert isinstance(result[uri], (float, int, str)), f"Result for {uri} should be a value"
 
 
 @pytest.mark.asyncio
@@ -1538,8 +1538,8 @@ async def test_get_all_data_handles_exceptions_gracefully():
     api._http.get_request = mock_get_request
 
     sensor_list = {
-        "/120/10101/0/0/12197": False,
-        "/120/10101/0/0/99999": False,
+        "/120/10101/0/0/12197": {},
+        "/120/10101/0/0/99999": {},
     }
 
     result = await api.get_all_data(sensor_list)
@@ -1601,9 +1601,9 @@ async def test_get_all_data_when_all_sensors_fail():
     api._http.get_request = mock_get_request
 
     sensor_list = {
-        "/120/10101/0/0/12197": False,
-        "/120/10101/0/0/12198": False,
-        "/120/10101/0/0/12199": False,
+        "/120/10101/0/0/12197": {},
+        "/120/10101/0/0/12198": {},
+        "/120/10101/0/0/12199": {},
     }
 
     result = await api.get_all_data(sensor_list)
@@ -1658,7 +1658,7 @@ async def test_get_all_data_respects_concurrent_request_limit():
 
     # Create api._http.max_concurrent_requests*2 sensors to ensure we exceed the limit of api._http.max_concurrent_requests
     sensor_list = {
-        f"/120/10101/0/0/1219{i}": False
+        f"/120/10101/0/0/1219{i}": {}
         for i in range(api._http.max_concurrent_requests*2)
     }
 
@@ -1671,6 +1671,88 @@ async def test_get_all_data_respects_concurrent_request_limit():
     assert max_concurrent > 1, "Should have some concurrency"
     assert completed_count == len(sensor_list), "Should have completed all requests"
     assert len(result) == len(sensor_list), "Should have results for all sensors"
+
+
+@pytest.mark.asyncio
+async def test_get_all_data_passes_force_number_handling():
+    """Test that get_all_data passes force_number_handling per sensor.
+
+    This test verifies:
+    - Sensors with force_number_handling=True return a numeric value even for custom units
+    - Sensors without force_number_handling return a string for custom units
+    """
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.1", 8080)
+
+    custom_unit_xml = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<value uri="/user/var/120/10101/0/0/12345" strValue="100" '
+        'unit="CustomUnit" decPlaces="0" scaleFactor="10" advTextOffset="0">1000</value>'
+        '</eta>'
+    )
+
+    async def mock_get_request(suffix):
+        response = AsyncMock()
+        response.text = AsyncMock(return_value=custom_unit_xml)
+        return response
+
+    api._http.get_request = mock_get_request
+
+    sensor_list = {
+        "/120/10101/0/0/12345": {"force_number_handling": True},
+        "/120/10101/0/0/12346": {},
+    }
+
+    result = await api.get_all_data(sensor_list)
+
+    assert result["/120/10101/0/0/12345"] == 100.0, (
+        "force_number_handling=True should return scaled numeric value"
+    )
+    assert result["/120/10101/0/0/12346"] == "100", (
+        "Default should return string value for custom unit"
+    )
+
+
+@pytest.mark.asyncio
+async def test_get_all_data_passes_force_string_handling():
+    """Test that get_all_data passes force_string_handling per sensor.
+
+    This test verifies:
+    - Sensors with force_string_handling=True return a string even for float units
+    - Sensors without force_string_handling return a numeric value for float units
+    """
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.1", 8080)
+
+    float_unit_xml = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<value uri="/user/var/120/10101/0/0/12197" strValue="20.5" '
+        'unit="°C" decPlaces="1" scaleFactor="10" advTextOffset="0">205</value>'
+        '</eta>'
+    )
+
+    async def mock_get_request(suffix):
+        response = AsyncMock()
+        response.text = AsyncMock(return_value=float_unit_xml)
+        return response
+
+    api._http.get_request = mock_get_request
+
+    sensor_list = {
+        "/120/10101/0/0/12197": {"force_string_handling": True},
+        "/120/10101/0/0/12198": {},
+    }
+
+    result = await api.get_all_data(sensor_list)
+
+    assert result["/120/10101/0/0/12197"] == "20.5", (
+        "force_string_handling=True should return string value"
+    )
+    assert result["/120/10101/0/0/12198"] == 20.5, (
+        "Default should return scaled numeric value for float unit"
+    )
 
 
 @pytest.mark.asyncio

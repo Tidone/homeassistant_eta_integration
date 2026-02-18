@@ -78,7 +78,7 @@ class EtaWritableSensorEntity(
         )
         CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
 
-        self.handle_data_updates(float(coordinator.data[self.unique_id]))
+        self.handle_data_updates(float(coordinator.data[self.uri]))
 
     @abstractmethod
     def handle_data_updates(self, data: float) -> None:  # noqa: D102
@@ -87,8 +87,9 @@ class EtaWritableSensorEntity(
     @callback
     def _handle_coordinator_update(self) -> None:
         """Update attributes when the coordinator updates."""
-        data = self.coordinator.data[self.unique_id]
-        self.handle_data_updates(float(data))
+        data = self.coordinator.data.get(self.uri, None)
+        if data is not None:
+            self.handle_data_updates(float(data))
         super()._handle_coordinator_update()
 
 
