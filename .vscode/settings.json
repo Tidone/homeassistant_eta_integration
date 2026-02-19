@@ -11,5 +11,10 @@
     },
     "files.trimTrailingWhitespace": true,
     "python.analysis.typeCheckingMode": "basic",
-    "pylint.importStrategy": "fromEnvironment"
+    "pylint.importStrategy": "fromEnvironment",
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }
