@@ -9,7 +9,7 @@
                     "port": "Port",
                     "force_legacy_mode": "Erzwinge die alte API Version",
                     "enable_debug_logging": "Aktiviere ausführliche Protokolle",
-                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch hinzufügen (kann hunderte auf einmal hinzufügen)"
+                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch hinzufügen (können ja nach ETA Gerät mehrere hundert Entitäten sein!)"
                 }
             },
             "select_entities": {
