@@ -77,7 +77,9 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                     _LOGGER.parent.setLevel(logging.DEBUG)
 
                 # If enabled, skip the manual selection step and add every discovered entity.
-                auto_select_all_entities = user_input.get(AUTO_SELECT_ALL_ENTITIES, True)
+                auto_select_all_entities = user_input.get(
+                    AUTO_SELECT_ALL_ENTITIES, False
+                )
                 # Keep the helper checkbox out of the stored config entry data.
                 self.data = {
                     key: value
@@ -127,7 +129,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         # Provide defaults for form
         user_input[CONF_HOST] = "0.0.0.0"
         user_input[CONF_PORT] = "8080"
-        user_input[AUTO_SELECT_ALL_ENTITIES] = True
+        user_input[AUTO_SELECT_ALL_ENTITIES] = False
 
         return await self._show_config_form_user(user_input)
 
@@ -170,7 +172,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                     vol.Required(ENABLE_DEBUG_LOGGING, default=False): cv.boolean,
                     vol.Required(
                         AUTO_SELECT_ALL_ENTITIES,
-                        default=user_input.get(AUTO_SELECT_ALL_ENTITIES, True),
+                        default=user_input.get(AUTO_SELECT_ALL_ENTITIES, False),
                     ): cv.boolean,
                 }
             ),
