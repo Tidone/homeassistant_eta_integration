@@ -74,6 +74,10 @@ To do that follow these steps:
 1. In the popup dialog you can choose between different options to update the list of sensors:
     - The first option, `Update sensor values`, will only update the current values of all sensors in the list. It will not update the list of sensors itself. This option is enabled by default to make it easier to find the correct sensor in the list.
     - The second option, `Update list of sensors`, will update the whole list of sensors.
+    - The third option, `Maximum parallel API requests`, controls how many API requests are sent in parallel while polling data.
+      - Higher values can speed up updates, but increase load on the ETA unit and may cause errors on older/slower devices.
+      - Lower values are safer for older ETA units.
+      - The value is selected via dropdown (`1, 2, 3, 5, 8, 10, 15`).
 1. New sensors will then be added to the list, where you can select them in the next step.
 1. Deleted or renamed sensors will be handled differently depending on if the sensor has previously been added to HA:
     - If the sensor has not been added to HA, it will simply be removed from the list. If it has been renamed on the ETA terminal, it will show its new name instead.
