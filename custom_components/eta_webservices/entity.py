@@ -3,10 +3,8 @@
 from abc import abstractmethod
 from typing import Generic, TypeVar, cast
 
-from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity import Entity, generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -56,25 +54,6 @@ class EtaEntity(Entity):
             self.port,
             max_concurrent_requests=self.max_parallel_requests,
             request_semaphore=self.request_semaphore,
-        )
-
-
-class EtaSensorEntity(SensorEntity, EtaEntity, Generic[_EntityT]):
-    """Common sensor entity definition for all ETA sensors."""
-
-    async def async_update(self):
-        """Fetch new state data for the sensor.
-
-        This is the only method that should fetch new data for Home Assistant.
-        """
-        eta_client = self._create_eta_client()
-        value, _ = await eta_client.get_data(self.uri)
-        self._attr_native_value = cast(_EntityT, value)  # pyright: ignore[reportAttributeAccessIssue]
-
-    async def async_update_timeslot_service(self, begin, end, temperature=None) -> None:
-        """Handle the write_timeslot service call. Raises an error if it is not overwritten by the entity."""
-        raise HomeAssistantError(
-            f"Entity {self.entity_id} does not support setting a timeslot"
         )
 
 
