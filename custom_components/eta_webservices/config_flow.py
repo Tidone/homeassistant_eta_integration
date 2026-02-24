@@ -294,12 +294,13 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
-        parallel_request_options = [1, 2, 3, 5, 8, 10, 15]
+        parallel_request_options = ["1", "2", "3", "5", "8", "10", "15"]
         default_parallel_requests = self.hass.data[DOMAIN][
             self.config_entry.entry_id  # pyright: ignore[reportOptionalMemberAccess]
         ].get(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+        default_parallel_requests = str(default_parallel_requests)
         if default_parallel_requests not in parallel_request_options:
-            default_parallel_requests = DEFAULT_MAX_PARALLEL_REQUESTS
+            default_parallel_requests = str(DEFAULT_MAX_PARALLEL_REQUESTS)
 
         return self.async_show_form(
             step_id="init",
