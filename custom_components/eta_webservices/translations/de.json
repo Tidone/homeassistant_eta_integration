@@ -3,13 +3,13 @@
         "step": {
             "user": {
                 "title": "ETA Schritt 1",
-                "description": "Gib die Netzwerkadresse deines ETA Geräts ein. Wenn du Hilfe bei der Konfiguration brauchst, schau hier nach: https://github.com/Tidone/homeassistant_eta_integration \n\n Info: Abhängig von der Anzahl der möglichen Endpunkte deinse ETA Geräts kann die Abfrage eine lange Zeit dauern! Bitte hab etwas Geduld nachdem du auf Absenden gedrückt hast.\n\nWähle den alten API Modus falls du Probleme mit dem neuen Modus hast.",
+                "description": "Gib die Netzwerkadresse deines ETA Geräts ein. Wenn du Hilfe bei der Konfiguration brauchst, schau hier nach: https://github.com/Tidone/homeassistant_eta_integration \n\n Info: Abhängig von der Anzahl der möglichen Endpunkte deinse ETA Geräts kann die Abfrage eine lange Zeit dauern! Bitte hab etwas Geduld nachdem du auf Absenden gedrückt hast.\n\nWähle den alten API Modus falls du Probleme mit dem neuen Modus hast.\n\nWichtig: Wenn du die automatische Auswahl aktivierst, werden alle gefundenen Entitäten (inklusive schreibbarer Entitäten) auf einmal hinzugefügt. Das können mehrere hundert Entitäten sein (z. B. 700+).",
                 "data": {
                     "host": "Host",
                     "port": "Port",
                     "force_legacy_mode": "Erzwinge die alte API Version",
                     "enable_debug_logging": "Aktiviere ausführliche Protokolle",
-                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch hinzufügen"
+                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch hinzufügen (kann hunderte auf einmal hinzufügen)"
                 }
             },
             "select_entities": {

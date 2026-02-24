@@ -3,13 +3,13 @@
         "step": {
             "user": {
                 "title": "ETA Step 1",
-                "description": "Enter the host and port of your ETA terminal. If you need help with the configuration have a look here: https://github.com/Tidone/homeassistant_eta_integration \n\n Note: Depending on the total number of endpoints of your ETA terminal, getting all possible sensors can take a very long time! Have patience when you click on Submit.\n\nSelect the old API mode if you have problems with the new ETA API.",
+                "description": "Enter the host and port of your ETA terminal. If you need help with the configuration have a look here: https://github.com/Tidone/homeassistant_eta_integration \n\n Note: Depending on the total number of endpoints of your ETA terminal, getting all possible sensors can take a very long time! Have patience when you click on Submit.\n\nSelect the old API mode if you have problems with the new ETA API.\n\nImportant: If you enable automatic entity selection, all discovered entities (including writable ones) are added at once. This can be several hundred entities (for example 700+).",
                 "data": {
                     "host": "Host",
                     "port": "Port",
                     "force_legacy_mode": "Force old API mode",
                     "enable_debug_logging": "Enable verbose logging",
-                    "auto_select_all_entities": "Automatically add all discovered entities"
+                    "auto_select_all_entities": "Automatically add all discovered entities (can add hundreds at once)"
                 }
             },
             "select_entities": {

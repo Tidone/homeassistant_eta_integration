@@ -76,7 +76,9 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                     self._old_logging_level = _LOGGER.parent.getEffectiveLevel()
                     _LOGGER.parent.setLevel(logging.DEBUG)
 
+                # If enabled, skip the manual selection step and add every discovered entity.
                 auto_select_all_entities = user_input.get(AUTO_SELECT_ALL_ENTITIES, True)
+                # Keep the helper checkbox out of the stored config entry data.
                 self.data = {
                     key: value
                     for key, value in user_input.items()
@@ -95,6 +97,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 )
 
                 if auto_select_all_entities:
+                    # Select all discovered entities across all categories.
                     self.data[CHOSEN_FLOAT_SENSORS] = list(self.data[FLOAT_DICT].keys())
                     self.data[CHOSEN_SWITCHES] = list(self.data[SWITCHES_DICT].keys())
                     self.data[CHOSEN_TEXT_SENSORS] = list(self.data[TEXT_DICT].keys())
@@ -109,6 +112,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                     ):
                         _LOGGER.parent.setLevel(self._old_logging_level)
 
+                    # Create the integration entry directly without opening the manual picker.
                     return self.async_create_entry(
                         title=f"ETA at {self.data[CONF_HOST]}", data=self.data
                     )
