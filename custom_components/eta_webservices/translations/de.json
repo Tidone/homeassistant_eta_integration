@@ -3,19 +3,20 @@
         "step": {
             "user": {
                 "title": "ETA Schritt 1",
-                "description": "Gib die Netzwerkadresse deines ETA Geräts ein. Wenn du Hilfe bei der Konfiguration brauchst, schau hier nach: https://github.com/Tidone/homeassistant_eta_integration \n\n Info: Abhängig von der Anzahl der möglichen Endpunkte deinse ETA Geräts kann die Abfrage eine lange Zeit dauern! Bitte hab etwas Geduld nachdem du auf Absenden gedrückt hast.\n\nWähle den alten API Modus falls du Probleme mit dem neuen Modus hast.\n\nWichtig: Wenn du die automatische Auswahl aktivierst, werden alle gefundenen Entitäten (inklusive schreibbarer Entitäten) auf einmal hinzugefügt. Das können mehrere hundert Entitäten sein (z. B. 700+).",
+                "description": "Gib die Netzwerkadresse deines ETA Geräts ein. Wenn du Hilfe bei der Konfiguration brauchst, schau hier nach: https://github.com/Tidone/homeassistant_eta_integration \n\n Info: Abhängig von der Anzahl der möglichen Endpunkte deinse ETA Geräts kann die Abfrage eine lange Zeit dauern! Bitte hab etwas Geduld nachdem du auf Absenden gedrückt hast.\n\nWähle den alten API Modus falls du Probleme mit dem neuen Modus hast.",
                 "data": {
                     "host": "Host",
                     "port": "Port",
                     "force_legacy_mode": "Erzwinge die alte API Version",
-                    "enable_debug_logging": "Aktiviere ausführliche Protokolle",
-                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch hinzufügen (können ja nach ETA Gerät mehrere hundert Entitäten sein!)"
+                    "enable_debug_logging": "Aktiviere ausführliche Protokolle"
                 }
             },
             "select_entities": {
                 "title": "ETA Schritt 2",
-                "description": "Wähle die Sensoren aus, die hinzugefügt werden sollen.",
+                "description": "Wähle die Entitäten aus, die hinzugefügt werden sollen. Aktiviere die automatische Auswahl, um alle gefundenen Entitäten auf einmal hinzuzufügen (das können mehrere hundert Entitäten sein).",
                 "data": {
+                    "entity_count_summary": "Gefundene Entitäten (Anzahl)",
+                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch auswählen",
                     "chosen_float_sensors": "Sensoren",
                     "chosen_switches": "Schalter",
                     "chosen_text_sensors": "Zustandssensoren",
@@ -46,6 +47,8 @@
             },
             "user": {
                 "data": {
+                    "entity_count_summary": "Gefundene Entitäten (Anzahl)",
+                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch auswählen",
                     "chosen_float_sensors": "Sensoren",
                     "chosen_switches": "Schalter",
                     "chosen_text_sensors": "Zustandssensoren",
