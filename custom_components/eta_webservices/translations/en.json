@@ -8,7 +8,8 @@
                     "host": "Host",
                     "port": "Port",
                     "force_legacy_mode": "Force old API mode",
-                    "enable_debug_logging": "Enable verbose logging"
+                    "enable_debug_logging": "Enable verbose logging",
+                    "auto_select_all_entities": "Automatically add all discovered entities"
                 }
             },
             "select_entities": {

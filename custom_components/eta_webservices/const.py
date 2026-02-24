@@ -18,6 +18,7 @@ CHOSEN_WRITABLE_SENSORS = "chosen_writable_sensors"
 
 FORCE_LEGACY_MODE = "force_legacy_mode"
 ENABLE_DEBUG_LOGGING = "enable_debug_logging"
+AUTO_SELECT_ALL_ENTITIES = "auto_select_all_entities"
 
 OPTIONS_UPDATE_SENSOR_VALUES = "update_sensor_values"
 OPTIONS_ENUMERATE_NEW_ENDPOINTS = "enumerate_new_endpoints"

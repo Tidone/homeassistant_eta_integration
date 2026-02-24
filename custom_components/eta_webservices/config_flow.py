@@ -16,6 +16,7 @@ import homeassistant.helpers.entity_registry as er
 from .api import EtaAPI, ETAEndpoint
 from .const import (
     ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
+    AUTO_SELECT_ALL_ENTITIES,
     CHOSEN_FLOAT_SENSORS,
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
@@ -75,7 +76,12 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                     self._old_logging_level = _LOGGER.parent.getEffectiveLevel()
                     _LOGGER.parent.setLevel(logging.DEBUG)
 
-                self.data = user_input
+                auto_select_all_entities = user_input.get(AUTO_SELECT_ALL_ENTITIES, True)
+                self.data = {
+                    key: value
+                    for key, value in user_input.items()
+                    if key != AUTO_SELECT_ALL_ENTITIES
+                }
 
                 (
                     self.data[FLOAT_DICT],
@@ -88,6 +94,25 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                     user_input[FORCE_LEGACY_MODE],
                 )
 
+                if auto_select_all_entities:
+                    self.data[CHOSEN_FLOAT_SENSORS] = list(self.data[FLOAT_DICT].keys())
+                    self.data[CHOSEN_SWITCHES] = list(self.data[SWITCHES_DICT].keys())
+                    self.data[CHOSEN_TEXT_SENSORS] = list(self.data[TEXT_DICT].keys())
+                    self.data[CHOSEN_WRITABLE_SENSORS] = list(
+                        self.data[WRITABLE_DICT].keys()
+                    )
+
+                    # Restore old logging level
+                    if (
+                        self._old_logging_level != logging.NOTSET
+                        and _LOGGER.parent is not None
+                    ):
+                        _LOGGER.parent.setLevel(self._old_logging_level)
+
+                    return self.async_create_entry(
+                        title=f"ETA at {self.data[CONF_HOST]}", data=self.data
+                    )
+
                 return await self.async_step_select_entities()
 
             self._errors["base"] = "no_eta_endpoint" if valid == 0 else "unknown_host"
@@ -98,6 +123,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         # Provide defaults for form
         user_input[CONF_HOST] = "0.0.0.0"
         user_input[CONF_PORT] = "8080"
+        user_input[AUTO_SELECT_ALL_ENTITIES] = True
 
         return await self._show_config_form_user(user_input)
 
@@ -138,6 +164,10 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_PORT, default=user_input[CONF_PORT]): str,
                     vol.Required(FORCE_LEGACY_MODE, default=False): cv.boolean,
                     vol.Required(ENABLE_DEBUG_LOGGING, default=False): cv.boolean,
+                    vol.Required(
+                        AUTO_SELECT_ALL_ENTITIES,
+                        default=user_input.get(AUTO_SELECT_ALL_ENTITIES, True),
+                    ): cv.boolean,
                 }
             ),
             errors=self._errors,
