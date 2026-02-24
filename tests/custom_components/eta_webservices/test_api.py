@@ -2258,3 +2258,22 @@ async def test_write_endpoint_with_empty_payload():
 
     assert result is True, "Should return True on success"
     assert posted_data == {}, "Should send empty payload when no parameters provided"
+
+
+@pytest.mark.asyncio
+async def test_get_all_switch_states_handles_exceptions():
+    """Test that get_all_switch_states maps results and keeps exceptions per endpoint."""
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.1", 8080, max_concurrent_requests=2)
+
+    async def mock_get_switch_state(uri):
+        if uri.endswith("/ok"):
+            return 1803
+        raise RuntimeError("switch read failed")
+
+    api.get_switch_state = mock_get_switch_state
+
+    results = await api.get_all_switch_states(["/120/1/ok", "/120/1/fail"])
+
+    assert results["/120/1/ok"] == 1803
+    assert isinstance(results["/120/1/fail"], RuntimeError)

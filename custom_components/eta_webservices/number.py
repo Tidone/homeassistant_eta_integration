@@ -21,7 +21,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import async_get_current_platform
 from homeassistant.helpers.typing import VolDictType
 
-from .api import EtaAPI, ETAEndpoint, ETAValidWritableValues
+from .api import ETAEndpoint, ETAValidWritableValues
 from .const import (
     ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
     CHOSEN_WRITABLE_SENSORS,
@@ -139,7 +139,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
                     f"Temperature value out of bounds for entity {self.entity_id}"
                 )
 
-        eta_client = EtaAPI(self.session, self.host, self.port)
+        eta_client = self._create_eta_client()
         success = await eta_client.write_endpoint(self.uri, raw_value)
         if not success:
             raise HomeAssistantError(

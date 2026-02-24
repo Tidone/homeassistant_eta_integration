@@ -1,5 +1,6 @@
 """The ETA Sensors integration."""
 
+import asyncio
 import logging
 from typing import Any
 
@@ -11,15 +12,23 @@ from .const import (
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    DEFAULT_MAX_PARALLEL_REQUESTS,
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
     FORCE_LEGACY_MODE,
+    MAX_PARALLEL_REQUESTS,
+    REQUEST_SEMAPHORE,
+    SENSOR_UPDATE_COORDINATOR,
     TEXT_DICT,
     WRITABLE_DICT,
     WRITABLE_UPDATE_COORDINATOR,
 )
-from .coordinator import ETAErrorUpdateCoordinator, ETAWritableUpdateCoordinator
+from .coordinator import (
+    ETAErrorUpdateCoordinator,
+    ETASensorUpdateCoordinator,
+    ETAWritableUpdateCoordinator,
+)
 from .services import async_setup_services
 
 PLATFORMS: list[Platform] = [
@@ -50,12 +59,23 @@ async def async_setup_entry(
     if entry.options:
         config.update(entry.options)
 
+    config[MAX_PARALLEL_REQUESTS] = int(
+        config.get(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+    )
+    # Share one limiter across all API users of this config entry
+    # so startup and periodic updates cannot overload slower ETA units.
+    config[REQUEST_SEMAPHORE] = asyncio.Semaphore(config[MAX_PARALLEL_REQUESTS])
+
     error_coordinator = ETAErrorUpdateCoordinator(hass, config)
+    sensor_coordinator = ETASensorUpdateCoordinator(hass, config)
     writable_coordinator = ETAWritableUpdateCoordinator(hass, config)
     config[ERROR_UPDATE_COORDINATOR] = error_coordinator
+    config[SENSOR_UPDATE_COORDINATOR] = sensor_coordinator
     config[WRITABLE_UPDATE_COORDINATOR] = writable_coordinator
 
+    # Prime coordinators once before entities are added to avoid initial update bursts.
     await error_coordinator.async_config_entry_first_refresh()
+    await sensor_coordinator.async_config_entry_first_refresh()
     await writable_coordinator.async_config_entry_first_refresh()
 
     hass.data[DOMAIN][entry.entry_id] = config

@@ -16,7 +16,14 @@ _LOGGER = logging.getLogger(__name__)
 class APIClient:
     """Handles low-level HTTP and XML operations for ETA API."""
 
-    def __init__(self, session: ClientSession, host: str, port: int) -> None:
+    def __init__(
+        self,
+        session: ClientSession,
+        host: str,
+        port: int,
+        max_concurrent_requests: int = 5,
+        request_semaphore=None,
+    ) -> None:
         """Initialize HTTP client.
 
         :param session: aiohttp ClientSession for HTTP requests
@@ -26,7 +33,10 @@ class APIClient:
         self._session = session
         self._host = host
         self._port = int(port)
-        self._max_concurrent_requests = 5
+        self._max_concurrent_requests = max(1, int(max_concurrent_requests))
+        self._request_semaphore = request_semaphore or asyncio.Semaphore(
+            self._max_concurrent_requests
+        )
         self._num_duplicates = 0
 
     def _build_uri(self, suffix: str) -> str:
@@ -35,11 +45,13 @@ class APIClient:
 
     async def get_request(self, suffix: str):
         """Execute GET request."""
-        return await self._session.get(self._build_uri(suffix))
+        async with self._request_semaphore:
+            return await self._session.get(self._build_uri(suffix))
 
     async def post_request(self, suffix: str, data: dict):
         """Execute POST request."""
-        return await self._session.post(self._build_uri(suffix), data=data)
+        async with self._request_semaphore:
+            return await self._session.post(self._build_uri(suffix), data=data)
 
     def _evaluate_xml_dict(self, xml_dict, uri_dict: dict, prefix: str = ""):
         """Recursively evaluate XML dictionary and extract URIs."""

@@ -40,7 +40,8 @@
                 "description": "Select if the sensors should be updated before going to the next step",
                 "data": {
                     "update_sensor_values": "Update sensor values",
-                    "enumerate_new_endpoints": "Update list of sensors"
+                    "enumerate_new_endpoints": "Update list of sensors",
+                    "max_parallel_requests": "Maximum parallel API requests"
                 }
             },
             "user": {
