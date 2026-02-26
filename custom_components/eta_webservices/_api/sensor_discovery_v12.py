@@ -307,11 +307,15 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                     len(valid_uris),
                 )
 
-        # Remove invalid URIs from endpoint_infos
-        for uri in uris_to_remove:
-            del endpoint_infos[uri]
+        # Remove invalid URIs from endpoint_infos.
+        # A URI can appear in multiple duplicate-node groups, so deduplicate before deletion.
+        removed_count = 0
+        for uri in set(uris_to_remove):
+            if uri in endpoint_infos:
+                del endpoint_infos[uri]
+                removed_count += 1
 
-        return len(uris_to_remove)
+        return removed_count
 
     # runlength w/o optimizations: 326s
     # runlength w/ optimizations (sem=1): 330s

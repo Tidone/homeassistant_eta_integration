@@ -56,7 +56,6 @@ class ETAErrorUpdateCoordinator(DataUpdateCoordinator[list[ETAError]]):
             update_interval=ERROR_SCAN_INTERVAL,
         )
 
-    def _handle_error_events(self, new_errors: list[ETAError]):
     def _create_eta_client(self):
         return EtaAPI(
             self.session,
@@ -116,8 +115,6 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
 
         self.sensor_queries: dict[str, tuple[str, bool]] = {}
         self.switch_queries: dict[str, tuple[str, int, int]] = {}
-        # Per-entity defaults are used for first refresh and as fallback on partial API failures.
-        self.default_data: dict[str, float | str | bool] = {}
         self._build_queries()
 
         super().__init__(
@@ -145,7 +142,6 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
                 continue
             endpoint = self.all_float_sensors[sensor]
             self.sensor_queries[sensor] = (endpoint["url"], False)
-            self.default_data[sensor] = endpoint["value"]
 
         for sensor in self.chosen_text_sensors:
             if sensor not in self.all_text_sensors:
@@ -164,7 +160,6 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
                 endpoint["url"],
                 endpoint["unit"] in CUSTOM_UNITS,
             )
-            self.default_data[sensor] = endpoint["value"]
 
         for sensor in self.chosen_writable_sensors:
             if sensor not in self.all_writable_sensors:
@@ -176,7 +171,6 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
             ):
                 continue
             self.sensor_queries[sensor] = (endpoint["url"], True)
-            self.default_data[sensor] = endpoint["value"]
 
         for switch in self.chosen_switches:
             if switch not in self.all_switches:
@@ -190,15 +184,11 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
                 off_value = int(valid_values.get("off_value", off_value))
 
             self.switch_queries[switch] = (endpoint["url"], on_value, off_value)
-            self.default_data[switch] = False
 
     async def _async_update_data(self) -> dict[str, float | str | bool]:
         """Update data via library."""
         eta_client = self._create_eta_client()
-        data = dict(self.default_data)
-        if self.data is not None:
-            # Keep previous values if only a subset of endpoints fails in this refresh cycle.
-            data.update(self.data)
+        data: dict[str, float | str | bool] = {}
 
         uri_sensor_queries: dict[str, dict[str, bool]] = {}
         # Multiple entities can point to the same URI; query each endpoint only once.
@@ -214,7 +204,6 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
                 for sensor, (uri, _) in self.sensor_queries.items():
                     result = all_sensor_data.get(uri)
                     if result is None:
-                        _LOGGER.debug("Failed to update sensor '%s': %s", sensor, result)
                         continue
                     data[sensor] = result
 
@@ -229,9 +218,6 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
                 for switch, (uri, on_value, _) in self.switch_queries.items():
                     result = all_switch_states.get(uri)
                     if result is None or isinstance(result, Exception):
-                        _LOGGER.debug(
-                            "Failed to update switch '%s' (%s): %s", switch, uri, result
-                        )
                         continue
                     data[switch] = int(result) == on_value
 

@@ -39,6 +39,20 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
+def _build_discovered_entity_placeholders(
+    float_count: int, switch_count: int, text_count: int, writable_count: int
+) -> dict[str, str]:
+    """Build placeholders for discovered entity counts."""
+    total_count = float_count + switch_count + text_count + writable_count
+    return {
+        "float_count": str(float_count),
+        "switch_count": str(switch_count),
+        "text_count": str(text_count),
+        "writable_count": str(writable_count),
+        "total_count": str(total_count),
+    }
+
+
 class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for Eta."""
 
@@ -166,26 +180,18 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         switches_dict: dict[str, ETAEndpoint] = self.data[SWITCHES_DICT]
         text_dict: dict[str, ETAEndpoint] = self.data[TEXT_DICT]
         writable_dict: dict[str, ETAEndpoint] = self.data[WRITABLE_DICT]
-        discovered_entity_summary = (
-            f"float: {len(sensors_dict)}\n"
-            f"switches: {len(switches_dict)}\n"
-            f"text: {len(text_dict)}\n"
-            f"writable: {len(writable_dict)}\n"
-            f"total: {len(sensors_dict) + len(switches_dict) + len(text_dict) + len(writable_dict)}"
+        float_count = len(sensors_dict)
+        switch_count = len(switches_dict)
+        text_count = len(text_dict)
+        writable_count = len(writable_dict)
+        count_placeholders = _build_discovered_entity_placeholders(
+            float_count, switch_count, text_count, writable_count
         )
 
         return self.async_show_form(
             step_id="select_entities",
             data_schema=vol.Schema(
                 {
-                    vol.Optional(
-                        "entity_count_summary", default=discovered_entity_summary
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            multiline=True,
-                            read_only=True,
-                        )
-                    ),
                     vol.Required(AUTO_SELECT_ALL_ENTITIES, default=False): cv.boolean,
                     vol.Optional(CHOSEN_FLOAT_SENSORS): selector.SelectSelector(
                         selector.SelectSelectorConfig(
@@ -242,6 +248,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 }
             ),
             errors=self._errors,
+            description_placeholders=count_placeholders,
         )
 
     async def _get_possible_endpoints(self, host, port, force_legacy_mode):
@@ -294,7 +301,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         """Initialize HACS options flow."""
         self.data = {}
         self._errors = {}
-        self.update_sensor_values = True
+        self.update_sensor_values = False
         self.enumerate_new_endpoints = False
         self.auto_select_all_entities = False
         self.max_parallel_requests = DEFAULT_MAX_PARALLEL_REQUESTS
@@ -338,7 +345,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        OPTIONS_UPDATE_SENSOR_VALUES, default=True
+                        OPTIONS_UPDATE_SENSOR_VALUES, default=False
                     ): cv.boolean,
                     vol.Required(
                         OPTIONS_ENUMERATE_NEW_ENDPOINTS, default=False
@@ -599,7 +606,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             _LOGGER.info("Updated sensor values")
 
         elif self.update_sensor_values:
-            # Update the current sensor values if requested and if we did not already re-enumerate the whole list of sensors
+            # Update current sensor values only if requested and no re-enumeration is running.
             await self._update_sensor_values()
 
         return await self.async_step_user()
@@ -778,23 +785,15 @@ class EtaOptionsFlowHandler(OptionsFlow):
         if len(self.unavailable_sensors) > 0:
             self._errors["base"] = "unavailable_sensors"
 
-        discovered_entity_summary = (
-            f"float: {len(self.data[FLOAT_DICT])}\n"
-            f"switches: {len(self.data[SWITCHES_DICT])}\n"
-            f"text: {len(self.data[TEXT_DICT])}\n"
-            f"writable: {len(self.data[WRITABLE_DICT])}\n"
-            f"total: {len(self.data[FLOAT_DICT]) + len(self.data[SWITCHES_DICT]) + len(self.data[TEXT_DICT]) + len(self.data[WRITABLE_DICT])}"
+        float_count = len(self.data[FLOAT_DICT])
+        switch_count = len(self.data[SWITCHES_DICT])
+        text_count = len(self.data[TEXT_DICT])
+        writable_count = len(self.data[WRITABLE_DICT])
+        count_placeholders = _build_discovered_entity_placeholders(
+            float_count, switch_count, text_count, writable_count
         )
 
         schema = {
-            vol.Optional(
-                "entity_count_summary", default=discovered_entity_summary
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    multiline=True,
-                    read_only=True,
-                )
-            ),
             vol.Required(
                 AUTO_SELECT_ALL_ENTITIES, default=self.auto_select_all_entities
             ): cv.boolean,
@@ -875,7 +874,6 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     ): selector.TextSelector(
                         selector.TextSelectorConfig(
                             multiline=True,
-                            read_only=True,
                         )
                     ),
                 }
@@ -885,4 +883,5 @@ class EtaOptionsFlowHandler(OptionsFlow):
             step_id="user",
             data_schema=vol.Schema(schema),
             errors=self._errors,
+            description_placeholders=count_placeholders,
         )
