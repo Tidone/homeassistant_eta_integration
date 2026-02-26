@@ -221,6 +221,8 @@ async def async_setup_entry(
             EtaLatestErrorSensor(config, hass, error_coordinator),
         ]  # pyright: ignore[reportArgumentType]
     )
+    # Final safety net: avoid HA startup failures if config data still contains
+    # the same unique_id in multiple sensor categories.
     sensors = _deduplicate_entities_by_unique_id(sensors)
     async_add_entities(sensors, update_before_add=False)
 

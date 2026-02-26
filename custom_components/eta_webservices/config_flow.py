@@ -190,6 +190,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 self.data[CHOSEN_TEXT_SENSORS],
                 self.data[CHOSEN_WRITABLE_SENSORS],
             ) = _sanitize_selected_entity_ids(
+                # Keep selection lists category-unique before persisting the entry.
                 selected_float_sensors,
                 selected_switches,
                 selected_text_sensors,
@@ -631,6 +632,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.data[CHOSEN_TEXT_SENSORS],
             self.data[CHOSEN_WRITABLE_SENSORS],
         ) = _sanitize_selected_entity_ids(
+            # Normalize historic options data before applying updates.
             self.data[CHOSEN_FLOAT_SENSORS],
             self.data[CHOSEN_SWITCHES],
             self.data[CHOSEN_TEXT_SENSORS],
@@ -729,6 +731,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 selected_text_sensors,
                 selected_writable_sensors,
             ) = _sanitize_selected_entity_ids(
+                # Prevent cross-category duplicates from being written back via options.
                 selected_float_sensors,
                 selected_switches,
                 selected_text_sensors,
