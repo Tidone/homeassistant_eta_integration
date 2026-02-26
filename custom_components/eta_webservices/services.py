@@ -10,7 +10,12 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import EtaAPI
-from .const import DOMAIN
+from .const import (
+    DEFAULT_MAX_PARALLEL_REQUESTS,
+    DOMAIN,
+    MAX_PARALLEL_REQUESTS,
+    REQUEST_SEMAPHORE,
+)
 
 WRITE_ENDPOINT_SCHEMA = vol.Schema(
     {
@@ -33,7 +38,15 @@ async def async_setup_services(hass: HomeAssistant, config_entry: ConfigEntry) -
         value = call.data.get("value")
         begin = call.data.get("begin", None)
         end = call.data.get("end", None)
-        eta_client = EtaAPI(session, config.get(CONF_HOST), config.get(CONF_PORT))
+        eta_client = EtaAPI(
+            session,
+            config.get(CONF_HOST),
+            config.get(CONF_PORT),
+            max_concurrent_requests=config.get(
+                MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
+            ),
+            request_semaphore=config.get(REQUEST_SEMAPHORE),
+        )
         success = await eta_client.write_endpoint(url, value, begin, end)
         if not success:
             raise HomeAssistantError("Could not write value, see log for details")

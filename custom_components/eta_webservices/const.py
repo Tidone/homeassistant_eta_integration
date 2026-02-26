@@ -28,6 +28,7 @@ ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION = (
 
 ERROR_UPDATE_COORDINATOR = "error_update_coordinator"
 WRITABLE_UPDATE_COORDINATOR = "writable_update_coordinator"
+SENSOR_UPDATE_COORDINATOR = "sensor_update_coordinator"
 
 CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT = "minutes_since_midnight"
 CUSTOM_UNIT_TIMESLOT = "timeslot"
@@ -56,6 +57,9 @@ INVISIBLE_UNITS = [
 # Defaults
 DEFAULT_NAME = DOMAIN
 REQUEST_TIMEOUT = 60
+DEFAULT_MAX_PARALLEL_REQUESTS = 5
+MAX_PARALLEL_REQUESTS = "max_parallel_requests"
+REQUEST_SEMAPHORE = "request_semaphore"
 
 STARTUP_MESSAGE = f"""
 -------------------------------------------------------------------

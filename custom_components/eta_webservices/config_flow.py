@@ -21,12 +21,14 @@ from .const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
+    DEFAULT_MAX_PARALLEL_REQUESTS,
     CUSTOM_UNITS,
     DOMAIN,
     ENABLE_DEBUG_LOGGING,
     FLOAT_DICT,
     FORCE_LEGACY_MODE,
     INVISIBLE_UNITS,
+    MAX_PARALLEL_REQUESTS,
     OPTIONS_ENUMERATE_NEW_ENDPOINTS,
     OPTIONS_UPDATE_SENSOR_VALUES,
     SWITCHES_DICT,
@@ -131,6 +133,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 _LOGGER.parent.setLevel(self._old_logging_level)
 
             # User is done, create the config entry.
+            self.data.setdefault(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
             return self.async_create_entry(
                 title=f"ETA at {self.data[CONF_HOST]}", data=self.data
             )
@@ -294,6 +297,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.update_sensor_values = True
         self.enumerate_new_endpoints = False
         self.auto_select_all_entities = False
+        self.max_parallel_requests = DEFAULT_MAX_PARALLEL_REQUESTS
         self.unavailable_sensors: dict = {}
         self.advanced_options_writable_sensors = []
 
@@ -314,12 +318,21 @@ class EtaOptionsFlowHandler(OptionsFlow):
         if user_input is not None:
             self.update_sensor_values = user_input[OPTIONS_UPDATE_SENSOR_VALUES]
             self.enumerate_new_endpoints = user_input[OPTIONS_ENUMERATE_NEW_ENDPOINTS]
+            self.max_parallel_requests = int(user_input[MAX_PARALLEL_REQUESTS])
             return await self._update_data_structures()
 
         return await self._show_initial_option_screen()
 
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
+        parallel_request_options = ["1", "2", "3", "5", "8", "10", "15"]
+        default_parallel_requests = self.hass.data[DOMAIN][
+            self.config_entry.entry_id  # pyright: ignore[reportOptionalMemberAccess]
+        ].get(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+        default_parallel_requests = str(default_parallel_requests)
+        if default_parallel_requests not in parallel_request_options:
+            default_parallel_requests = str(DEFAULT_MAX_PARALLEL_REQUESTS)
+
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
@@ -330,6 +343,18 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     vol.Required(
                         OPTIONS_ENUMERATE_NEW_ENDPOINTS, default=False
                     ): cv.boolean,
+                    vol.Required(
+                        MAX_PARALLEL_REQUESTS, default=default_parallel_requests
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=[
+                                selector.SelectOptionDict(value=value, label=str(value))
+                                for value in parallel_request_options
+                            ],
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                            multiple=False,
+                        )
+                    ),
                 }
             ),
             errors=self._errors,
@@ -337,7 +362,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _update_sensor_values(self):
         session = async_get_clientsession(self.hass)
-        eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
+        eta_client = EtaAPI(
+            session,
+            self.data[CONF_HOST],
+            self.data[CONF_PORT],
+            max_concurrent_requests=self.data[MAX_PARALLEL_REQUESTS],
+        )
 
         sensor_list: dict[str, dict[str, bool]] = {
             value["url"]: {} for value in self.data[FLOAT_DICT].values()
@@ -540,6 +570,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         ][self.config_entry.entry_id].get(  # pyright: ignore[reportOptionalMemberAccess]
             ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
         )
+        self.data[MAX_PARALLEL_REQUESTS] = self.max_parallel_requests
 
         if self.enumerate_new_endpoints:
             _LOGGER.info("Discovering new endpoints")
@@ -659,6 +690,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 SWITCHES_DICT: self.data[SWITCHES_DICT],
                 TEXT_DICT: self.data[TEXT_DICT],
                 WRITABLE_DICT: self.data[WRITABLE_DICT],
+                MAX_PARALLEL_REQUESTS: self.data[MAX_PARALLEL_REQUESTS],
                 CONF_HOST: self.data[CONF_HOST],
                 CONF_PORT: self.data[CONF_PORT],
                 ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: self.data[

@@ -10,7 +10,7 @@ from homeassistant.components.time import ENTITY_ID_FORMAT, TimeEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 
-from .api import EtaAPI, ETAEndpoint
+from .api import ETAEndpoint
 from .const import (
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
@@ -79,7 +79,7 @@ class EtaTime(TimeEntity, EtaWritableSensorEntity):
         total_minutes = value.hour * 60 + value.minute
         if total_minutes >= 60 * 24:
             raise HomeAssistantError("Invalid time: Must be between 00:00 and 23:59")
-        eta_client = EtaAPI(self.session, self.host, self.port)
+        eta_client = self._create_eta_client()
         success = await eta_client.write_endpoint(self.uri, total_minutes)
         if not success:
             raise HomeAssistantError("Could not write value, see log for details")

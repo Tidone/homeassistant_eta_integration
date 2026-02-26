@@ -3,16 +3,19 @@
 from abc import abstractmethod
 from typing import Generic, TypeVar, cast
 
-from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity import Entity, generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .api import EtaAPI, ETAEndpoint
-from .coordinator import ETAErrorUpdateCoordinator, ETAWritableUpdateCoordinator
+from .const import DEFAULT_MAX_PARALLEL_REQUESTS, MAX_PARALLEL_REQUESTS, REQUEST_SEMAPHORE
+from .coordinator import (
+    ETAErrorUpdateCoordinator,
+    ETASensorUpdateCoordinator,
+    ETAWritableUpdateCoordinator,
+)
 from .utils import create_device_info
 
 _EntityT = TypeVar("_EntityT")
@@ -34,29 +37,66 @@ class EtaEntity(Entity):
         self.host = config.get(CONF_HOST, "")
         self.port = config.get(CONF_PORT, "")
         self.uri = endpoint_info["url"]
+        self.max_parallel_requests = int(
+            config.get(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+        )
+        self.request_semaphore = config.get(REQUEST_SEMAPHORE)
 
         self._attr_device_info = create_device_info(self.host, self.port)
         self.entity_id = generate_entity_id(entity_id_format, unique_id, hass=hass)
         self._attr_unique_id = unique_id
 
-
-class EtaSensorEntity(SensorEntity, EtaEntity, Generic[_EntityT]):
-    """Common sensor entity definition for all ETA sensors."""
-
-    async def async_update(self):
-        """Fetch new state data for the sensor.
-
-        This is the only method that should fetch new data for Home Assistant.
-        """
-        eta_client = EtaAPI(self.session, self.host, self.port)
-        value, _ = await eta_client.get_data(self.uri)
-        self._attr_native_value = cast(_EntityT, value)  # pyright: ignore[reportAttributeAccessIssue]
-
-    async def async_update_timeslot_service(self, begin, end, temperature=None) -> None:
-        """Handle the write_timeslot service call. Raises an error if it is not overwritten by the entity."""
-        raise HomeAssistantError(
-            f"Entity {self.entity_id} does not support setting a timeslot"
+    def _create_eta_client(self) -> EtaAPI:
+        # Reuse configured concurrency settings for all entity-level write operations.
+        return EtaAPI(
+            self.session,
+            self.host,
+            self.port,
+            max_concurrent_requests=self.max_parallel_requests,
+            request_semaphore=self.request_semaphore,
         )
+
+
+class EtaCoordinatedSensorEntity(
+    EtaEntity, CoordinatorEntity[ETASensorUpdateCoordinator], Generic[_EntityT]
+):
+    """Common coordinated sensor entity definition for normal ETA sensors."""
+
+    def __init__(  # noqa: D107
+        self,
+        coordinator: ETASensorUpdateCoordinator,
+        config: dict,
+        hass: HomeAssistant,
+        unique_id: str,
+        endpoint_info: ETAEndpoint,
+        entity_id_format: str,
+    ) -> None:
+        EtaEntity.__init__(
+            self, config, hass, unique_id, endpoint_info, entity_id_format
+        )
+        CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
+
+        self._attr_should_poll = False
+        self.handle_data_updates(
+            cast(
+                _EntityT,
+                coordinator.data.get(
+                    self.unique_id, endpoint_info["value"]
+                ),  # pyright: ignore[reportAttributeAccessIssue]
+            )
+        )
+
+    @abstractmethod
+    def handle_data_updates(self, data: _EntityT) -> None:  # noqa: D102
+        raise NotImplementedError
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Update attributes when the coordinator updates."""
+        if self.unique_id in self.coordinator.data:
+            data = self.coordinator.data[self.unique_id]
+            self.handle_data_updates(cast(_EntityT, data))
+        super()._handle_coordinator_update()
 
 
 class EtaWritableSensorEntity(

@@ -39,10 +39,11 @@
         "step": {
             "init": {
                 "title": "Optionen initialisieren",
-                "description": "Wähle aus, ob die Sensoren aktualisiert werden sollen bevor der nächste Schritt angezeigt wird",
+                "description": "Wähle aus, ob Sensorwerte vor dem nächsten Schritt aktualisiert werden sollen. Höhere Werte für parallele Anfragen erhöhen die Last auf dem ETA-Kessel und können zu Fehlern führen, besonders bei älteren Kesseln. Für ältere Kessel besser kleinere Werte verwenden.",
                 "data": {
                     "update_sensor_values": "Sensorwerte aktualisieren",
-                    "enumerate_new_endpoints": "Liste der Sensoren aktualisieren"
+                    "enumerate_new_endpoints": "Liste der Sensoren aktualisieren",
+                    "max_parallel_requests": "Maximale parallele API-Anfragen"
                 }
             },
             "user": {

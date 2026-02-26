@@ -10,7 +10,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import EtaAPI
-from .const import DOMAIN
+from .const import (
+    DEFAULT_MAX_PARALLEL_REQUESTS,
+    DOMAIN,
+    MAX_PARALLEL_REQUESTS,
+    REQUEST_SEMAPHORE,
+)
 
 
 async def async_get_config_entry_diagnostics(
@@ -23,7 +28,15 @@ async def async_get_config_entry_diagnostics(
     port = config.get(CONF_PORT)
     session = async_get_clientsession(hass)
 
-    eta_client = EtaAPI(session, host, port)
+    eta_client = EtaAPI(
+        session,
+        host,
+        port,
+        max_concurrent_requests=config.get(
+            MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
+        ),
+        request_semaphore=config.get(REQUEST_SEMAPHORE),
+    )
     user_menu = await eta_client.get_menu()
     api_version = await eta_client.get_api_version()
 
