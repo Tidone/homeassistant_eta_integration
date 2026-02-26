@@ -53,6 +53,54 @@ def _build_discovered_entity_placeholders(
     }
 
 
+def _sanitize_selected_entity_ids(
+    selected_float_sensors: list[str],
+    selected_switches: list[str],
+    selected_text_sensors: list[str],
+    selected_writable_sensors: list[str],
+) -> tuple[list[str], list[str], list[str], list[str]]:
+    """Ensure selected entity IDs are unique across categories.
+
+    The same unique_id must never be selected in multiple regular sensor
+    categories, otherwise HA will reject duplicated entities on setup.
+    """
+    sanitized_float_sensors = list(dict.fromkeys(selected_float_sensors))
+    float_set = set(sanitized_float_sensors)
+
+    sanitized_switches = [
+        sensor_id
+        for sensor_id in dict.fromkeys(selected_switches)
+        if sensor_id not in float_set
+    ]
+    switch_set = set(sanitized_switches)
+
+    sanitized_text_sensors = [
+        sensor_id
+        for sensor_id in dict.fromkeys(selected_text_sensors)
+        if sensor_id not in float_set and sensor_id not in switch_set
+    ]
+    sanitized_writable_sensors = list(dict.fromkeys(selected_writable_sensors))
+
+    removed_from_switches = len(selected_switches) - len(sanitized_switches)
+    removed_from_text_sensors = len(selected_text_sensors) - len(
+        sanitized_text_sensors
+    )
+    if removed_from_switches > 0 or removed_from_text_sensors > 0:
+        _LOGGER.info(
+            "Removed duplicate selected entity IDs across categories: "
+            "switches=%d, text_sensors=%d",
+            removed_from_switches,
+            removed_from_text_sensors,
+        )
+
+    return (
+        sanitized_float_sensors,
+        sanitized_switches,
+        sanitized_text_sensors,
+        sanitized_writable_sensors,
+    )
+
+
 class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for Eta."""
 
@@ -124,23 +172,29 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             auto_select_all_entities = user_input.get(AUTO_SELECT_ALL_ENTITIES, False)
             # add chosen entities to data
             if auto_select_all_entities:
-                self.data[CHOSEN_FLOAT_SENSORS] = list(self.data[FLOAT_DICT].keys())
-                self.data[CHOSEN_SWITCHES] = list(self.data[SWITCHES_DICT].keys())
-                self.data[CHOSEN_TEXT_SENSORS] = list(self.data[TEXT_DICT].keys())
-                self.data[CHOSEN_WRITABLE_SENSORS] = list(
-                    self.data[WRITABLE_DICT].keys()
-                )
+                selected_float_sensors = list(self.data[FLOAT_DICT].keys())
+                selected_switches = list(self.data[SWITCHES_DICT].keys())
+                selected_text_sensors = list(self.data[TEXT_DICT].keys())
+                selected_writable_sensors = list(self.data[WRITABLE_DICT].keys())
             else:
-                self.data[CHOSEN_FLOAT_SENSORS] = user_input.get(
-                    CHOSEN_FLOAT_SENSORS, []
-                )
-                self.data[CHOSEN_SWITCHES] = user_input.get(CHOSEN_SWITCHES, [])
-                self.data[CHOSEN_TEXT_SENSORS] = user_input.get(
-                    CHOSEN_TEXT_SENSORS, []
-                )
-                self.data[CHOSEN_WRITABLE_SENSORS] = user_input.get(
+                selected_float_sensors = user_input.get(CHOSEN_FLOAT_SENSORS, [])
+                selected_switches = user_input.get(CHOSEN_SWITCHES, [])
+                selected_text_sensors = user_input.get(CHOSEN_TEXT_SENSORS, [])
+                selected_writable_sensors = user_input.get(
                     CHOSEN_WRITABLE_SENSORS, []
                 )
+
+            (
+                self.data[CHOSEN_FLOAT_SENSORS],
+                self.data[CHOSEN_SWITCHES],
+                self.data[CHOSEN_TEXT_SENSORS],
+                self.data[CHOSEN_WRITABLE_SENSORS],
+            ) = _sanitize_selected_entity_ids(
+                selected_float_sensors,
+                selected_switches,
+                selected_text_sensors,
+                selected_writable_sensors,
+            )
 
             # Restore old logging level
             if self._old_logging_level != logging.NOTSET and _LOGGER.parent is not None:
@@ -571,6 +625,17 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.data[key] = copy.copy(
                 self.hass.data[DOMAIN][self.config_entry.entry_id][key]  # pyright: ignore[reportOptionalMemberAccess]
             )
+        (
+            self.data[CHOSEN_FLOAT_SENSORS],
+            self.data[CHOSEN_SWITCHES],
+            self.data[CHOSEN_TEXT_SENSORS],
+            self.data[CHOSEN_WRITABLE_SENSORS],
+        ) = _sanitize_selected_entity_ids(
+            self.data[CHOSEN_FLOAT_SENSORS],
+            self.data[CHOSEN_SWITCHES],
+            self.data[CHOSEN_TEXT_SENSORS],
+            self.data[CHOSEN_WRITABLE_SENSORS],
+        )
         # ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION can be unset, so we have to handle it separately
         self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = self.hass.data[
             DOMAIN
@@ -657,6 +722,17 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 list(self.data[WRITABLE_DICT].keys())
                 if self.auto_select_all_entities
                 else user_input[CHOSEN_WRITABLE_SENSORS]
+            )
+            (
+                selected_float_sensors,
+                selected_switches,
+                selected_text_sensors,
+                selected_writable_sensors,
+            ) = _sanitize_selected_entity_ids(
+                selected_float_sensors,
+                selected_switches,
+                selected_text_sensors,
+                selected_writable_sensors,
             )
             removed_entities = [
                 entity_map_sensors[entity_id]
