@@ -28,6 +28,7 @@ from custom_components.eta_webservices.const import (
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
+    SENSOR_UPDATE_COORDINATOR,
     SWITCHES_DICT,
     TEXT_DICT,
     WRITABLE_DICT,
@@ -62,6 +63,8 @@ async def test_all_writable_sensors_handled(hass: HomeAssistant, load_fixture):
     # (e.g. 'xxx', '21:00') that can't be float()-ed.
     writable_coordinator = MagicMock()
     writable_coordinator.data = {info["url"]: 0 for info in writable_dict.values()}
+    sensor_coordinator = MagicMock()
+    sensor_coordinator.data = {}
     error_coordinator = MagicMock()
     error_coordinator.data = []
 
@@ -77,6 +80,7 @@ async def test_all_writable_sensors_handled(hass: HomeAssistant, load_fixture):
         CHOSEN_TEXT_SENSORS: [],
         CHOSEN_WRITABLE_SENSORS: chosen_writable_sensors,
         ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
+        SENSOR_UPDATE_COORDINATOR: sensor_coordinator,
         WRITABLE_UPDATE_COORDINATOR: writable_coordinator,
         ERROR_UPDATE_COORDINATOR: error_coordinator,
     }
@@ -97,6 +101,7 @@ async def test_all_writable_sensors_handled(hass: HomeAssistant, load_fixture):
     with (
         patch("custom_components.eta_webservices.number.async_get_current_platform"),
         patch("custom_components.eta_webservices.sensor.async_get_current_platform"),
+        patch("custom_components.eta_webservices.entity.async_get_clientsession"),
     ):
         await number_async_setup_entry(hass, config_entry, add_entities)
         await sensor_async_setup_entry(hass, config_entry, add_entities)
@@ -132,6 +137,8 @@ async def test_all_non_writable_sensors_handled(hass: HomeAssistant, load_fixtur
 
     writable_coordinator = MagicMock()
     writable_coordinator.data = {}
+    sensor_coordinator = MagicMock()
+    sensor_coordinator.data = {}
     error_coordinator = MagicMock()
     error_coordinator.data = []
 
@@ -147,6 +154,7 @@ async def test_all_non_writable_sensors_handled(hass: HomeAssistant, load_fixtur
         CHOSEN_TEXT_SENSORS: chosen_text_sensors,
         CHOSEN_WRITABLE_SENSORS: [],
         ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
+        SENSOR_UPDATE_COORDINATOR: sensor_coordinator,
         WRITABLE_UPDATE_COORDINATOR: writable_coordinator,
         ERROR_UPDATE_COORDINATOR: error_coordinator,
     }
@@ -163,6 +171,7 @@ async def test_all_non_writable_sensors_handled(hass: HomeAssistant, load_fixtur
     with (
         patch("custom_components.eta_webservices.number.async_get_current_platform"),
         patch("custom_components.eta_webservices.sensor.async_get_current_platform"),
+        patch("custom_components.eta_webservices.entity.async_get_clientsession"),
     ):
         await number_async_setup_entry(hass, config_entry, add_entities)
         await sensor_async_setup_entry(hass, config_entry, add_entities)
@@ -209,6 +218,8 @@ async def test_all_writable_and_non_writable_sensors_handled(
     # counterpart URLs (same physical endpoint), so writable_dict URLs suffice.
     writable_coordinator = MagicMock()
     writable_coordinator.data = {info["url"]: 0 for info in writable_dict.values()}
+    sensor_coordinator = MagicMock()
+    sensor_coordinator.data = {}
     error_coordinator = MagicMock()
     error_coordinator.data = []
 
@@ -224,6 +235,7 @@ async def test_all_writable_and_non_writable_sensors_handled(
         CHOSEN_TEXT_SENSORS: chosen_text_sensors,
         CHOSEN_WRITABLE_SENSORS: chosen_writable_sensors,
         ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
+        SENSOR_UPDATE_COORDINATOR: sensor_coordinator,
         WRITABLE_UPDATE_COORDINATOR: writable_coordinator,
         ERROR_UPDATE_COORDINATOR: error_coordinator,
     }
@@ -240,6 +252,7 @@ async def test_all_writable_and_non_writable_sensors_handled(
     with (
         patch("custom_components.eta_webservices.number.async_get_current_platform"),
         patch("custom_components.eta_webservices.sensor.async_get_current_platform"),
+        patch("custom_components.eta_webservices.entity.async_get_clientsession"),
     ):
         await number_async_setup_entry(hass, config_entry, add_entities)
         await sensor_async_setup_entry(hass, config_entry, add_entities)
