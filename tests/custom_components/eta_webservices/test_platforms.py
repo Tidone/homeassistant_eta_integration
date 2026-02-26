@@ -11,6 +11,7 @@ from custom_components.eta_webservices.number import (
     async_setup_entry as number_async_setup_entry,
 )
 from custom_components.eta_webservices.sensor import (
+    _coerce_numeric_value,
     async_setup_entry as sensor_async_setup_entry,
 )
 from custom_components.eta_webservices.time import (
@@ -34,6 +35,24 @@ from custom_components.eta_webservices.const import (
     WRITABLE_DICT,
     WRITABLE_UPDATE_COORDINATOR,
 )
+
+
+@pytest.mark.parametrize(
+    ("raw_value", "expected"),
+    [
+        (12.5, 12.5),
+        (7, 7.0),
+        ("10.4", 10.4),
+        ("10,4", 10.4),
+        ("---", None),
+        ("Aus", None),
+        ("", None),
+        (None, None),
+    ],
+)
+def test_coerce_numeric_value_handles_transient_text_values(raw_value, expected):
+    """Numeric ETA sensors should tolerate temporary non-numeric placeholder values."""
+    assert _coerce_numeric_value(raw_value) == expected
 
 
 @pytest.mark.asyncio

@@ -245,6 +245,30 @@ def _determine_device_class(unit):
     return None
 
 
+def _coerce_numeric_value(value: float | int | str | None) -> float | None:
+    """Convert ETA values for numeric sensors, or return None if not numeric.
+
+    ETA may temporarily return text placeholders (e.g. "---", "Aus") for
+    sensors that are normally numeric. In that case we keep the entity type
+    stable and publish an unavailable state for that update cycle.
+    """
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return float(value)
+    if isinstance(value, (int, float)):
+        return float(value)
+
+    normalized_value = str(value).strip().replace(",", ".")
+    if normalized_value == "":
+        return None
+
+    try:
+        return float(normalized_value)
+    except ValueError:
+        return None
+
+
 class EtaFloatSensor(SensorEntity, EtaCoordinatedSensorEntity[float]):
     """Representation of a Float Sensor."""
 
@@ -271,8 +295,17 @@ class EtaFloatSensor(SensorEntity, EtaCoordinatedSensorEntity[float]):
         else:
             self._attr_state_class = SensorStateClass.MEASUREMENT
 
-    def handle_data_updates(self, data: float) -> None:  # noqa: D102
-        self._attr_native_value = data
+    def handle_data_updates(self, data: float | str) -> None:  # noqa: D102
+        numeric_value = _coerce_numeric_value(data)
+        if numeric_value is None:
+            _LOGGER.debug(
+                "Sensor %s received non-numeric value '%s'; setting state to unavailable",
+                self.entity_id,
+                data,
+            )
+            self._attr_native_value = None
+            return
+        self._attr_native_value = numeric_value
 
 
 class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
@@ -301,8 +334,17 @@ class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
         else:
             self._attr_state_class = SensorStateClass.MEASUREMENT
 
-    def handle_data_updates(self, data: float) -> None:  # noqa: D102
-        self._attr_native_value = data
+    def handle_data_updates(self, data: float | str) -> None:  # noqa: D102
+        numeric_value = _coerce_numeric_value(data)
+        if numeric_value is None:
+            _LOGGER.debug(
+                "Writable sensor %s received non-numeric value '%s'; setting state to unavailable",
+                self.entity_id,
+                data,
+            )
+            self._attr_native_value = None
+            return
+        self._attr_native_value = numeric_value
 
 
 class EtaTextSensor(SensorEntity, EtaCoordinatedSensorEntity[str]):
