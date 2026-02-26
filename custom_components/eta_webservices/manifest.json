@@ -1,7 +1,7 @@
 {
   "domain": "eta_webservices",
   "name": "Eta Sensors",
-  "codeowners": ["@nigl", "@Tidone"],
+  "codeowners": ["@nigl", "@Tidone", "@christofpichler"],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/Tidone/homeassistant_eta_integration",
@@ -9,5 +9,5 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/Tidone/homeassistant_eta_integration/issues",
   "requirements": ["xmltodict", "packaging"],
-  "version": "1.3.0"
+  "version": "1.3.1"
 }
