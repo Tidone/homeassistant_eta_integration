@@ -16,6 +16,7 @@ import homeassistant.helpers.entity_registry as er
 from .api import EtaAPI, ETAEndpoint
 from .const import (
     ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
+    AUTO_SELECT_ALL_ENTITIES,
     CHOSEN_FLOAT_SENSORS,
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
@@ -104,13 +105,26 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     async def async_step_select_entities(self, user_input=None):
         """Second step in config flow to add a repo to watch."""
         if user_input is not None:
+            auto_select_all_entities = user_input.get(AUTO_SELECT_ALL_ENTITIES, False)
             # add chosen entities to data
-            self.data[CHOSEN_FLOAT_SENSORS] = user_input.get(CHOSEN_FLOAT_SENSORS, [])
-            self.data[CHOSEN_SWITCHES] = user_input.get(CHOSEN_SWITCHES, [])
-            self.data[CHOSEN_TEXT_SENSORS] = user_input.get(CHOSEN_TEXT_SENSORS, [])
-            self.data[CHOSEN_WRITABLE_SENSORS] = user_input.get(
-                CHOSEN_WRITABLE_SENSORS, []
-            )
+            if auto_select_all_entities:
+                self.data[CHOSEN_FLOAT_SENSORS] = list(self.data[FLOAT_DICT].keys())
+                self.data[CHOSEN_SWITCHES] = list(self.data[SWITCHES_DICT].keys())
+                self.data[CHOSEN_TEXT_SENSORS] = list(self.data[TEXT_DICT].keys())
+                self.data[CHOSEN_WRITABLE_SENSORS] = list(
+                    self.data[WRITABLE_DICT].keys()
+                )
+            else:
+                self.data[CHOSEN_FLOAT_SENSORS] = user_input.get(
+                    CHOSEN_FLOAT_SENSORS, []
+                )
+                self.data[CHOSEN_SWITCHES] = user_input.get(CHOSEN_SWITCHES, [])
+                self.data[CHOSEN_TEXT_SENSORS] = user_input.get(
+                    CHOSEN_TEXT_SENSORS, []
+                )
+                self.data[CHOSEN_WRITABLE_SENSORS] = user_input.get(
+                    CHOSEN_WRITABLE_SENSORS, []
+                )
 
             # Restore old logging level
             if self._old_logging_level != logging.NOTSET and _LOGGER.parent is not None:
@@ -149,11 +163,27 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         switches_dict: dict[str, ETAEndpoint] = self.data[SWITCHES_DICT]
         text_dict: dict[str, ETAEndpoint] = self.data[TEXT_DICT]
         writable_dict: dict[str, ETAEndpoint] = self.data[WRITABLE_DICT]
+        discovered_entity_summary = (
+            f"float: {len(sensors_dict)}\n"
+            f"switches: {len(switches_dict)}\n"
+            f"text: {len(text_dict)}\n"
+            f"writable: {len(writable_dict)}\n"
+            f"total: {len(sensors_dict) + len(switches_dict) + len(text_dict) + len(writable_dict)}"
+        )
 
         return self.async_show_form(
             step_id="select_entities",
             data_schema=vol.Schema(
                 {
+                    vol.Optional(
+                        "entity_count_summary", default=discovered_entity_summary
+                    ): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            multiline=True,
+                            read_only=True,
+                        )
+                    ),
+                    vol.Required(AUTO_SELECT_ALL_ENTITIES, default=False): cv.boolean,
                     vol.Optional(CHOSEN_FLOAT_SENSORS): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=[
@@ -263,6 +293,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self._errors = {}
         self.update_sensor_values = True
         self.enumerate_new_endpoints = False
+        self.auto_select_all_entities = False
         self.unavailable_sensors: dict = {}
         self.advanced_options_writable_sensors = []
 
@@ -566,30 +597,53 @@ class EtaOptionsFlowHandler(OptionsFlow):
         }
 
         if user_input is not None:
+            self.auto_select_all_entities = user_input.get(
+                AUTO_SELECT_ALL_ENTITIES, False
+            )
+            selected_float_sensors = (
+                list(self.data[FLOAT_DICT].keys())
+                if self.auto_select_all_entities
+                else user_input[CHOSEN_FLOAT_SENSORS]
+            )
+            selected_switches = (
+                list(self.data[SWITCHES_DICT].keys())
+                if self.auto_select_all_entities
+                else user_input[CHOSEN_SWITCHES]
+            )
+            selected_text_sensors = (
+                list(self.data[TEXT_DICT].keys())
+                if self.auto_select_all_entities
+                else user_input[CHOSEN_TEXT_SENSORS]
+            )
+            selected_writable_sensors = (
+                list(self.data[WRITABLE_DICT].keys())
+                if self.auto_select_all_entities
+                else user_input[CHOSEN_WRITABLE_SENSORS]
+            )
             removed_entities = [
                 entity_map_sensors[entity_id]
                 for entity_id in entity_map_sensors
-                if entity_id not in user_input[CHOSEN_FLOAT_SENSORS]
+                if entity_id not in selected_float_sensors
             ]
             removed_entities.extend(
                 [
                     entity_map_switches[entity_id]
                     for entity_id in entity_map_switches
-                    if entity_id not in user_input[CHOSEN_SWITCHES]
+                    if entity_id not in selected_switches
                 ]
             )
             removed_entities.extend(
                 [
                     entity_map_text_sensors[entity_id]
                     for entity_id in entity_map_text_sensors
-                    if entity_id not in user_input[CHOSEN_TEXT_SENSORS]
+                    if entity_id not in selected_text_sensors
                 ]
             )
             removed_entities.extend(
                 [
                     entity_map_writable_sensors[entity_id]
                     for entity_id in entity_map_writable_sensors
-                    if entity_id not in user_input[CHOSEN_WRITABLE_SENSORS]
+                    if entity_id not in selected_writable_sensors
                 ]
             )
             for e in removed_entities:
@@ -597,10 +651,10 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 entity_registry.async_remove(e.entity_id)
 
             data = {
-                CHOSEN_FLOAT_SENSORS: user_input[CHOSEN_FLOAT_SENSORS],
-                CHOSEN_SWITCHES: user_input[CHOSEN_SWITCHES],
-                CHOSEN_TEXT_SENSORS: user_input[CHOSEN_TEXT_SENSORS],
-                CHOSEN_WRITABLE_SENSORS: user_input[CHOSEN_WRITABLE_SENSORS],
+                CHOSEN_FLOAT_SENSORS: selected_float_sensors,
+                CHOSEN_SWITCHES: selected_switches,
+                CHOSEN_TEXT_SENSORS: selected_text_sensors,
+                CHOSEN_WRITABLE_SENSORS: selected_writable_sensors,
                 FLOAT_DICT: self.data[FLOAT_DICT],
                 SWITCHES_DICT: self.data[SWITCHES_DICT],
                 TEXT_DICT: self.data[TEXT_DICT],
@@ -692,7 +746,26 @@ class EtaOptionsFlowHandler(OptionsFlow):
         if len(self.unavailable_sensors) > 0:
             self._errors["base"] = "unavailable_sensors"
 
+        discovered_entity_summary = (
+            f"float: {len(self.data[FLOAT_DICT])}\n"
+            f"switches: {len(self.data[SWITCHES_DICT])}\n"
+            f"text: {len(self.data[TEXT_DICT])}\n"
+            f"writable: {len(self.data[WRITABLE_DICT])}\n"
+            f"total: {len(self.data[FLOAT_DICT]) + len(self.data[SWITCHES_DICT]) + len(self.data[TEXT_DICT]) + len(self.data[WRITABLE_DICT])}"
+        )
+
         schema = {
+            vol.Optional(
+                "entity_count_summary", default=discovered_entity_summary
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                    read_only=True,
+                )
+            ),
+            vol.Required(
+                AUTO_SELECT_ALL_ENTITIES, default=self.auto_select_all_entities
+            ): cv.boolean,
             vol.Optional(
                 CHOSEN_FLOAT_SENSORS, default=current_chosen_sensors
             ): selector.SelectSelector(

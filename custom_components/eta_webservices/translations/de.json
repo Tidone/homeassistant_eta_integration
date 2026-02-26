@@ -13,8 +13,10 @@
             },
             "select_entities": {
                 "title": "ETA Schritt 2",
-                "description": "Wähle die Sensoren aus, die hinzugefügt werden sollen.",
+                "description": "Wähle die Entitäten aus, die hinzugefügt werden sollen. Aktiviere die automatische Auswahl, um alle gefundenen Entitäten auf einmal hinzuzufügen (das können mehrere hundert Entitäten sein).",
                 "data": {
+                    "entity_count_summary": "Gefundene Entitäten (Anzahl)",
+                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch auswählen",
                     "chosen_float_sensors": "Sensoren",
                     "chosen_switches": "Schalter",
                     "chosen_text_sensors": "Zustandssensoren",
@@ -45,6 +47,8 @@
             },
             "user": {
                 "data": {
+                    "entity_count_summary": "Gefundene Entitäten (Anzahl)",
+                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch auswählen",
                     "chosen_float_sensors": "Sensoren",
                     "chosen_switches": "Schalter",
                     "chosen_text_sensors": "Zustandssensoren",

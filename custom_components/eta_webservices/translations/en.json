@@ -13,8 +13,10 @@
             },
             "select_entities": {
                 "title": "ETA Step 2",
-                "description": "Select endpoints which should be added as entities",
+                "description": "Select endpoints which should be added as entities. Enable auto-select-all to add all discovered entities at once (this can be several hundred entities).",
                 "data": {
+                    "entity_count_summary": "Discovered entity counts",
+                    "auto_select_all_entities": "Automatically select all discovered entities",
                     "chosen_float_sensors": "Possible sensors",
                     "chosen_switches": "Possible switches",
                     "chosen_text_sensors": "Possible state sensors",
@@ -45,6 +47,8 @@
             },
             "user": {
                 "data": {
+                    "entity_count_summary": "Discovered entity counts",
+                    "auto_select_all_entities": "Automatically select all discovered entities",
                     "chosen_float_sensors": "Possible sensors",
                     "chosen_switches": "Possible switches",
                     "chosen_text_sensors": "Possible state sensors",
