@@ -74,6 +74,35 @@ WRITE_TIMESLOT_PLUS_TEMPERATURE_SCHEMA: VolDictType = {
 }
 
 
+def _deduplicate_entities_by_unique_id(entities: list[SensorEntity]) -> list[SensorEntity]:
+    """Drop duplicate entities with identical unique IDs.
+
+    In rare edge cases a sensor can temporarily end up in multiple categories
+    in config data. Guard against duplicate entity registration at runtime.
+    """
+    deduplicated_entities: list[SensorEntity] = []
+    seen_unique_ids: set[str] = set()
+
+    for entity in entities:
+        unique_id = entity.unique_id
+        if unique_id is None:
+            deduplicated_entities.append(entity)
+            continue
+
+        if unique_id in seen_unique_ids:
+            _LOGGER.warning(
+                "Skipping duplicate sensor entity with unique_id '%s' (entity_id: %s)",
+                unique_id,
+                entity.entity_id,
+            )
+            continue
+
+        seen_unique_ids.add(unique_id)
+        deduplicated_entities.append(entity)
+
+    return deduplicated_entities
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: config_entries.ConfigEntry,
@@ -192,6 +221,7 @@ async def async_setup_entry(
             EtaLatestErrorSensor(config, hass, error_coordinator),
         ]  # pyright: ignore[reportArgumentType]
     )
+    sensors = _deduplicate_entities_by_unique_id(sensors)
     async_add_entities(sensors, update_before_add=False)
 
     # activate the service for all selected writable sensors with the unit CUSTOM_UNIT_TIMESLOT
