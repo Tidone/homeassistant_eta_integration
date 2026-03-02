@@ -16,7 +16,6 @@ import logging
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict
 from unittest.mock import AsyncMock
 
 # Add parent's parent directory to path for imports
@@ -24,13 +23,16 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from aiohttp import ClientSession
 
-from custom_components.eta_webservices.api import EtaAPI
+from custom_components.eta_webservices._api.api_client import APIClient
+from custom_components.eta_webservices._api.sensor_discovery_v12 import (
+    SensorDiscoveryV12,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class MockedETAAPI:
-    """Creates EtaAPI instance with mocked _get_request."""
+    """Creates SensorDiscoveryV12 instance with mocked get_request."""
 
     def __init__(self, fixture_data: dict, host: str, port: int):
         """Initialize mocked API.
@@ -43,11 +45,13 @@ class MockedETAAPI:
         # Create mock session (won't be used)
         mock_session = AsyncMock(spec=ClientSession)
 
-        # Create real EtaAPI instance
-        self.api = EtaAPI(mock_session, host, port)
+        # Create real APIClient instance and wire up the mock
+        self.http_client = APIClient(mock_session, host, port)
+        self.http_client.get_request = self._mock_get_request
 
-        # Replace _get_request with mock version
-        self.api._get_request = self._mock_get_request
+        # Create SensorDiscoveryV12 directly
+        self.discovery = SensorDiscoveryV12(self.http_client)
+
         self.fixture_data = fixture_data
         self.request_log = []  # Track requests for debugging
 
@@ -94,7 +98,7 @@ class SensorUpdater:
         """Update reference data based on mode.
 
         Args:
-            discovered: The 4 dictionaries from _get_all_sensors_v12
+            discovered: The 4 dictionaries from SensorDiscoveryV12.get_all_sensors
             existing: The current reference file content
 
         Returns:
@@ -169,9 +173,7 @@ class SensorUpdater:
         print(f"Updated:   {self.stats['updated']} existing sensors")
         print(f"Unchanged: {self.stats['unchanged']} sensors")
         if self.stats["removed"] > 0:
-            print(
-                f"Removed:   {self.stats['removed']} sensors (not in discovered set)"
-            )
+            print(f"Removed:   {self.stats['removed']} sensors (not in discovered set)")
         print("=" * 70)
 
 
@@ -251,9 +253,9 @@ async def run_update(args) -> int:
         text_dict = {}
         writable_dict = {}
 
-        # Call _get_all_sensors_v12
-        print("Running _get_all_sensors_v12 to discover sensors...")
-        await mocked.api._get_all_sensors_v12(
+        # Call get_all_sensors
+        print("Running SensorDiscoveryV12.get_all_sensors to discover sensors...")
+        await mocked.discovery.get_all_sensors(
             float_dict, switches_dict, text_dict, writable_dict
         )
 
@@ -261,7 +263,7 @@ async def run_update(args) -> int:
         total_discovered = (
             len(float_dict) + len(switches_dict) + len(text_dict) + len(writable_dict)
         )
-        print(f"\nDiscovered sensors:")
+        print("\nDiscovered sensors:")
         print(f"  Float:    {len(float_dict)}")
         print(f"  Switches: {len(switches_dict)}")
         print(f"  Text:     {len(text_dict)}")
@@ -381,9 +383,7 @@ Examples:
         "--port", type=int, default=8080, help="Mock port (default: 8080)"
     )
 
-    parser.add_argument(
-        "--yes", action="store_true", help="Skip confirmation prompt"
-    )
+    parser.add_argument("--yes", action="store_true", help="Skip confirmation prompt")
 
     parser.add_argument(
         "-v",

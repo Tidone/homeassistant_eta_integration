@@ -194,7 +194,12 @@
       "value": 20.0
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_registerleistung": {
-      "valid_values": null,
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
       "friendly_name": "WW > Warmwasserspeicher > Registerleistung",
       "unit": "kW",
       "endpoint_type": "DEFAULT",
@@ -393,7 +398,12 @@
       "value": 8750.0
     },
     "eta_192_168_0_25__hk_heizkreis_heizlast_heizlast_während_estrichtrocknung": {
-      "valid_values": null,
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1000.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
       "friendly_name": "HK > Heizkreis > Heizlast > Heizlast während Estrichtrocknung",
       "unit": "kW",
       "endpoint_type": "DEFAULT",
@@ -849,7 +859,12 @@
       "value": 11970.0
     },
     "eta_192_168_0_25__fbh_heizkreis_heizlast_heizlast_während_estrichtrocknung": {
-      "valid_values": null,
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1000.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
       "friendly_name": "Fbh > Heizkreis > Heizlast > Heizlast während Estrichtrocknung",
       "unit": "kW",
       "endpoint_type": "DEFAULT",
@@ -5542,6 +5557,19 @@
       "url": "/120/10111/0/0/12109",
       "value": 20.0
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_registerleistung_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 200.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Registerleistung",
+      "unit": "kW",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10111/0/0/13150",
+      "value": 7.7
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_max._writable": {
       "valid_values": {
         "scaled_min_value": 0.0,
@@ -5931,6 +5959,19 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10101/0/0/14133",
       "value": 22.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizlast_heizlast_während_estrichtrocknung_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1000.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "HK > Heizkreis > Heizlast > Heizlast während Estrichtrocknung",
+      "unit": "kW",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10101/0/0/13600",
+      "value": 8.8
     },
     "eta_192_168_0_25__hk_heizkreis_heizgrenze_für_'heizen'_writable": {
       "valid_values": {
@@ -6399,6 +6440,19 @@
       "endpoint_type": "DEFAULT",
       "url": "/120/10102/0/0/14133",
       "value": 22.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizlast_heizlast_während_estrichtrocknung_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 1000.0,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizlast > Heizlast während Estrichtrocknung",
+      "unit": "kW",
+      "endpoint_type": "DEFAULT",
+      "url": "/120/10102/0/0/13600",
+      "value": 12.0
     },
     "eta_192_168_0_25__fbh_heizkreis_heizgrenze_für_'heizen'_writable": {
       "valid_values": {

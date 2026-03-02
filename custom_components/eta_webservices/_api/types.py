@@ -82,6 +82,7 @@ WRITABLE_SENSOR_UNITS = [
     "%",
     "°C",
     "kg",
+    "kW",
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     CUSTOM_UNIT_TIMESLOT,
     CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
@@ -104,6 +105,12 @@ DEFAULT_VALID_WRITABLE_VALUES = {
     "kg": ETAValidWritableValues(
         scaled_min_value=-100000,
         scaled_max_value=100000,
+        scale_factor=1,
+        dec_places=0,
+    ),
+    "kW": ETAValidWritableValues(
+        scaled_min_value=0,
+        scaled_max_value=1000,
         scale_factor=1,
         dec_places=0,
     ),

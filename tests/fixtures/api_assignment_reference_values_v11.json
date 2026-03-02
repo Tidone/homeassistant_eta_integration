@@ -483,7 +483,12 @@
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_registerleistung": {
       "url": "/120/10111/0/0/13150",
-      "valid_values": null,
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 1000,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
       "friendly_name": "WW > Warmwasserspeicher > Registerleistung",
       "unit": "kW",
       "endpoint_type": "TEXT",
@@ -682,7 +687,12 @@
     },
     "eta_192_168_0_25__hk_heizkreis_heizlast_heizlast_während_estrichtrocknung": {
       "url": "/120/10101/0/0/13600",
-      "valid_values": null,
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 1000,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
       "friendly_name": "HK > Heizkreis > Heizlast > Heizlast während Estrichtrocknung",
       "unit": "kW",
       "endpoint_type": "TEXT",
@@ -1158,7 +1168,12 @@
     },
     "eta_192_168_0_25__fbh_heizkreis_heizlast_heizlast_während_estrichtrocknung": {
       "url": "/120/10102/0/0/13600",
-      "valid_values": null,
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 1000,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
       "friendly_name": "Fbh > Heizkreis > Heizlast > Heizlast während Estrichtrocknung",
       "unit": "kW",
       "endpoint_type": "TEXT",
@@ -2308,7 +2323,12 @@
     },
     "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_leistung": {
       "url": "/40/10021/0/0/12077",
-      "valid_values": null,
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 1000,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
       "friendly_name": "Kessel > Kessel > Vorlaufregler 1 > Angeforderte Leistung",
       "unit": "kW",
       "endpoint_type": "TEXT",
@@ -5446,6 +5466,19 @@
       "endpoint_type": "TEXT",
       "value": 20.0
     },
+    "eta_192_168_0_25__ww_warmwasserspeicher_registerleistung_writable": {
+      "url": "/120/10111/0/0/13150",
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 1000,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "WW > Warmwasserspeicher > Registerleistung",
+      "unit": "kW",
+      "endpoint_type": "TEXT",
+      "value": 7.7
+    },
     "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_max._writable": {
       "url": "/120/10111/0/0/12169",
       "valid_values": {
@@ -5588,6 +5621,19 @@
       "unit": "°C",
       "endpoint_type": "TEXT",
       "value": 22.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_heizlast_heizlast_während_estrichtrocknung_writable": {
+      "url": "/120/10101/0/0/13600",
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 1000,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "HK > Heizkreis > Heizlast > Heizlast während Estrichtrocknung",
+      "unit": "kW",
+      "endpoint_type": "TEXT",
+      "value": 8.8
     },
     "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_writable": {
       "url": "/120/10101/12095/0/0",
@@ -5952,6 +5998,19 @@
       "unit": "°C",
       "endpoint_type": "TEXT",
       "value": 22.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_heizlast_heizlast_während_estrichtrocknung_writable": {
+      "url": "/120/10102/0/0/13600",
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 1000,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Fbh > Heizkreis > Heizlast > Heizlast während Estrichtrocknung",
+      "unit": "kW",
+      "endpoint_type": "TEXT",
+      "value": 12.0
     },
     "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_writable": {
       "url": "/120/10102/12095/0/0",
@@ -6654,6 +6713,19 @@
       "unit": "°C",
       "endpoint_type": "TEXT",
       "value": 61.1
+    },
+    "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_leistung_writable": {
+      "url": "/40/10021/0/0/12077",
+      "valid_values": {
+        "scaled_min_value": 0,
+        "scaled_max_value": 1000,
+        "scale_factor": 10,
+        "dec_places": 1
+      },
+      "friendly_name": "Kessel > Kessel > Vorlaufregler 1 > Angeforderte Leistung",
+      "unit": "kW",
+      "endpoint_type": "TEXT",
+      "value": 8.3
     },
     "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_temperatur_writable": {
       "url": "/40/10021/0/0/12006",
