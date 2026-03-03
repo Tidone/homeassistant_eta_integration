@@ -2,8 +2,8 @@
     "config": {
         "step": {
             "user": {
-                "title": "ETA Schritt 1",
-                "description": "Gib die Netzwerkadresse deines ETA Geräts ein. Wenn du Hilfe bei der Konfiguration brauchst, schau hier nach: https://github.com/Tidone/homeassistant_eta_integration \n\n Info: Abhängig von der Anzahl der möglichen Endpunkte deinse ETA Geräts kann die Abfrage eine lange Zeit dauern! Bitte hab etwas Geduld nachdem du auf Absenden gedrückt hast.\n\nWähle den alten API Modus falls du Probleme mit dem neuen Modus hast.",
+                "title": "ETA Verbindung",
+                "description": "Gib Host und Port deines ETA-Geräts ein. Die erste Suche nach verfügbaren Endpunkten kann bei großen Anlagen mehrere Minuten dauern.\n\nAktiviere den alten API-Modus nur dann, wenn es Probleme mit der neueren ETA-API gibt.",
                 "data": {
                     "host": "Host",
                     "port": "Port",
@@ -12,8 +12,8 @@
                 }
             },
             "select_entities": {
-                "title": "ETA Schritt 2",
-                "description": "Wähle die Entitäten aus, die hinzugefügt werden sollen.\n\nSensoren: {float_count}\nSchalter: {switch_count}\nZustandssensoren: {text_count}\nSchreibbare Sensoren: {writable_count}\n**Gesamt: {total_count}**\n\nAktiviere die automatische Auswahl, um alle gefundenen Entitäten auf einmal hinzuzufügen (das können mehrere hundert Entitäten sein).",
+                "title": "Entitäten auswählen",
+                "description": "Wähle aus, welche gefundenen ETA-Entitäten zu Home Assistant hinzugefügt werden sollen.\n\nSensoren: {float_count}\nSchalter: {switch_count}\nZustandssensoren: {text_count}\nSchreibbare Sensoren: {writable_count}\n**Gesamt: {total_count}**\n\nAktiviere die automatische Auswahl, wenn du alles auf einmal hinzufügen möchtest. Bei großen Anlagen können das mehrere hundert Entitäten sein.",
                 "data": {
                     "auto_select_all_entities": "Alle gefundenen Entitäten automatisch auswählen",
                     "chosen_float_sensors": "Sensoren",
@@ -28,17 +28,24 @@
             "no_eta_endpoint": "Konnte keinen ETA Endpunkt finden. Hast du die Webservices in meinETA aktiviert?",
             "wrong_api_version": "API Version des ETA Geräts ist zu alt. Einige Entitäten werden möglicherweise nicht oder falsch erkannt. Aktualisiere die Firmware deines ETA Geräts auf die aktuellste Firmware, falls möglich.",
             "legacy_mode_selected": "Alter API Modus wird verwendet. Einige Entitäten werden möglicherweise nicht oder falsch erkannt.",
+            "endpoint_discovery_failed": "Die Suche nach ETA-Endpunkten ist unerwartet fehlgeschlagen. Bitte versuche es erneut und prüfe die Protokolle, falls das Problem bestehen bleibt.",
             "value_update_error": "Mindestens ein Endpunkt meldet einen Fehler. Die entsprechenden Entitäten werden in der Liste nicht angezeigt."
+        },
+        "progress": {
+            "discover_entities": "Dein ETA-System wird nach verfügbaren Entitäten durchsucht. Das kann bei großen Anlagen mehrere Minuten dauern. Home Assistant fährt automatisch fort, sobald die Suche abgeschlossen ist."
         },
         "abort": {
             "single_instance_allowed": "Host bereits konfiguriert. Nur eine Instanz ist erlaubt."
         }
     },
     "options": {
+        "abort": {
+            "integration_busy": "Die Integration wird gerade noch gestartet oder neu geladen. Bitte warte einen Moment und versuche das Konfigurieren dann erneut."
+        },
         "step": {
             "init": {
-                "title": "Optionen initialisieren",
-                "description": "Wähle aus, ob Sensorwerte aktualisiert und/oder die Sensorliste neu eingelesen werden soll. Höhere Werte für parallele Anfragen erhöhen die Last auf dem ETA-Kessel und können zu Fehlern führen, besonders bei älteren Kesseln. Für ältere Kessel besser kleinere Werte verwenden.",
+                "title": "Aktualisierungsoptionen",
+                "description": "Wähle aus, ob Sensorwerte und/oder die Entitätsliste aktualisiert werden sollen. Höhere Werte für parallele Anfragen erhöhen die Last auf dem ETA-Gerät und können besonders bei älteren Anlagen zu Fehlern führen. Für ältere ETA-Systeme besser kleinere Werte verwenden.",
                 "data": {
                     "update_sensor_values": "Sensorwerte aktualisieren",
                     "enumerate_new_endpoints": "Liste der Sensoren aktualisieren",
@@ -47,7 +54,7 @@
             },
             "user": {
                 "title": "Entitäten auswählen",
-                "description": "Wähle die Entitäten aus, die hinzugefügt werden sollen.\n\nSensoren: {float_count}\nSchalter: {switch_count}\nZustandssensoren: {text_count}\nSchreibbare Sensoren: {writable_count}\n**Gesamt: {total_count}**\n\nAktiviere die automatische Auswahl, um alle gefundenen Entitäten auf einmal hinzuzufügen (das können mehrere hundert Entitäten sein).",
+                "description": "Wähle aus, welche gefundenen ETA-Entitäten zu Home Assistant hinzugefügt werden sollen.\n\nSensoren: {float_count}\nSchalter: {switch_count}\nZustandssensoren: {text_count}\nSchreibbare Sensoren: {writable_count}\n**Gesamt: {total_count}**\n\nAktiviere die automatische Auswahl, wenn du alles auf einmal hinzufügen möchtest. Bei großen Anlagen können das mehrere hundert Entitäten sein.",
                 "data": {
                     "auto_select_all_entities": "Alle gefundenen Entitäten automatisch auswählen",
                     "chosen_float_sensors": "Sensoren",
@@ -59,7 +66,7 @@
             },
             "advanced_options": {
                 "title": "Erweiterte Optionen",
-                "description": "Wähle erweiterte Optionen für die Integration. Weitere Informationen zu diesen Optionen findest du hier: https://github.com/Tidone/homeassistant_eta_integration/wiki/Advanded-Options",
+                "description": "Konfiguriere erweiterte Optionen für die Integration.",
                 "data": {
                     "ignore_decimal_places_restriction_for_writable_entities": "HACK: Füge Dezimalstellen zu den Werten dieser schreibbaren Sensoren hinzu"
                 }

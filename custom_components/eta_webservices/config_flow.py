@@ -1,5 +1,6 @@
 """Adds config flow for ETA Sensors."""
 
+import asyncio
 import copy
 import logging
 
@@ -112,6 +113,8 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         self._errors = {}
         self.data = {}
         self._old_logging_level = logging.NOTSET
+        self._endpoint_discovery_task: asyncio.Task | None = None
+        self._endpoint_discovery_error: str | None = None
 
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
@@ -141,19 +144,16 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                     _LOGGER.parent.setLevel(logging.DEBUG)
 
                 self.data = user_input
-
-                (
-                    self.data[FLOAT_DICT],
-                    self.data[SWITCHES_DICT],
-                    self.data[TEXT_DICT],
-                    self.data[WRITABLE_DICT],
-                ) = await self._get_possible_endpoints(
-                    user_input[CONF_HOST],
-                    user_input[CONF_PORT],
-                    user_input[FORCE_LEGACY_MODE],
+                self._endpoint_discovery_error = None
+                self._endpoint_discovery_task = self.hass.async_create_task(
+                    self._async_discover_possible_endpoints(
+                        user_input[CONF_HOST],
+                        user_input[CONF_PORT],
+                        user_input[FORCE_LEGACY_MODE],
+                    )
                 )
 
-                return await self.async_step_select_entities()
+                return await self.async_step_discover_entities()
 
             self._errors["base"] = "no_eta_endpoint" if valid == 0 else "unknown_host"
 
@@ -165,6 +165,50 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         user_input[CONF_PORT] = "8080"
 
         return await self._show_config_form_user(user_input)
+
+    async def async_step_discover_entities(self, user_input=None):
+        """Show a dedicated progress step while endpoint discovery runs."""
+        if self._endpoint_discovery_task is None:
+            return await self.async_step_user(self.data)
+
+        if not self._endpoint_discovery_task.done():
+            return self.async_show_progress(
+                step_id="discover_entities",
+                progress_action="discover_entities",
+                progress_task=self._endpoint_discovery_task,
+            )
+
+        if self._endpoint_discovery_error is not None:
+            self._restore_logging_level()
+            self._endpoint_discovery_task = None
+            self._errors["base"] = self._endpoint_discovery_error
+            return await self._show_config_form_user(self.data)
+
+        self._endpoint_discovery_task = None
+        return self.async_show_progress_done(next_step_id="select_entities")
+
+    async def _async_discover_possible_endpoints(
+        self, host: str, port: str, force_legacy_mode: bool
+    ) -> None:
+        """Discover endpoints while the config flow shows a native progress page."""
+        self.async_update_progress(0.05)
+        try:
+            (
+                self.data[FLOAT_DICT],
+                self.data[SWITCHES_DICT],
+                self.data[TEXT_DICT],
+                self.data[WRITABLE_DICT],
+            ) = await self._get_possible_endpoints(host, port, force_legacy_mode)
+            self.async_update_progress(1.0)
+        except asyncio.CancelledError:
+            self._endpoint_discovery_error = None
+            raise
+        except Exception:
+            _LOGGER.exception("Exception while discovering ETA endpoints")
+            self._endpoint_discovery_error = "endpoint_discovery_failed"
+        finally:
+            if self._endpoint_discovery_error is not None:
+                self._restore_logging_level()
 
     async def async_step_select_entities(self, user_input=None):
         """Second step in config flow to add a repo to watch."""
@@ -198,8 +242,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             )
 
             # Restore old logging level
-            if self._old_logging_level != logging.NOTSET and _LOGGER.parent is not None:
-                _LOGGER.parent.setLevel(self._old_logging_level)
+            self._restore_logging_level()
 
             # User is done, create the config entry.
             self.data.setdefault(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
@@ -228,6 +271,12 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             ),
             errors=self._errors,
         )
+
+    def _restore_logging_level(self) -> None:
+        """Restore the previous root logger level if it was changed."""
+        if self._old_logging_level != logging.NOTSET and _LOGGER.parent is not None:
+            _LOGGER.parent.setLevel(self._old_logging_level)
+            self._old_logging_level = logging.NOTSET
 
     async def _show_config_form_endpoint(self):
         """Show the configuration form to select which endpoints should become entities."""
@@ -363,6 +412,14 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.unavailable_sensors: dict = {}
         self.advanced_options_writable_sensors = []
 
+    def _get_runtime_config(self) -> dict | None:
+        """Return the loaded runtime config for this entry if available."""
+        domain_data = self.hass.data.get(DOMAIN, {})
+        config_entry = self.config_entry
+        if config_entry is None:
+            return None
+        return domain_data.get(config_entry.entry_id)
+
     async def _get_possible_endpoints(self, host, port, force_legacy_mode):
         session = async_get_clientsession(self.hass)
         eta_client = EtaAPI(session, host, port)
@@ -377,10 +434,37 @@ class EtaOptionsFlowHandler(OptionsFlow):
         return float_dict, switches_dict, text_dict, writable_dict
 
     async def async_step_init(self, user_input=None):  # noqa: D102
+        if self._get_runtime_config() is None:
+            return self.async_abort(reason="integration_busy")
+
         if user_input is not None:
             self.update_sensor_values = user_input[OPTIONS_UPDATE_SENSOR_VALUES]
             self.enumerate_new_endpoints = user_input[OPTIONS_ENUMERATE_NEW_ENDPOINTS]
             self.max_parallel_requests = int(user_input[MAX_PARALLEL_REQUESTS])
+
+            if not self.update_sensor_values and not self.enumerate_new_endpoints:
+                current_data = self._get_runtime_config()
+                if current_data is None:
+                    return self.async_abort(reason="integration_busy")
+                data = {
+                    CHOSEN_FLOAT_SENSORS: current_data[CHOSEN_FLOAT_SENSORS],
+                    CHOSEN_SWITCHES: current_data[CHOSEN_SWITCHES],
+                    CHOSEN_TEXT_SENSORS: current_data[CHOSEN_TEXT_SENSORS],
+                    CHOSEN_WRITABLE_SENSORS: current_data[CHOSEN_WRITABLE_SENSORS],
+                    FLOAT_DICT: current_data[FLOAT_DICT],
+                    SWITCHES_DICT: current_data[SWITCHES_DICT],
+                    TEXT_DICT: current_data[TEXT_DICT],
+                    WRITABLE_DICT: current_data[WRITABLE_DICT],
+                    MAX_PARALLEL_REQUESTS: self.max_parallel_requests,
+                    CONF_HOST: current_data[CONF_HOST],
+                    CONF_PORT: current_data[CONF_PORT],
+                    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: current_data.get(
+                        ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
+                    ),
+                    FORCE_LEGACY_MODE: current_data[FORCE_LEGACY_MODE],
+                }
+                return self.async_create_entry(title="", data=data)
+
             return await self._update_data_structures()
 
         return await self._show_initial_option_screen()
@@ -388,9 +472,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
         parallel_request_options = ["1", "2", "3", "5", "8", "10", "15"]
-        default_parallel_requests = self.hass.data[DOMAIN][
-            self.config_entry.entry_id  # pyright: ignore[reportOptionalMemberAccess]
-        ].get(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+        current_data = self._get_runtime_config()
+        if current_data is None:
+            return self.async_abort(reason="integration_busy")
+        default_parallel_requests = current_data.get(
+            MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
+        )
         default_parallel_requests = str(default_parallel_requests)
         if default_parallel_requests not in parallel_request_options:
             default_parallel_requests = str(DEFAULT_MAX_PARALLEL_REQUESTS)
@@ -609,6 +696,10 @@ class EtaOptionsFlowHandler(OptionsFlow):
             _LOGGER.exception("Exception while updating sensor values")
 
     async def _update_data_structures(self):
+        current_data = self._get_runtime_config()
+        if current_data is None:
+            return self.async_abort(reason="integration_busy")
+
         # Make a copy of the data structure to make sure we don't alter the original data
         for key in [
             CONF_HOST,
@@ -623,9 +714,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             CHOSEN_WRITABLE_SENSORS,
             FORCE_LEGACY_MODE,
         ]:
-            self.data[key] = copy.copy(
-                self.hass.data[DOMAIN][self.config_entry.entry_id][key]  # pyright: ignore[reportOptionalMemberAccess]
-            )
+            self.data[key] = copy.copy(current_data[key])
         (
             self.data[CHOSEN_FLOAT_SENSORS],
             self.data[CHOSEN_SWITCHES],
@@ -639,9 +728,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.data[CHOSEN_WRITABLE_SENSORS],
         )
         # ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION can be unset, so we have to handle it separately
-        self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = self.hass.data[
-            DOMAIN
-        ][self.config_entry.entry_id].get(  # pyright: ignore[reportOptionalMemberAccess]
+        self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = current_data.get(
             ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
         )
         self.data[MAX_PARALLEL_REQUESTS] = self.max_parallel_requests
@@ -680,6 +767,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def async_step_user(self, user_input=None):
         """Manage the options."""
+        if self._get_runtime_config() is None:
+            return self.async_abort(reason="integration_busy")
+
         entity_registry = er.async_get(self.hass)
         entries = er.async_entries_for_config_entry(
             entity_registry,
