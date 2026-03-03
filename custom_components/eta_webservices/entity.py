@@ -36,7 +36,6 @@ class EtaEntity(Entity):
         endpoint_info: ETAEndpoint,
         entity_id_format: str,
     ) -> None:
-        self._attr_name = endpoint_info["friendly_name"]
         self.session = async_get_clientsession(hass)
         self.host = config.get(CONF_HOST, "")
         self.port = config.get(CONF_PORT, "")
@@ -46,7 +45,23 @@ class EtaEntity(Entity):
         )
         self.request_semaphore = config.get(REQUEST_SEMAPHORE)
 
-        self._attr_device_info = create_device_info(self.host, self.port)
+        # Extract the FUB from the friendly name and use it as the device name
+        # E.g. "ETA > Living Room Sensor" -> "ETA"
+        device_name = (
+            endpoint_info["friendly_name"].split(" > ")[0].strip()
+            if ">" in endpoint_info["friendly_name"]
+            else None
+        )
+
+        # Remove the device name from the friendly name to avoid redundancy, e.g. "ETA > Living Room Sensor" -> "Living Room Sensor"
+        if device_name and device_name in endpoint_info["friendly_name"]:
+            self._attr_name = endpoint_info["friendly_name"].replace(
+                device_name + " > ", "", 1
+            )
+        else:
+            self._attr_name = endpoint_info["friendly_name"]
+
+        self._attr_device_info = create_device_info(self.host, self.port, device_name)
         self.entity_id = generate_entity_id(entity_id_format, unique_id, hass=hass)
         self._attr_unique_id = unique_id
 
@@ -159,7 +174,7 @@ class EtaErrorEntity(CoordinatorEntity[ETAErrorUpdateCoordinator]):
             entity_id_format, self._attr_unique_id, hass=hass
         )
 
-        self._attr_device_info = create_device_info(host, port)
+        self._attr_device_info = create_device_info(host, port, None)
 
     @abstractmethod
     def handle_data_updates(self, data) -> None:  # noqa: D102

@@ -1,3 +1,9 @@
+[tool.pylint.FORMAT]
+expected-line-ending-format = "LF"
+
+[tool.pylint.CODE_STYLE]
+max-line-length-suggestions = 72
+
 [tool.ruff]
 required-version = ">=0.14.13"
 

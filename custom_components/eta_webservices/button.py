@@ -50,7 +50,7 @@ class EtaResendErrorEventsButton(ButtonEntity):
         self.entity_id = generate_entity_id(
             ENTITY_ID_FORMAT, self._attr_unique_id, hass=hass
         )
-        self._attr_device_info = create_device_info(host, port)
+        self._attr_device_info = create_device_info(host, port, None)
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     async def async_press(self) -> None:
