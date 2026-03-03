@@ -11,6 +11,7 @@ from custom_components.eta_webservices.number import (
     async_setup_entry as number_async_setup_entry,
 )
 from custom_components.eta_webservices.sensor import (
+    _coerce_numeric_value,
     async_setup_entry as sensor_async_setup_entry,
 )
 from custom_components.eta_webservices.time import (
@@ -28,11 +29,30 @@ from custom_components.eta_webservices.const import (
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
+    SENSOR_UPDATE_COORDINATOR,
     SWITCHES_DICT,
     TEXT_DICT,
     WRITABLE_DICT,
     WRITABLE_UPDATE_COORDINATOR,
 )
+
+
+@pytest.mark.parametrize(
+    ("raw_value", "expected"),
+    [
+        (12.5, 12.5),
+        (7, 7.0),
+        ("10.4", 10.4),
+        ("10,4", 10.4),
+        ("---", None),
+        ("Aus", None),
+        ("", None),
+        (None, None),
+    ],
+)
+def test_coerce_numeric_value_handles_transient_text_values(raw_value, expected):
+    """Numeric ETA sensors should tolerate temporary non-numeric placeholder values."""
+    assert _coerce_numeric_value(raw_value) == expected
 
 
 @pytest.mark.asyncio
@@ -62,6 +82,8 @@ async def test_all_writable_sensors_handled(hass: HomeAssistant, load_fixture):
     # (e.g. 'xxx', '21:00') that can't be float()-ed.
     writable_coordinator = MagicMock()
     writable_coordinator.data = {info["url"]: 0 for info in writable_dict.values()}
+    sensor_coordinator = MagicMock()
+    sensor_coordinator.data = {}
     error_coordinator = MagicMock()
     error_coordinator.data = []
 
@@ -77,6 +99,7 @@ async def test_all_writable_sensors_handled(hass: HomeAssistant, load_fixture):
         CHOSEN_TEXT_SENSORS: [],
         CHOSEN_WRITABLE_SENSORS: chosen_writable_sensors,
         ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
+        SENSOR_UPDATE_COORDINATOR: sensor_coordinator,
         WRITABLE_UPDATE_COORDINATOR: writable_coordinator,
         ERROR_UPDATE_COORDINATOR: error_coordinator,
     }
@@ -97,6 +120,7 @@ async def test_all_writable_sensors_handled(hass: HomeAssistant, load_fixture):
     with (
         patch("custom_components.eta_webservices.number.async_get_current_platform"),
         patch("custom_components.eta_webservices.sensor.async_get_current_platform"),
+        patch("custom_components.eta_webservices.entity.async_get_clientsession"),
     ):
         await number_async_setup_entry(hass, config_entry, add_entities)
         await sensor_async_setup_entry(hass, config_entry, add_entities)
@@ -132,6 +156,8 @@ async def test_all_non_writable_sensors_handled(hass: HomeAssistant, load_fixtur
 
     writable_coordinator = MagicMock()
     writable_coordinator.data = {}
+    sensor_coordinator = MagicMock()
+    sensor_coordinator.data = {}
     error_coordinator = MagicMock()
     error_coordinator.data = []
 
@@ -147,6 +173,7 @@ async def test_all_non_writable_sensors_handled(hass: HomeAssistant, load_fixtur
         CHOSEN_TEXT_SENSORS: chosen_text_sensors,
         CHOSEN_WRITABLE_SENSORS: [],
         ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
+        SENSOR_UPDATE_COORDINATOR: sensor_coordinator,
         WRITABLE_UPDATE_COORDINATOR: writable_coordinator,
         ERROR_UPDATE_COORDINATOR: error_coordinator,
     }
@@ -163,6 +190,7 @@ async def test_all_non_writable_sensors_handled(hass: HomeAssistant, load_fixtur
     with (
         patch("custom_components.eta_webservices.number.async_get_current_platform"),
         patch("custom_components.eta_webservices.sensor.async_get_current_platform"),
+        patch("custom_components.eta_webservices.entity.async_get_clientsession"),
     ):
         await number_async_setup_entry(hass, config_entry, add_entities)
         await sensor_async_setup_entry(hass, config_entry, add_entities)
@@ -209,6 +237,8 @@ async def test_all_writable_and_non_writable_sensors_handled(
     # counterpart URLs (same physical endpoint), so writable_dict URLs suffice.
     writable_coordinator = MagicMock()
     writable_coordinator.data = {info["url"]: 0 for info in writable_dict.values()}
+    sensor_coordinator = MagicMock()
+    sensor_coordinator.data = {}
     error_coordinator = MagicMock()
     error_coordinator.data = []
 
@@ -224,6 +254,7 @@ async def test_all_writable_and_non_writable_sensors_handled(
         CHOSEN_TEXT_SENSORS: chosen_text_sensors,
         CHOSEN_WRITABLE_SENSORS: chosen_writable_sensors,
         ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
+        SENSOR_UPDATE_COORDINATOR: sensor_coordinator,
         WRITABLE_UPDATE_COORDINATOR: writable_coordinator,
         ERROR_UPDATE_COORDINATOR: error_coordinator,
     }
@@ -240,6 +271,7 @@ async def test_all_writable_and_non_writable_sensors_handled(
     with (
         patch("custom_components.eta_webservices.number.async_get_current_platform"),
         patch("custom_components.eta_webservices.sensor.async_get_current_platform"),
+        patch("custom_components.eta_webservices.entity.async_get_clientsession"),
     ):
         await number_async_setup_entry(hass, config_entry, add_entities)
         await sensor_async_setup_entry(hass, config_entry, add_entities)
@@ -251,3 +283,62 @@ async def test_all_writable_and_non_writable_sensors_handled(
     assert len(all_entities) == (
         len(float_dict) + len(text_dict) + len(writable_dict) + len(switch_dict) + 2
     )
+
+
+@pytest.mark.asyncio
+async def test_sensor_platform_skips_duplicate_unique_ids(
+    hass: HomeAssistant, load_fixture
+):
+    """Duplicate unique IDs across sensor categories should not be added twice."""
+    fixture = load_fixture("api_assignment_reference_values_v12.json")
+    float_dict = fixture["float_dict"]
+    switch_dict = fixture["switches_dict"]
+    writable_dict = fixture["writable_dict"]
+
+    duplicate_key = next(iter(float_dict.keys()))
+    duplicate_endpoint = float_dict[duplicate_key].copy()
+    text_dict = {duplicate_key: duplicate_endpoint}
+
+    writable_coordinator = MagicMock()
+    writable_coordinator.data = {}
+    sensor_coordinator = MagicMock()
+    sensor_coordinator.data = {}
+    error_coordinator = MagicMock()
+    error_coordinator.data = []
+
+    config = {
+        CONF_HOST: "192.168.0.25",
+        CONF_PORT: 9091,
+        WRITABLE_DICT: writable_dict,
+        FLOAT_DICT: float_dict,
+        SWITCHES_DICT: switch_dict,
+        TEXT_DICT: text_dict,
+        CHOSEN_FLOAT_SENSORS: [duplicate_key],
+        CHOSEN_SWITCHES: [],
+        CHOSEN_TEXT_SENSORS: [duplicate_key],
+        CHOSEN_WRITABLE_SENSORS: [],
+        ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
+        SENSOR_UPDATE_COORDINATOR: sensor_coordinator,
+        WRITABLE_UPDATE_COORDINATOR: writable_coordinator,
+        ERROR_UPDATE_COORDINATOR: error_coordinator,
+    }
+
+    entry_id = "test_entry_id_duplicate_unique_id"
+    config_entry = MockConfigEntry(domain=DOMAIN, entry_id=entry_id)
+    hass.data.setdefault(DOMAIN, {})[entry_id] = config
+
+    all_entities = []
+
+    def add_entities(entities, **_):
+        all_entities.extend(entities)
+
+    with (
+        patch("custom_components.eta_webservices.sensor.async_get_current_platform"),
+        patch("custom_components.eta_webservices.entity.async_get_clientsession"),
+    ):
+        await sensor_async_setup_entry(hass, config_entry, add_entities)
+
+    unique_ids = [entity.unique_id for entity in all_entities if entity.unique_id]
+    assert len(unique_ids) == len(set(unique_ids))
+    # 1 deduplicated regular sensor + 2 always-present error sensors
+    assert len(all_entities) == 3

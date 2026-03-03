@@ -16,16 +16,19 @@ import homeassistant.helpers.entity_registry as er
 from .api import EtaAPI, ETAEndpoint
 from .const import (
     ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
+    AUTO_SELECT_ALL_ENTITIES,
     CHOSEN_FLOAT_SENSORS,
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
+    DEFAULT_MAX_PARALLEL_REQUESTS,
     CUSTOM_UNITS,
     DOMAIN,
     ENABLE_DEBUG_LOGGING,
     FLOAT_DICT,
     FORCE_LEGACY_MODE,
     INVISIBLE_UNITS,
+    MAX_PARALLEL_REQUESTS,
     OPTIONS_ENUMERATE_NEW_ENDPOINTS,
     OPTIONS_UPDATE_SENSOR_VALUES,
     SWITCHES_DICT,
@@ -34,6 +37,68 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _build_discovered_entity_placeholders(
+    float_count: int, switch_count: int, text_count: int, writable_count: int
+) -> dict[str, str]:
+    """Build placeholders for discovered entity counts."""
+    total_count = float_count + switch_count + text_count + writable_count
+    return {
+        "float_count": str(float_count),
+        "switch_count": str(switch_count),
+        "text_count": str(text_count),
+        "writable_count": str(writable_count),
+        "total_count": str(total_count),
+    }
+
+
+def _sanitize_selected_entity_ids(
+    selected_float_sensors: list[str],
+    selected_switches: list[str],
+    selected_text_sensors: list[str],
+    selected_writable_sensors: list[str],
+) -> tuple[list[str], list[str], list[str], list[str]]:
+    """Ensure selected entity IDs are unique across categories.
+
+    The same unique_id must never be selected in multiple regular sensor
+    categories, otherwise HA will reject duplicated entities on setup.
+    """
+    sanitized_float_sensors = list(dict.fromkeys(selected_float_sensors))
+    float_set = set(sanitized_float_sensors)
+
+    sanitized_switches = [
+        sensor_id
+        for sensor_id in dict.fromkeys(selected_switches)
+        if sensor_id not in float_set
+    ]
+    switch_set = set(sanitized_switches)
+
+    sanitized_text_sensors = [
+        sensor_id
+        for sensor_id in dict.fromkeys(selected_text_sensors)
+        if sensor_id not in float_set and sensor_id not in switch_set
+    ]
+    sanitized_writable_sensors = list(dict.fromkeys(selected_writable_sensors))
+
+    removed_from_switches = len(selected_switches) - len(sanitized_switches)
+    removed_from_text_sensors = len(selected_text_sensors) - len(
+        sanitized_text_sensors
+    )
+    if removed_from_switches > 0 or removed_from_text_sensors > 0:
+        _LOGGER.info(
+            "Removed duplicate selected entity IDs across categories: "
+            "switches=%d, text_sensors=%d",
+            removed_from_switches,
+            removed_from_text_sensors,
+        )
+
+    return (
+        sanitized_float_sensors,
+        sanitized_switches,
+        sanitized_text_sensors,
+        sanitized_writable_sensors,
+    )
 
 
 class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
@@ -104,12 +169,32 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     async def async_step_select_entities(self, user_input=None):
         """Second step in config flow to add a repo to watch."""
         if user_input is not None:
+            auto_select_all_entities = user_input.get(AUTO_SELECT_ALL_ENTITIES, False)
             # add chosen entities to data
-            self.data[CHOSEN_FLOAT_SENSORS] = user_input.get(CHOSEN_FLOAT_SENSORS, [])
-            self.data[CHOSEN_SWITCHES] = user_input.get(CHOSEN_SWITCHES, [])
-            self.data[CHOSEN_TEXT_SENSORS] = user_input.get(CHOSEN_TEXT_SENSORS, [])
-            self.data[CHOSEN_WRITABLE_SENSORS] = user_input.get(
-                CHOSEN_WRITABLE_SENSORS, []
+            if auto_select_all_entities:
+                selected_float_sensors = list(self.data[FLOAT_DICT].keys())
+                selected_switches = list(self.data[SWITCHES_DICT].keys())
+                selected_text_sensors = list(self.data[TEXT_DICT].keys())
+                selected_writable_sensors = list(self.data[WRITABLE_DICT].keys())
+            else:
+                selected_float_sensors = user_input.get(CHOSEN_FLOAT_SENSORS, [])
+                selected_switches = user_input.get(CHOSEN_SWITCHES, [])
+                selected_text_sensors = user_input.get(CHOSEN_TEXT_SENSORS, [])
+                selected_writable_sensors = user_input.get(
+                    CHOSEN_WRITABLE_SENSORS, []
+                )
+
+            (
+                self.data[CHOSEN_FLOAT_SENSORS],
+                self.data[CHOSEN_SWITCHES],
+                self.data[CHOSEN_TEXT_SENSORS],
+                self.data[CHOSEN_WRITABLE_SENSORS],
+            ) = _sanitize_selected_entity_ids(
+                # Keep selection lists category-unique before persisting the entry.
+                selected_float_sensors,
+                selected_switches,
+                selected_text_sensors,
+                selected_writable_sensors,
             )
 
             # Restore old logging level
@@ -117,6 +202,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 _LOGGER.parent.setLevel(self._old_logging_level)
 
             # User is done, create the config entry.
+            self.data.setdefault(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
             return self.async_create_entry(
                 title=f"ETA at {self.data[CONF_HOST]}", data=self.data
             )
@@ -149,11 +235,19 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         switches_dict: dict[str, ETAEndpoint] = self.data[SWITCHES_DICT]
         text_dict: dict[str, ETAEndpoint] = self.data[TEXT_DICT]
         writable_dict: dict[str, ETAEndpoint] = self.data[WRITABLE_DICT]
+        float_count = len(sensors_dict)
+        switch_count = len(switches_dict)
+        text_count = len(text_dict)
+        writable_count = len(writable_dict)
+        count_placeholders = _build_discovered_entity_placeholders(
+            float_count, switch_count, text_count, writable_count
+        )
 
         return self.async_show_form(
             step_id="select_entities",
             data_schema=vol.Schema(
                 {
+                    vol.Required(AUTO_SELECT_ALL_ENTITIES, default=False): cv.boolean,
                     vol.Optional(CHOSEN_FLOAT_SENSORS): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=[
@@ -209,6 +303,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 }
             ),
             errors=self._errors,
+            description_placeholders=count_placeholders,
         )
 
     async def _get_possible_endpoints(self, host, port, force_legacy_mode):
@@ -261,8 +356,10 @@ class EtaOptionsFlowHandler(OptionsFlow):
         """Initialize HACS options flow."""
         self.data = {}
         self._errors = {}
-        self.update_sensor_values = True
+        self.update_sensor_values = False
         self.enumerate_new_endpoints = False
+        self.auto_select_all_entities = False
+        self.max_parallel_requests = DEFAULT_MAX_PARALLEL_REQUESTS
         self.unavailable_sensors: dict = {}
         self.advanced_options_writable_sensors = []
 
@@ -283,22 +380,43 @@ class EtaOptionsFlowHandler(OptionsFlow):
         if user_input is not None:
             self.update_sensor_values = user_input[OPTIONS_UPDATE_SENSOR_VALUES]
             self.enumerate_new_endpoints = user_input[OPTIONS_ENUMERATE_NEW_ENDPOINTS]
+            self.max_parallel_requests = int(user_input[MAX_PARALLEL_REQUESTS])
             return await self._update_data_structures()
 
         return await self._show_initial_option_screen()
 
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
+        parallel_request_options = ["1", "2", "3", "5", "8", "10", "15"]
+        default_parallel_requests = self.hass.data[DOMAIN][
+            self.config_entry.entry_id  # pyright: ignore[reportOptionalMemberAccess]
+        ].get(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+        default_parallel_requests = str(default_parallel_requests)
+        if default_parallel_requests not in parallel_request_options:
+            default_parallel_requests = str(DEFAULT_MAX_PARALLEL_REQUESTS)
+
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        OPTIONS_UPDATE_SENSOR_VALUES, default=True
+                        OPTIONS_UPDATE_SENSOR_VALUES, default=False
                     ): cv.boolean,
                     vol.Required(
                         OPTIONS_ENUMERATE_NEW_ENDPOINTS, default=False
                     ): cv.boolean,
+                    vol.Required(
+                        MAX_PARALLEL_REQUESTS, default=default_parallel_requests
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=[
+                                selector.SelectOptionDict(value=value, label=str(value))
+                                for value in parallel_request_options
+                            ],
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                            multiple=False,
+                        )
+                    ),
                 }
             ),
             errors=self._errors,
@@ -306,7 +424,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _update_sensor_values(self):
         session = async_get_clientsession(self.hass)
-        eta_client = EtaAPI(session, self.data[CONF_HOST], self.data[CONF_PORT])
+        eta_client = EtaAPI(
+            session,
+            self.data[CONF_HOST],
+            self.data[CONF_PORT],
+            max_concurrent_requests=self.data[MAX_PARALLEL_REQUESTS],
+        )
 
         sensor_list: dict[str, dict[str, bool]] = {
             value["url"]: {} for value in self.data[FLOAT_DICT].values()
@@ -503,12 +626,25 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.data[key] = copy.copy(
                 self.hass.data[DOMAIN][self.config_entry.entry_id][key]  # pyright: ignore[reportOptionalMemberAccess]
             )
+        (
+            self.data[CHOSEN_FLOAT_SENSORS],
+            self.data[CHOSEN_SWITCHES],
+            self.data[CHOSEN_TEXT_SENSORS],
+            self.data[CHOSEN_WRITABLE_SENSORS],
+        ) = _sanitize_selected_entity_ids(
+            # Normalize historic options data before applying updates.
+            self.data[CHOSEN_FLOAT_SENSORS],
+            self.data[CHOSEN_SWITCHES],
+            self.data[CHOSEN_TEXT_SENSORS],
+            self.data[CHOSEN_WRITABLE_SENSORS],
+        )
         # ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION can be unset, so we have to handle it separately
         self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = self.hass.data[
             DOMAIN
         ][self.config_entry.entry_id].get(  # pyright: ignore[reportOptionalMemberAccess]
             ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
         )
+        self.data[MAX_PARALLEL_REQUESTS] = self.max_parallel_requests
 
         if self.enumerate_new_endpoints:
             _LOGGER.info("Discovering new endpoints")
@@ -537,7 +673,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             _LOGGER.info("Updated sensor values")
 
         elif self.update_sensor_values:
-            # Update the current sensor values if requested and if we did not already re-enumerate the whole list of sensors
+            # Update current sensor values only if requested and no re-enumeration is running.
             await self._update_sensor_values()
 
         return await self.async_step_user()
@@ -566,30 +702,65 @@ class EtaOptionsFlowHandler(OptionsFlow):
         }
 
         if user_input is not None:
+            self.auto_select_all_entities = user_input.get(
+                AUTO_SELECT_ALL_ENTITIES, False
+            )
+            selected_float_sensors = (
+                list(self.data[FLOAT_DICT].keys())
+                if self.auto_select_all_entities
+                else user_input[CHOSEN_FLOAT_SENSORS]
+            )
+            selected_switches = (
+                list(self.data[SWITCHES_DICT].keys())
+                if self.auto_select_all_entities
+                else user_input[CHOSEN_SWITCHES]
+            )
+            selected_text_sensors = (
+                list(self.data[TEXT_DICT].keys())
+                if self.auto_select_all_entities
+                else user_input[CHOSEN_TEXT_SENSORS]
+            )
+            selected_writable_sensors = (
+                list(self.data[WRITABLE_DICT].keys())
+                if self.auto_select_all_entities
+                else user_input[CHOSEN_WRITABLE_SENSORS]
+            )
+            (
+                selected_float_sensors,
+                selected_switches,
+                selected_text_sensors,
+                selected_writable_sensors,
+            ) = _sanitize_selected_entity_ids(
+                # Prevent cross-category duplicates from being written back via options.
+                selected_float_sensors,
+                selected_switches,
+                selected_text_sensors,
+                selected_writable_sensors,
+            )
             removed_entities = [
                 entity_map_sensors[entity_id]
                 for entity_id in entity_map_sensors
-                if entity_id not in user_input[CHOSEN_FLOAT_SENSORS]
+                if entity_id not in selected_float_sensors
             ]
             removed_entities.extend(
                 [
                     entity_map_switches[entity_id]
                     for entity_id in entity_map_switches
-                    if entity_id not in user_input[CHOSEN_SWITCHES]
+                    if entity_id not in selected_switches
                 ]
             )
             removed_entities.extend(
                 [
                     entity_map_text_sensors[entity_id]
                     for entity_id in entity_map_text_sensors
-                    if entity_id not in user_input[CHOSEN_TEXT_SENSORS]
+                    if entity_id not in selected_text_sensors
                 ]
             )
             removed_entities.extend(
                 [
                     entity_map_writable_sensors[entity_id]
                     for entity_id in entity_map_writable_sensors
-                    if entity_id not in user_input[CHOSEN_WRITABLE_SENSORS]
+                    if entity_id not in selected_writable_sensors
                 ]
             )
             for e in removed_entities:
@@ -597,14 +768,15 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 entity_registry.async_remove(e.entity_id)
 
             data = {
-                CHOSEN_FLOAT_SENSORS: user_input[CHOSEN_FLOAT_SENSORS],
-                CHOSEN_SWITCHES: user_input[CHOSEN_SWITCHES],
-                CHOSEN_TEXT_SENSORS: user_input[CHOSEN_TEXT_SENSORS],
-                CHOSEN_WRITABLE_SENSORS: user_input[CHOSEN_WRITABLE_SENSORS],
+                CHOSEN_FLOAT_SENSORS: selected_float_sensors,
+                CHOSEN_SWITCHES: selected_switches,
+                CHOSEN_TEXT_SENSORS: selected_text_sensors,
+                CHOSEN_WRITABLE_SENSORS: selected_writable_sensors,
                 FLOAT_DICT: self.data[FLOAT_DICT],
                 SWITCHES_DICT: self.data[SWITCHES_DICT],
                 TEXT_DICT: self.data[TEXT_DICT],
                 WRITABLE_DICT: self.data[WRITABLE_DICT],
+                MAX_PARALLEL_REQUESTS: self.data[MAX_PARALLEL_REQUESTS],
                 CONF_HOST: self.data[CONF_HOST],
                 CONF_PORT: self.data[CONF_PORT],
                 ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: self.data[
@@ -692,7 +864,18 @@ class EtaOptionsFlowHandler(OptionsFlow):
         if len(self.unavailable_sensors) > 0:
             self._errors["base"] = "unavailable_sensors"
 
+        float_count = len(self.data[FLOAT_DICT])
+        switch_count = len(self.data[SWITCHES_DICT])
+        text_count = len(self.data[TEXT_DICT])
+        writable_count = len(self.data[WRITABLE_DICT])
+        count_placeholders = _build_discovered_entity_placeholders(
+            float_count, switch_count, text_count, writable_count
+        )
+
         schema = {
+            vol.Required(
+                AUTO_SELECT_ALL_ENTITIES, default=self.auto_select_all_entities
+            ): cv.boolean,
             vol.Optional(
                 CHOSEN_FLOAT_SENSORS, default=current_chosen_sensors
             ): selector.SelectSelector(
@@ -770,7 +953,6 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     ): selector.TextSelector(
                         selector.TextSelectorConfig(
                             multiline=True,
-                            read_only=True,
                         )
                     ),
                 }
@@ -780,4 +962,5 @@ class EtaOptionsFlowHandler(OptionsFlow):
             step_id="user",
             data_schema=vol.Schema(schema),
             errors=self._errors,
+            description_placeholders=count_placeholders,
         )

@@ -101,10 +101,13 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
                     len(valid_uris),
                 )
 
-        for uri in uris_to_remove:
-            del endpoint_data[uri]
+        removed_count = 0
+        for uri in set(uris_to_remove):
+            if uri in endpoint_data:
+                del endpoint_data[uri]
+                removed_count += 1
 
-        return len(uris_to_remove)
+        return removed_count
 
     # runlength w/o optimizations: 78s
     # runlength w/ optimizations (sem=1): 77s

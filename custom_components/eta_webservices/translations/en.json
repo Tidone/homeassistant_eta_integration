@@ -13,8 +13,9 @@
             },
             "select_entities": {
                 "title": "ETA Step 2",
-                "description": "Select endpoints which should be added as entities",
+                "description": "Select endpoints which should be added as entities.\n\nSensors: {float_count}\nSwitches: {switch_count}\nState sensors: {text_count}\nWritable sensors: {writable_count}\n**Total: {total_count}**\n\nEnable auto-select-all to add all discovered entities at once (this can be several hundred entities).",
                 "data": {
+                    "auto_select_all_entities": "Automatically select all discovered entities",
                     "chosen_float_sensors": "Possible sensors",
                     "chosen_switches": "Possible switches",
                     "chosen_text_sensors": "Possible state sensors",
@@ -37,14 +38,18 @@
         "step": {
             "init": {
                 "title": "Initialize options",
-                "description": "Select if the sensors should be updated before going to the next step",
+                "description": "Select whether sensor values and/or the sensor list should be refreshed. Higher parallel request values increase ETA unit load and may cause errors, especially on older units. Use lower values for older units.",
                 "data": {
                     "update_sensor_values": "Update sensor values",
-                    "enumerate_new_endpoints": "Update list of sensors"
+                    "enumerate_new_endpoints": "Update list of sensors",
+                    "max_parallel_requests": "Maximum parallel API requests"
                 }
             },
             "user": {
+                "title": "Select entities",
+                "description": "Select endpoints which should be added as entities.\n\nSensors: {float_count}\nSwitches: {switch_count}\nState sensors: {text_count}\nWritable sensors: {writable_count}\n**Total: {total_count}**\n\nEnable auto-select-all to add all discovered entities at once (this can be several hundred entities).",
                 "data": {
+                    "auto_select_all_entities": "Automatically select all discovered entities",
                     "chosen_float_sensors": "Possible sensors",
                     "chosen_switches": "Possible switches",
                     "chosen_text_sensors": "Possible state sensors",

@@ -41,6 +41,7 @@ This integration can be configured directly in Home Assistant via HACS:
 1. In Home Assistant, go to `Configuration` -> `Integrations` -> Click `+ Add Integration`
    Search for `Eta Sensors` and follow the instructions.
     - **Note**: After entering the host and port the integration will query information about every possible endpoint. This step can take a very long time, so please have some patience.
+      - As a rough reference: on newer ETA units with around `800` discovered entities, the initial setup can take around `8-15 minutes`.
     - **Note**: This only affects the configuration step when adding the integration. After the integration has been configured, only the selected entities will be queried.
     - **Note**: The integration will also query the current sensor values of all endpoints when clicking on `Configure`. This will also take a bit of time, but not as much as when adding the integration for the first time.
 
@@ -72,8 +73,18 @@ To do that follow these steps:
 1. Go to `Settings` -> `Devices & services` -> `ETA Sensors`
 1. Click on the gear symbol (`Configure`)
 1. In the popup dialog you can choose between different options to update the list of sensors:
-    - The first option, `Update sensor values`, will only update the current values of all sensors in the list. It will not update the list of sensors itself. This option is enabled by default to make it easier to find the correct sensor in the list.
+    - The first option, `Update sensor values`, will only update the current values of all sensors in the list. It will not update the list of sensors itself.
+      - This option is disabled by default.
+      - If you only want to change the parallel request limit, keep this option disabled.
     - The second option, `Update list of sensors`, will update the whole list of sensors.
+    - The third option, `Maximum parallel API requests`, controls how many API requests are sent in parallel.
+      - Higher values can speed up updates, but increase load on the ETA unit and may cause errors/timeouts on older or slower devices.
+      - Lower values are safer for older ETA units.
+      - Practical starting points:
+        - Older ETA units: `3-5`
+        - Newer ETA units: `8-15` (if stable)
+      - If you see API errors/timeouts, reduce this value step by step.
+      - The value is selected via dropdown (`1, 2, 3, 5, 8, 10, 15`).
 1. New sensors will then be added to the list, where you can select them in the next step.
 1. Deleted or renamed sensors will be handled differently depending on if the sensor has previously been added to HA:
     - If the sensor has not been added to HA, it will simply be removed from the list. If it has been renamed on the ETA terminal, it will show its new name instead.

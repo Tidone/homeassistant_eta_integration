@@ -4,6 +4,7 @@ This module provides a unified API for the ETA integration, with automatic
 version detection and routing to the appropriate sensor discovery implementation.
 """
 
+import asyncio
 import logging
 
 from packaging import version
@@ -35,14 +36,27 @@ class EtaAPI:
     appropriate version-specific implementation.
     """
 
-    def __init__(self, session, host, port) -> None:
+    def __init__(
+        self,
+        session,
+        host,
+        port,
+        max_concurrent_requests=5,
+        request_semaphore=None,
+    ) -> None:
         """Initialize the ETA API.
 
         :param session: aiohttp ClientSession for HTTP requests
         :param host: Hostname or IP address of the ETA device
         :param port: Port number of the ETA API
         """
-        self._http = APIClient(session, host, port)
+        self._http = APIClient(
+            session,
+            host,
+            port,
+            max_concurrent_requests=max_concurrent_requests,
+            request_semaphore=request_semaphore,
+        )
 
     async def get_all_sensors(
         self, force_legacy_mode, float_dict, switches_dict, text_dict, writable_dict
@@ -149,6 +163,24 @@ class EtaAPI:
         text = await data.text()
         data = xmltodict.parse(text)["eta"]["value"]
         return int(data["#text"])
+
+    async def get_all_switch_states(self, switch_uris: list[str]):
+        """Get switch states from all endpoints.
+
+        :param switch_uris: List of switch endpoint URIs
+        :return: Mapping from URI to raw switch state (or exception)
+        :rtype: Dict[str, Any]
+        """
+        semaphore = asyncio.Semaphore(self._http.max_concurrent_requests)
+
+        async def fetch_state_limited(uri: str):
+            async with semaphore:
+                return await self.get_switch_state(uri)
+
+        tasks = [fetch_state_limited(uri) for uri in switch_uris]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        return dict(zip(switch_uris, results, strict=False))
 
     async def set_switch_state(self, uri, state):
         """Set the state of a switch sensor.

@@ -13,8 +13,9 @@
             },
             "select_entities": {
                 "title": "ETA Schritt 2",
-                "description": "Wähle die Sensoren aus, die hinzugefügt werden sollen.",
+                "description": "Wähle die Entitäten aus, die hinzugefügt werden sollen.\n\nSensoren: {float_count}\nSchalter: {switch_count}\nZustandssensoren: {text_count}\nSchreibbare Sensoren: {writable_count}\n**Gesamt: {total_count}**\n\nAktiviere die automatische Auswahl, um alle gefundenen Entitäten auf einmal hinzuzufügen (das können mehrere hundert Entitäten sein).",
                 "data": {
+                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch auswählen",
                     "chosen_float_sensors": "Sensoren",
                     "chosen_switches": "Schalter",
                     "chosen_text_sensors": "Zustandssensoren",
@@ -37,14 +38,18 @@
         "step": {
             "init": {
                 "title": "Optionen initialisieren",
-                "description": "Wähle aus, ob die Sensoren aktualisiert werden sollen bevor der nächste Schritt angezeigt wird",
+                "description": "Wähle aus, ob Sensorwerte aktualisiert und/oder die Sensorliste neu eingelesen werden soll. Höhere Werte für parallele Anfragen erhöhen die Last auf dem ETA-Kessel und können zu Fehlern führen, besonders bei älteren Kesseln. Für ältere Kessel besser kleinere Werte verwenden.",
                 "data": {
                     "update_sensor_values": "Sensorwerte aktualisieren",
-                    "enumerate_new_endpoints": "Liste der Sensoren aktualisieren"
+                    "enumerate_new_endpoints": "Liste der Sensoren aktualisieren",
+                    "max_parallel_requests": "Maximale parallele API-Anfragen"
                 }
             },
             "user": {
+                "title": "Entitäten auswählen",
+                "description": "Wähle die Entitäten aus, die hinzugefügt werden sollen.\n\nSensoren: {float_count}\nSchalter: {switch_count}\nZustandssensoren: {text_count}\nSchreibbare Sensoren: {writable_count}\n**Gesamt: {total_count}**\n\nAktiviere die automatische Auswahl, um alle gefundenen Entitäten auf einmal hinzuzufügen (das können mehrere hundert Entitäten sein).",
                 "data": {
+                    "auto_select_all_entities": "Alle gefundenen Entitäten automatisch auswählen",
                     "chosen_float_sensors": "Sensoren",
                     "chosen_switches": "Schalter",
                     "chosen_text_sensors": "Zustandssensoren",
