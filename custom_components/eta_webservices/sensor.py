@@ -52,11 +52,7 @@ from .coordinator import (
     ETASensorUpdateCoordinator,
     ETAWritableUpdateCoordinator,
 )
-from .entity import (
-    EtaCoordinatedSensorEntity,
-    EtaErrorEntity,
-    EtaWritableSensorEntity,
-)
+from .entity import EtaCoordinatedSensorEntity, EtaErrorEntity, EtaWritableSensorEntity
 from .utils import get_native_unit
 
 _LOGGER = logging.getLogger(__name__)
@@ -74,7 +70,9 @@ WRITE_TIMESLOT_PLUS_TEMPERATURE_SCHEMA: VolDictType = {
 }
 
 
-def _deduplicate_entities_by_unique_id(entities: list[SensorEntity]) -> list[SensorEntity]:
+def _deduplicate_entities_by_unique_id(
+    entities: list[SensorEntity],
+) -> list[SensorEntity]:
     """Drop duplicate entities with identical unique IDs.
 
     In rare edge cases a sensor can temporarily end up in multiple categories
@@ -223,7 +221,7 @@ async def async_setup_entry(
     )
     # Final safety net: avoid HA startup failures if config data still contains
     # the same unique_id in multiple sensor categories.
-    sensors = _deduplicate_entities_by_unique_id(sensors)
+    sensors = _deduplicate_entities_by_unique_id(sensors)  # pyright: ignore[reportArgumentType]
     async_add_entities(sensors, update_before_add=False)
 
     # activate the service for all selected writable sensors with the unit CUSTOM_UNIT_TIMESLOT
@@ -277,7 +275,7 @@ def _determine_device_class(unit):
     return None
 
 
-def _coerce_numeric_value(value: float | int | str | None) -> float | None:
+def _coerce_numeric_value(value: float | str | None) -> float | None:
     """Convert ETA values for numeric sensors, or return None if not numeric.
 
     ETA may temporarily return text placeholders (e.g. "---", "Aus") for

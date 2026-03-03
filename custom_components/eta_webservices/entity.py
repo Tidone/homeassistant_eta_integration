@@ -10,7 +10,11 @@ from homeassistant.helpers.entity import Entity, generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .api import EtaAPI, ETAEndpoint
-from .const import DEFAULT_MAX_PARALLEL_REQUESTS, MAX_PARALLEL_REQUESTS, REQUEST_SEMAPHORE
+from .const import (
+    DEFAULT_MAX_PARALLEL_REQUESTS,
+    MAX_PARALLEL_REQUESTS,
+    REQUEST_SEMAPHORE,
+)
 from .coordinator import (
     ETAErrorUpdateCoordinator,
     ETASensorUpdateCoordinator,
@@ -80,9 +84,7 @@ class EtaCoordinatedSensorEntity(
         self.handle_data_updates(
             cast(
                 _EntityT,
-                coordinator.data.get(
-                    self.unique_id, endpoint_info["value"]
-                ),  # pyright: ignore[reportAttributeAccessIssue]
+                coordinator.data.get(self.unique_id, endpoint_info["value"]),  # pyright: ignore[reportCallIssue, reportArgumentType]
             )
         )
 

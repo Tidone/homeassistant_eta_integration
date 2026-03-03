@@ -217,7 +217,7 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
                 )
                 for switch, (uri, on_value, _) in self.switch_queries.items():
                     result = all_switch_states.get(uri)
-                    if result is None or isinstance(result, Exception):
+                    if result is None or isinstance(result, BaseException):
                         continue
                     data[switch] = int(result) == on_value
 
