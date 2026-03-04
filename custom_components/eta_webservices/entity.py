@@ -10,7 +10,11 @@ from homeassistant.helpers.entity import Entity, generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .api import EtaAPI, ETAEndpoint
-from .const import DEFAULT_MAX_PARALLEL_REQUESTS, MAX_PARALLEL_REQUESTS, REQUEST_SEMAPHORE
+from .const import (
+    DEFAULT_MAX_PARALLEL_REQUESTS,
+    MAX_PARALLEL_REQUESTS,
+    REQUEST_SEMAPHORE,
+)
 from .coordinator import (
     ETAErrorUpdateCoordinator,
     ETASensorUpdateCoordinator,
@@ -32,7 +36,6 @@ class EtaEntity(Entity):
         endpoint_info: ETAEndpoint,
         entity_id_format: str,
     ) -> None:
-        self._attr_name = endpoint_info["friendly_name"]
         self.session = async_get_clientsession(hass)
         self.host = config.get(CONF_HOST, "")
         self.port = config.get(CONF_PORT, "")
@@ -42,7 +45,23 @@ class EtaEntity(Entity):
         )
         self.request_semaphore = config.get(REQUEST_SEMAPHORE)
 
-        self._attr_device_info = create_device_info(self.host, self.port)
+        # Extract the FUB from the friendly name and use it as the device name
+        # E.g. "ETA > Living Room Sensor" -> "ETA"
+        device_name = (
+            endpoint_info["friendly_name"].split(" > ")[0].strip()
+            if ">" in endpoint_info["friendly_name"]
+            else None
+        )
+
+        # Remove the device name from the friendly name to avoid redundancy, e.g. "ETA > Living Room Sensor" -> "Living Room Sensor"
+        if device_name and device_name in endpoint_info["friendly_name"]:
+            self._attr_name = endpoint_info["friendly_name"].replace(
+                device_name + " > ", "", 1
+            )
+        else:
+            self._attr_name = endpoint_info["friendly_name"]
+
+        self._attr_device_info = create_device_info(self.host, self.port, device_name)
         self.entity_id = generate_entity_id(entity_id_format, unique_id, hass=hass)
         self._attr_unique_id = unique_id
 
@@ -80,9 +99,7 @@ class EtaCoordinatedSensorEntity(
         self.handle_data_updates(
             cast(
                 _EntityT,
-                coordinator.data.get(
-                    self.unique_id, endpoint_info["value"]
-                ),  # pyright: ignore[reportAttributeAccessIssue]
+                coordinator.data.get(self.unique_id, endpoint_info["value"]),  # pyright: ignore[reportCallIssue, reportArgumentType]
             )
         )
 
@@ -157,7 +174,7 @@ class EtaErrorEntity(CoordinatorEntity[ETAErrorUpdateCoordinator]):
             entity_id_format, self._attr_unique_id, hass=hass
         )
 
-        self._attr_device_info = create_device_info(host, port)
+        self._attr_device_info = create_device_info(host, port, None)
 
     @abstractmethod
     def handle_data_updates(self, data) -> None:  # noqa: D102

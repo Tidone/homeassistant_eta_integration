@@ -21,8 +21,8 @@ from .const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
-    DEFAULT_MAX_PARALLEL_REQUESTS,
     CUSTOM_UNITS,
+    DEFAULT_MAX_PARALLEL_REQUESTS,
     DOMAIN,
     ENABLE_DEBUG_LOGGING,
     FLOAT_DICT,
@@ -82,9 +82,7 @@ def _sanitize_selected_entity_ids(
     sanitized_writable_sensors = list(dict.fromkeys(selected_writable_sensors))
 
     removed_from_switches = len(selected_switches) - len(sanitized_switches)
-    removed_from_text_sensors = len(selected_text_sensors) - len(
-        sanitized_text_sensors
-    )
+    removed_from_text_sensors = len(selected_text_sensors) - len(sanitized_text_sensors)
     if removed_from_switches > 0 or removed_from_text_sensors > 0:
         _LOGGER.info(
             "Removed duplicate selected entity IDs across categories: "
@@ -180,9 +178,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 selected_float_sensors = user_input.get(CHOSEN_FLOAT_SENSORS, [])
                 selected_switches = user_input.get(CHOSEN_SWITCHES, [])
                 selected_text_sensors = user_input.get(CHOSEN_TEXT_SENSORS, [])
-                selected_writable_sensors = user_input.get(
-                    CHOSEN_WRITABLE_SENSORS, []
-                )
+                selected_writable_sensors = user_input.get(CHOSEN_WRITABLE_SENSORS, [])
 
             (
                 self.data[CHOSEN_FLOAT_SENSORS],

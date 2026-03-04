@@ -60,7 +60,7 @@ class EtaSwitch(EtaEntity, SwitchEntity, CoordinatorEntity[ETASensorUpdateCoordi
         self.on_value = endpoint_info["valid_values"].get("on_value", 1803)  # pyright: ignore[reportOptionalMemberAccess]
         self.off_value = endpoint_info["valid_values"].get("off_value", 1802)  # pyright: ignore[reportOptionalMemberAccess]
         self._attr_should_poll = False
-        self._attr_is_on = bool(coordinator.data.get(self.unique_id, False))
+        self._attr_is_on = bool(coordinator.data.get(self.unique_id, False))  # pyright: ignore[reportCallIssue, reportArgumentType]
 
     @callback
     def _handle_coordinator_update(self) -> None:
