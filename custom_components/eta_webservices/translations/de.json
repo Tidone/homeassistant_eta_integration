@@ -2,13 +2,8 @@
     "config": {
         "step": {
             "user": {
-<<<<<<< feat/config-flow-progress-upstream
                 "title": "ETA Verbindung",
                 "description": "Gib Host und Port deines ETA-Geräts ein. Die erste Suche nach verfügbaren Endpunkten kann bei großen Anlagen mehrere Minuten dauern.\n\nAktiviere den alten API-Modus nur dann, wenn es Probleme mit der neueren ETA-API gibt.",
-=======
-                "title": "ETA Schritt 1",
-                "description": "Gib die Netzwerkadresse deines ETA Geräts ein. Wenn du Hilfe bei der Konfiguration brauchst, schau bitte in die README des Repositories.\n\nInfo: Abhängig von der Anzahl der möglichen Endpunkte deines ETA Geräts kann die Abfrage lange dauern. Bitte hab etwas Geduld, nachdem du auf Absenden gedrückt hast.\n\nWähle den alten API Modus, falls du Probleme mit dem neuen Modus hast.",
->>>>>>> main
                 "data": {
                     "host": "Host",
                     "port": "Port",
@@ -71,11 +66,7 @@
             },
             "advanced_options": {
                 "title": "Erweiterte Optionen",
-<<<<<<< feat/config-flow-progress-upstream
                 "description": "Konfiguriere erweiterte Optionen für die Integration.",
-=======
-                "description": "Wähle erweiterte Optionen für die Integration. Weitere Informationen zu diesen Optionen findest du im Repository-Wiki.",
->>>>>>> main
                 "data": {
                     "ignore_decimal_places_restriction_for_writable_entities": "HACK: Füge Dezimalstellen zu den Werten dieser schreibbaren Sensoren hinzu"
                 }
