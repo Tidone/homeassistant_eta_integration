@@ -3,7 +3,7 @@
         "step": {
             "user": {
                 "title": "ETA Step 1",
-                "description": "Enter the host and port of your ETA terminal. If you need help with the configuration have a look here: https://github.com/Tidone/homeassistant_eta_integration \n\n Note: Depending on the total number of endpoints of your ETA terminal, getting all possible sensors can take a very long time! Have patience when you click on Submit.\n\nSelect the old API mode if you have problems with the new ETA API.",
+                "description": "Enter the host and port of your ETA terminal. If you need help with the configuration, please check the repository README.\n\nNote: Depending on the total number of endpoints of your ETA terminal, getting all possible sensors can take a very long time. Have patience when you click on Submit.\n\nSelect the old API mode if you have problems with the new ETA API.",
                 "data": {
                     "host": "Host",
                     "port": "Port",
@@ -59,7 +59,7 @@
             },
             "advanced_options": {
                 "title": "Advanced options",
-                "description": "Select advanced options for the integration. You can find more information about these options here: https://github.com/Tidone/homeassistant_eta_integration/wiki/Advanded-Options",
+                "description": "Select advanced options for the integration. You can find more information about these options in the repository wiki.",
                 "data": {
                     "ignore_decimal_places_restriction_for_writable_entities": "HACK: Handle decimal places for these writable sensor values"
                 }

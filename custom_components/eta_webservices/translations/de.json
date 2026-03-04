@@ -3,7 +3,7 @@
         "step": {
             "user": {
                 "title": "ETA Schritt 1",
-                "description": "Gib die Netzwerkadresse deines ETA Geräts ein. Wenn du Hilfe bei der Konfiguration brauchst, schau hier nach: https://github.com/Tidone/homeassistant_eta_integration \n\n Info: Abhängig von der Anzahl der möglichen Endpunkte deinse ETA Geräts kann die Abfrage eine lange Zeit dauern! Bitte hab etwas Geduld nachdem du auf Absenden gedrückt hast.\n\nWähle den alten API Modus falls du Probleme mit dem neuen Modus hast.",
+                "description": "Gib die Netzwerkadresse deines ETA Geräts ein. Wenn du Hilfe bei der Konfiguration brauchst, schau bitte in die README des Repositories.\n\nInfo: Abhängig von der Anzahl der möglichen Endpunkte deines ETA Geräts kann die Abfrage lange dauern. Bitte hab etwas Geduld, nachdem du auf Absenden gedrückt hast.\n\nWähle den alten API Modus, falls du Probleme mit dem neuen Modus hast.",
                 "data": {
                     "host": "Host",
                     "port": "Port",
@@ -59,7 +59,7 @@
             },
             "advanced_options": {
                 "title": "Erweiterte Optionen",
-                "description": "Wähle erweiterte Optionen für die Integration. Weitere Informationen zu diesen Optionen findest du hier: https://github.com/Tidone/homeassistant_eta_integration/wiki/Advanded-Options",
+                "description": "Wähle erweiterte Optionen für die Integration. Weitere Informationen zu diesen Optionen findest du im Repository-Wiki.",
                 "data": {
                     "ignore_decimal_places_restriction_for_writable_entities": "HACK: Füge Dezimalstellen zu den Werten dieser schreibbaren Sensoren hinzu"
                 }
