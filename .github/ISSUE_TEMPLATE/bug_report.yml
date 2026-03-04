@@ -1,0 +1,83 @@
+name: Bug report
+description: Report a reproducible problem with the ETA integration
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a bug report, please confirm the issue still exists on the latest version of this repository.
+  - type: input
+    id: integration_version
+    attributes:
+      label: Integration version
+      description: "Example: 1.3.0"
+      placeholder: "1.3.0"
+    validations:
+      required: true
+  - type: input
+    id: home_assistant_version
+    attributes:
+      label: Home Assistant version
+      description: "Example: 2026.2.5"
+      placeholder: "2026.2.5"
+    validations:
+      required: true
+  - type: input
+    id: eta_api_version
+    attributes:
+      label: ETA API version
+      description: "Example: 1.2 or 1.1 legacy mode"
+      placeholder: "1.2"
+    validations:
+      required: false
+  - type: input
+    id: eta_model
+    attributes:
+      label: ETA unit / model
+      description: Optional, but useful when comparing behavior across devices
+      placeholder: ETA ePE-K 20 / ETA Touch
+    validations:
+      required: false
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened?
+      description: Describe the problem and include the exact error behavior.
+      placeholder: After changing the integration option, the config flow fails with...
+    validations:
+      required: true
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the exact steps so the issue can be reproduced.
+      placeholder: |
+        1. Open Settings -> Devices & services
+        2. Open ETA options
+        3. Change the affected setting
+        4. Submit
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      placeholder: The options flow should save successfully and reload the integration.
+    validations:
+      required: true
+  - type: textarea
+    id: relevant_logs
+    attributes:
+      label: Relevant log output
+      description: Paste only the relevant lines. Remove passwords, tokens, and private hostnames if needed.
+      render: shell
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I have searched the existing issues
+          required: true
