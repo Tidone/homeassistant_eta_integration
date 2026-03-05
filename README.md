@@ -60,10 +60,8 @@ This integration can be configured directly in Home Assistant via HACS:
 
 -   Your ETA pellets unit needs a static IP address! Either configure the IP adress directly on the ETA terminal, or set the DHCP server on your router to give the ETA unit a static lease.
 
-- If your pellets unit is behind a proxy (`nginx`, `Cloudflare`, etc.) you may have to increase the timeout of the proxy when adding or configuring the integration.
-    - The integration can take a very long time (> 5 minutes) when enumerating the list of available sensors. A proxy server may interrupt the connection between the browser and the HA server because it thinks the HA server is down because it takes too long to send the requested data.
-    - Check the manual of your proxy server for how to increase the timeouts.
-        - For nginx you may have to set the options `proxy_connect_timeout`, `proxy_send_timeout`, `proxy_read_timeout` and `send_timeout` to a higher number (600 seconds).
+- If your pellets unit is behind a proxy (`nginx`, `Cloudflare`, etc.), setup and rediscovery can still take several minutes on large systems.
+  From version `1.3.2` onward, discovery runs in background tasks with progress updates, so the flow no longer relies on a single long blocking request.
 
 ## Updating the List of Sensors
 
@@ -72,19 +70,23 @@ If the sensors on the ETA unit are changed, the integration can be updated to re
 To do that follow these steps:
 1. Go to `Settings` -> `Devices & services` -> `ETA Sensors`
 1. Click on the gear symbol (`Configure`)
-1. In the popup dialog you can choose between different options to update the list of sensors:
-    - The first option, `Update sensor values`, will only update the current values of all sensors in the list. It will not update the list of sensors itself.
-      - This option is disabled by default.
-      - If you only want to change the parallel request limit, keep this option disabled.
-    - The second option, `Update list of sensors`, will update the whole list of sensors.
-    - The third option, `Maximum parallel API requests`, controls how many API requests are sent in parallel.
-      - Higher values can speed up updates, but increase load on the ETA unit and may cause errors/timeouts on older or slower devices.
-      - Lower values are safer for older ETA units.
-      - Practical starting points:
-        - Older ETA units: `3-5`
-        - Newer ETA units: `8-15` (if stable)
-      - If you see API errors/timeouts, reduce this value step by step.
-      - The value is selected via dropdown (`1, 2, 3, 5, 8, 10, 15`).
+1. In the popup dialog, select one of these actions:
+    - `Update parallel API requests only`:
+      - Only updates the request limit.
+      - Does not refresh entity values and does not rediscover entities.
+    - `Update selected entities`:
+      - Refreshes values of your currently selected entities.
+      - Does not rediscover the entity list.
+    - `Rediscover available entities and update selected entities`:
+      - Performs a full rediscovery and then opens entity selection so you can review and adjust your list.
+1. `Maximum parallel API requests` controls how many API requests are sent in parallel.
+    - Higher values can speed up updates, but increase load on the ETA unit and may cause errors/timeouts on older or slower devices.
+    - Lower values are safer for older ETA units.
+    - Practical starting points:
+      - Older ETA units: `3-5`
+      - Newer ETA units: `8-15` (if stable)
+    - If you see API errors/timeouts, reduce this value step by step.
+    - The value is selected via dropdown (`1, 2, 3, 5, 8, 10, 15`).
 1. New sensors will then be added to the list, where you can select them in the next step.
 1. Deleted or renamed sensors will be handled differently depending on if the sensor has previously been added to HA:
     - If the sensor has not been added to HA, it will simply be removed from the list. If it has been renamed on the ETA terminal, it will show its new name instead.
