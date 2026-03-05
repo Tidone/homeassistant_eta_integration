@@ -157,9 +157,13 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
 
         return await self._show_config_form_user(user_input)
 
-    async def async_remove(self) -> None:
+    @callback
+    def async_remove(self) -> None:
         """Clean up resources if the config flow is aborted/removed."""
-        if self._endpoint_discovery_task is not None and not self._endpoint_discovery_task.done():
+        if (
+            self._endpoint_discovery_task is not None
+            and not self._endpoint_discovery_task.done()
+        ):
             self._endpoint_discovery_task.cancel()
         self._restore_logging_level()
 
@@ -563,8 +567,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
-        is_german_ui = str(getattr(self.hass.config, "language", "en")).lower().startswith(
-            "de"
+        is_german_ui = (
+            str(getattr(self.hass.config, "language", "en")).lower().startswith("de")
         )
         update_action_options = [
             selector.SelectOptionDict(
@@ -891,8 +895,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.data[CHOSEN_WRITABLE_SENSORS],
         )
         # ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION can be unset, so we have to handle it separately
-        self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = current_data.get(
-            ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
+        self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = (
+            current_data.get(ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, [])
         )
         self.data[MAX_PARALLEL_REQUESTS] = self.max_parallel_requests
         self._on_options_progress("Loaded current configuration", 0.1)
@@ -940,7 +944,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
             # Update current sensor values only if requested and no re-enumeration is running.
             self._on_options_progress("Refreshing values of selected entities", 0.3)
             await self._update_sensor_values()
-            self._on_options_progress("Finished refreshing selected entity values", 0.98)
+            self._on_options_progress(
+                "Finished refreshing selected entity values", 0.98
+            )
 
         self._on_options_progress("Preparation finished", 1.0)
 

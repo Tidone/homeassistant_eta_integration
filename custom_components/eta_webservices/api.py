@@ -5,8 +5,8 @@ version detection and routing to the appropriate sensor discovery implementation
 """
 
 import asyncio
-import logging
 from collections.abc import Callable
+import logging
 
 from packaging import version
 import xmltodict
