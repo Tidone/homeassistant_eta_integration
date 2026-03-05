@@ -4,7 +4,7 @@
 
 Integration of ETA (Heating) sensors and switches to Home Assistant
 
-This integration uses the [ETA REST API](https://www.meineta.at/javax.faces.resource/downloads/ETA-RESTful-v1.2.pdf.xhtml?ln=default&v=0) to get sensor values and set switch states from the ETA pellets heating unit.
+This integration uses the [ETA REST API](https://www.meineta.at/javax.faces.resource/downloads/ETA-RESTful-v1.2.pdf.xhtml?ln=default&v=0) to get sensor values and set switch states from the ETA heating unit.
 
 This is a fork of [nigl's repo](https://github.com/nigl/homeassistant_eta_integration) with the following changes:
 
@@ -47,18 +47,18 @@ This integration can be configured directly in Home Assistant via HACS:
 
 ## General Notes
 
--   You have to activate the webservices API on your pellet heater first: see the "official" [documentation](https://www.meineta.at/javax.faces.resource/downloads/ETA-RESTful-v1.2.pdf.xhtml?ln=default&v=0):
+-   You have to activate the webservices API on your ETA heating unit first: see the "official" [documentation](https://www.meineta.at/javax.faces.resource/downloads/ETA-RESTful-v1.2.pdf.xhtml?ln=default&v=0):
 
     -   Log in to `meinETA`
     -   Go to `Settings` in the middle of the page (not the bottom one!)
     -   Click on `Activate Webservices`
     -   Follow the instructions
 
--   For best results, your pellet heater has to support at least API version **1.2**. If you are on an older version the integration will fall back to a compatibility mode, which means that some sensors may not be correctly detected/identified. The ones that are correctly detected and identified should still work without problems.\
+-   For best results, your ETA heating unit has to support at least API version **1.2**. If you are on an older version the integration will fall back to a compatibility mode, which means that some sensors may not be correctly detected/identified. The ones that are correctly detected and identified should still work without problems.\
     Writable sensors may not work correctly in this mode (they may set the wrong value), because version 1.1 lacks the necessary functions to query details about sensors.\
-    If you want to update the firmware of your pellet heater you can find the firmware files on `meinETA` (`Settings at the bottom` -> `Installation & Software`).
+    If you want to update the firmware of your ETA heating unit you can find the firmware files on `meinETA` (`Settings at the bottom` -> `Installation & Software`).
 
--   Your ETA pellets unit needs a static IP address! Either configure the IP adress directly on the ETA terminal, or set the DHCP server on your router to give the ETA unit a static lease.
+-   Your ETA heating unit needs a static IP address! Either configure the IP adress directly on the ETA terminal, or set the DHCP server on your router to give the ETA unit a static lease.
 
 ## Updating the List of Sensors
 

@@ -195,7 +195,9 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             return
 
         if valid != 1:
-            self._endpoint_discovery_error = "no_eta_endpoint" if valid == 0 else "unknown_host"
+            self._endpoint_discovery_error = (
+                "no_eta_endpoint" if valid == 0 else "unknown_host"
+            )
             return
 
         await self._async_discover_possible_endpoints(host, port, force_legacy_mode)
@@ -423,12 +425,6 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             return -1
         return 1 if does_endpoint_exist else 0
 
-    async def _is_correct_api_version(self, host, port):
-        session = async_get_clientsession(self.hass)
-        eta_client = EtaAPI(session, host, port)
-
-        return await eta_client.is_correct_api_version()
-
 
 class EtaOptionsFlowHandler(OptionsFlow):
     """Blueprint config flow options handler."""
@@ -457,11 +453,6 @@ class EtaOptionsFlowHandler(OptionsFlow):
         if config_entry is None:
             return None
         return domain_data.get(config_entry.entry_id)
-
-    async def _get_possible_endpoints(self, host, port, force_legacy_mode):
-        return await self._get_possible_endpoints_with_progress(
-            host, port, force_legacy_mode, progress_callback=None
-        )
 
     async def _get_possible_endpoints_with_progress(
         self, host, port, force_legacy_mode, progress_callback=None
