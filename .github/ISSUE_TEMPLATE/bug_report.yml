@@ -22,7 +22,7 @@ body:
       description: "Example: 2026.2.5"
       placeholder: "2026.2.5"
     validations:
-      required: true
+      required: false
   - type: input
     id: eta_api_version
     attributes:
@@ -30,7 +30,7 @@ body:
       description: "Example: 1.2 or 1.1 legacy mode"
       placeholder: "1.2"
     validations:
-      required: false
+      required: true
   - type: input
     id: eta_model
     attributes:
@@ -58,14 +58,14 @@ body:
         3. Change the affected setting
         4. Submit
     validations:
-      required: true
+      required: false
   - type: textarea
     id: expected_behavior
     attributes:
       label: Expected behavior
       placeholder: The options flow should save successfully and reload the integration.
     validations:
-      required: true
+      required: false
   - type: textarea
     id: relevant_logs
     attributes:
