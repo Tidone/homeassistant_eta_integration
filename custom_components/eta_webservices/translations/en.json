@@ -42,6 +42,9 @@
         "abort": {
             "integration_busy": "The integration is still starting up or reloading. Please wait a moment and try configuring it again."
         },
+        "progress": {
+            "prepare_entities": "Preparing entity data in the background. This can take several minutes on large systems. Home Assistant will continue automatically as soon as the process is finished."
+        },
         "step": {
             "init": {
                 "title": "Options",
@@ -79,6 +82,7 @@
         },
         "error": {
             "wrong_api_version": "API version of ETA terminal is too low. Some entities may not be detected. Please consider updating the firmware of your ETA terminal to the latest version.",
+            "endpoint_discovery_failed": "Rediscovering available entities failed. Please try again and check the logs if the problem persists.",
             "value_update_error": "At least one endpoint could not be updated. You may have to update the list of available sensors.",
             "unavailable_sensors": "One or more selected sensors are not available any more or have been moved to a different category. Please check the lists of selected sensors for any missing or wrong sensors. You can find a list of affected sensors at the bottom."
         }

@@ -329,6 +329,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         self, float_dict, switches_dict, text_dict, writable_dict
     ):
         """Enumerate all sensors using v1.2 methods."""
+        self._emit_progress("Loading endpoint list", 0.05)
         self._http.num_duplicates = 0  # Reset counter for this enumeration
         all_endpoints = await self._http.get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
@@ -356,33 +357,57 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         _LOGGER.debug(
             "Found %d duplicate keys with multiple URIs", self._http.num_duplicates
         )
+        self._emit_progress(
+            f"Loaded {len(deduplicated_uris)} unique endpoints", 0.1
+        )
 
         # Create a semaphore to limit concurrent requests
         semaphore = asyncio.Semaphore(self._http.max_concurrent_requests)
 
         async def fetch_varinfo_limited(uri, key):
             async with semaphore:
-                return await self._get_varinfo(key.split("_")[1], uri)
+                try:
+                    return uri, await self._get_varinfo(key.split("_")[1], uri)
+                except Exception as err:  # noqa: BLE001
+                    return uri, err
 
         # Fetch all varinfo with concurrency limit
         varinfo_tasks = [
-            fetch_varinfo_limited(uri, key) for uri, key in deduplicated_uris.items()
+            asyncio.create_task(fetch_varinfo_limited(uri, key))
+            for uri, key in deduplicated_uris.items()
         ]
 
         # This takes WAY longer than the calls to get_data() below
         # Runtime for this section: 170s
         # Runtime for the get_data() section below: 7s
-        varinfo_results = await asyncio.gather(*varinfo_tasks, return_exceptions=True)
-
-        # Map results back to URIs, filtering out exceptions
         endpoint_infos: dict[str, ETAEndpoint] = {}
-        for uri, result in zip(deduplicated_uris.keys(), varinfo_results, strict=False):
+        total_varinfo_tasks = len(varinfo_tasks)
+        varinfo_progress_step = (
+            max(1, total_varinfo_tasks // 20) if total_varinfo_tasks else 1
+        )
+        completed_varinfo_tasks = 0
+
+        for task in asyncio.as_completed(varinfo_tasks):
+            uri, result = await task
             if isinstance(result, Exception):
                 _LOGGER.debug("Failed to get varinfo for %s: %s", uri, str(result))
             else:
                 endpoint_infos[uri] = result  # pyright: ignore[reportArgumentType]
+            completed_varinfo_tasks += 1
+            if (
+                completed_varinfo_tasks == total_varinfo_tasks
+                or completed_varinfo_tasks % varinfo_progress_step == 0
+            ):
+                progress = 0.1 + (
+                    0.55 * completed_varinfo_tasks / max(total_varinfo_tasks, 1)
+                )
+                self._emit_progress(
+                    f"Reading endpoint metadata {completed_varinfo_tasks}/{total_varinfo_tasks}",
+                    progress,
+                )
 
         # Sanitize duplicate nodes by testing which URIs return valid data
+        self._emit_progress("Resolving duplicate endpoints", 0.7)
         removed_count = await self._sanitize_duplicate_nodes(
             all_endpoints, endpoint_infos
         )
@@ -408,31 +433,52 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
 
         async def fetch_data_limited(uri, force_string_handling):
             async with semaphore:
-                return await self._http.get_data(
-                    uri, force_string_handling=force_string_handling
-                )
+                try:
+                    return uri, await self._http.get_data(
+                        uri, force_string_handling=force_string_handling
+                    )
+                except Exception as err:  # noqa: BLE001
+                    return uri, err
 
         # Fetch all needed data concurrently
         data_results: dict[str, tuple[float | str, str]] = {}
         if needs_data:
             data_tasks = [
-                fetch_data_limited(
-                    uri,
-                    # all custom units should be treated as text sensors
-                    force_string_handling=endpoint_infos[uri]["unit"] in CUSTOM_UNITS,
+                asyncio.create_task(
+                    fetch_data_limited(
+                        uri,
+                        # all custom units should be treated as text sensors
+                        force_string_handling=endpoint_infos[uri]["unit"] in CUSTOM_UNITS,
+                    )
                 )
                 for uri in needs_data
             ]
-            # runtime: 7 seconds for ~500 endpoints
-            data_values = await asyncio.gather(*data_tasks, return_exceptions=True)
 
-            # Filter out exceptions from data results
-            for uri, result in zip(needs_data, data_values, strict=False):
+            total_data_tasks = len(data_tasks)
+            data_progress_step = max(1, total_data_tasks // 20) if total_data_tasks else 1
+            completed_data_tasks = 0
+            self._emit_progress("Reading endpoint values", 0.75)
+
+            for task in asyncio.as_completed(data_tasks):
+                uri, result = await task
                 if isinstance(result, Exception):
                     _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
                 else:
                     data_results[uri] = result  # pyright: ignore[reportArgumentType]
+                completed_data_tasks += 1
+                if (
+                    completed_data_tasks == total_data_tasks
+                    or completed_data_tasks % data_progress_step == 0
+                ):
+                    progress = 0.75 + (
+                        0.15 * completed_data_tasks / max(total_data_tasks, 1)
+                    )
+                    self._emit_progress(
+                        f"Reading endpoint values {completed_data_tasks}/{total_data_tasks}",
+                        progress,
+                    )
 
+        self._emit_progress("Classifying discovered entities", 0.9)
         for uri, key in deduplicated_uris.items():
             if uri not in endpoint_infos:
                 continue
@@ -543,4 +589,8 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             len(deduplicated_uris),
             total_uris,
             self._http.num_duplicates,
+        )
+        self._emit_progress(
+            f"Done: {valid_endpoints} entities discovered",
+            1.0,
         )

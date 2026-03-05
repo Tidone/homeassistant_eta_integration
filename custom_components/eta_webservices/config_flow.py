@@ -116,6 +116,12 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         self._endpoint_discovery_task: asyncio.Task | None = None
         self._endpoint_discovery_error: str | None = None
 
+    def _on_discovery_progress(self, message: str, progress: float | None) -> None:
+        """Forward discovery progress updates to HA's progress tracking."""
+        _LOGGER.debug("Discovery progress: %s", message)
+        if progress is not None:
+            self.async_update_progress(progress)
+
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
         self._errors = {}
@@ -129,35 +135,20 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             for entry in platform_entries:
                 if entry.data.get(CONF_HOST, "") == user_input[CONF_HOST]:
                     return self.async_abort(reason="single_instance_allowed")
-            valid = await self._test_url(user_input[CONF_HOST], user_input[CONF_PORT])
-            if valid == 1:
-                is_correct_api_version = await self._is_correct_api_version(
-                    user_input[CONF_HOST], user_input[CONF_PORT]
+            if user_input[ENABLE_DEBUG_LOGGING] and _LOGGER.parent is not None:
+                self._old_logging_level = _LOGGER.parent.getEffectiveLevel()
+                _LOGGER.parent.setLevel(logging.DEBUG)
+
+            self.data = user_input
+            self._endpoint_discovery_error = None
+            self._endpoint_discovery_task = self.hass.async_create_task(
+                self._async_validate_and_discover_endpoints(
+                    user_input[CONF_HOST],
+                    user_input[CONF_PORT],
+                    user_input[FORCE_LEGACY_MODE],
                 )
-                if not is_correct_api_version:
-                    self._errors["base"] = "wrong_api_version"
-                elif user_input[FORCE_LEGACY_MODE]:
-                    self._errors["base"] = "legacy_mode_selected"
-
-                if user_input[ENABLE_DEBUG_LOGGING] and _LOGGER.parent is not None:
-                    self._old_logging_level = _LOGGER.parent.getEffectiveLevel()
-                    _LOGGER.parent.setLevel(logging.DEBUG)
-
-                self.data = user_input
-                self._endpoint_discovery_error = None
-                self._endpoint_discovery_task = self.hass.async_create_task(
-                    self._async_discover_possible_endpoints(
-                        user_input[CONF_HOST],
-                        user_input[CONF_PORT],
-                        user_input[FORCE_LEGACY_MODE],
-                    )
-                )
-
-                return await self.async_step_discover_entities()
-
-            self._errors["base"] = "no_eta_endpoint" if valid == 0 else "unknown_host"
-
-            return await self._show_config_form_user(user_input)
+            )
+            return await self.async_step_discover_entities()
 
         user_input = {}
         # Provide defaults for form
@@ -187,6 +178,28 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         self._endpoint_discovery_task = None
         return self.async_show_progress_done(next_step_id="select_entities")
 
+    async def _async_validate_and_discover_endpoints(
+        self, host: str, port: str, force_legacy_mode: bool
+    ) -> None:
+        """Validate connectivity and discover endpoints in background."""
+        self._on_discovery_progress("Testing ETA endpoint", 0.01)
+        try:
+            valid = await asyncio.wait_for(self._test_url(host, port), timeout=20)
+        except TimeoutError:
+            _LOGGER.warning("ETA endpoint connectivity check timed out after 20s")
+            self._endpoint_discovery_error = "unknown_host"
+            return
+        except Exception:
+            _LOGGER.exception("Unexpected error while validating ETA endpoint")
+            self._endpoint_discovery_error = "unknown_host"
+            return
+
+        if valid != 1:
+            self._endpoint_discovery_error = "no_eta_endpoint" if valid == 0 else "unknown_host"
+            return
+
+        await self._async_discover_possible_endpoints(host, port, force_legacy_mode)
+
     async def _async_discover_possible_endpoints(
         self, host: str, port: str, force_legacy_mode: bool
     ) -> None:
@@ -197,13 +210,29 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 self.data[SWITCHES_DICT],
                 self.data[TEXT_DICT],
                 self.data[WRITABLE_DICT],
-            ) = await self._get_possible_endpoints(host, port, force_legacy_mode)
+            ) = await self._get_possible_endpoints(
+                host,
+                port,
+                force_legacy_mode,
+                progress_callback=self._on_discovery_progress,
+            )
+            total_entities = (
+                len(self.data[FLOAT_DICT])
+                + len(self.data[SWITCHES_DICT])
+                + len(self.data[TEXT_DICT])
+                + len(self.data[WRITABLE_DICT])
+            )
+            self._on_discovery_progress(
+                f"Discovery finished: {total_entities} entities found",
+                1.0,
+            )
         except asyncio.CancelledError:
             self._endpoint_discovery_error = None
             raise
         except Exception:
             _LOGGER.exception("Exception while discovering ETA endpoints")
             self._endpoint_discovery_error = "endpoint_discovery_failed"
+            self._on_discovery_progress("Discovery failed unexpectedly", None)
         finally:
             if self._endpoint_discovery_error is not None:
                 self._restore_logging_level()
@@ -351,7 +380,13 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             description_placeholders=count_placeholders,
         )
 
-    async def _get_possible_endpoints(self, host, port, force_legacy_mode):
+    async def _get_possible_endpoints(
+        self,
+        host,
+        port,
+        force_legacy_mode,
+        progress_callback=None,
+    ):
         session = async_get_clientsession(self.hass)
         eta_client = EtaAPI(session, host, port)
         float_dict = {}
@@ -359,7 +394,12 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         text_dict = {}
         writable_dict = {}
         await eta_client.get_all_sensors(
-            force_legacy_mode, float_dict, switches_dict, text_dict, writable_dict
+            force_legacy_mode,
+            float_dict,
+            switches_dict,
+            text_dict,
+            writable_dict,
+            progress_callback=progress_callback,
         )
 
         _LOGGER.debug(
@@ -407,6 +447,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.max_parallel_requests = DEFAULT_MAX_PARALLEL_REQUESTS
         self.unavailable_sensors: dict = {}
         self.advanced_options_writable_sensors = []
+        self._options_update_task: asyncio.Task | None = None
+        self._options_update_error: str | None = None
 
     def _get_runtime_config(self) -> dict | None:
         """Return the loaded runtime config for this entry if available."""
@@ -417,6 +459,13 @@ class EtaOptionsFlowHandler(OptionsFlow):
         return domain_data.get(config_entry.entry_id)
 
     async def _get_possible_endpoints(self, host, port, force_legacy_mode):
+        return await self._get_possible_endpoints_with_progress(
+            host, port, force_legacy_mode, progress_callback=None
+        )
+
+    async def _get_possible_endpoints_with_progress(
+        self, host, port, force_legacy_mode, progress_callback=None
+    ):
         session = async_get_clientsession(self.hass)
         eta_client = EtaAPI(session, host, port)
         float_dict = {}
@@ -424,12 +473,24 @@ class EtaOptionsFlowHandler(OptionsFlow):
         text_dict = {}
         writable_dict = {}
         await eta_client.get_all_sensors(
-            force_legacy_mode, float_dict, switches_dict, text_dict, writable_dict
+            force_legacy_mode,
+            float_dict,
+            switches_dict,
+            text_dict,
+            writable_dict,
+            progress_callback=progress_callback,
         )
 
         return float_dict, switches_dict, text_dict, writable_dict
 
+    def _on_options_progress(self, message: str, progress: float | None) -> None:
+        """Forward options progress updates to HA's progress tracking."""
+        _LOGGER.debug("Options progress: %s", message)
+        if progress is not None:
+            self.async_update_progress(progress)
+
     async def async_step_init(self, user_input=None):  # noqa: D102
+        self._errors = {}
         current_data = self._get_runtime_config()
         if current_data is None:
             return self.async_abort(reason="integration_busy")
@@ -451,9 +512,49 @@ class EtaOptionsFlowHandler(OptionsFlow):
             if not self.update_sensor_values and not self.enumerate_new_endpoints:
                 return await self.async_step_parallel_requests()
 
-            return await self._update_data_structures()
+            self._options_update_error = None
+            self._options_update_task = self.hass.async_create_task(
+                self._async_prepare_entity_selection()
+            )
+            return await self.async_step_prepare_entities()
 
         return await self._show_initial_option_screen()
+
+    async def async_step_prepare_entities(self, user_input=None):
+        """Show progress while preparing entity data in the options flow."""
+        if self._options_update_task is None:
+            return await self.async_step_init()
+
+        if not self._options_update_task.done():
+            return self.async_show_progress(
+                step_id="prepare_entities",
+                progress_action="prepare_entities",
+                progress_task=self._options_update_task,
+            )
+
+        if self._options_update_error is not None:
+            self._options_update_task = None
+            self._errors["base"] = self._options_update_error
+            return await self._show_initial_option_screen()
+
+        self._options_update_task = None
+        return self.async_show_progress_done(next_step_id="user")
+
+    async def _async_prepare_entity_selection(self) -> None:
+        """Prepare endpoint data in a background task for the options flow."""
+        try:
+            await self._prepare_data_structures()
+        except asyncio.CancelledError:
+            self._options_update_error = None
+            raise
+        except Exception:
+            _LOGGER.exception("Exception while preparing options data structures")
+            self._options_update_error = (
+                "endpoint_discovery_failed"
+                if self.enumerate_new_endpoints
+                else "value_update_error"
+            )
+            self._on_options_progress("Background preparation failed", None)
 
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
@@ -751,10 +852,11 @@ class EtaOptionsFlowHandler(OptionsFlow):
         except Exception:
             _LOGGER.exception("Exception while updating sensor values")
 
-    async def _update_data_structures(self):
+    async def _prepare_data_structures(self):
         current_data = self._get_runtime_config()
         if current_data is None:
-            return self.async_abort(reason="integration_busy")
+            raise RuntimeError("Integration runtime config is unavailable")
+        self._on_options_progress("Loading current configuration", 0.05)
 
         # Make a copy of the data structure to make sure we don't alter the original data
         for key in [
@@ -788,38 +890,54 @@ class EtaOptionsFlowHandler(OptionsFlow):
             ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
         )
         self.data[MAX_PARALLEL_REQUESTS] = self.max_parallel_requests
+        self._on_options_progress("Loaded current configuration", 0.1)
 
         if self.enumerate_new_endpoints:
             _LOGGER.info("Discovering new endpoints")
+            self._on_options_progress("Rediscovering available entities", 0.15)
             (
                 new_float_sensors,
                 new_switches,
                 new_text_sensors,
                 new_writable_sensors,
-            ) = await self._get_possible_endpoints(
-                self.data[CONF_HOST], self.data[CONF_PORT], self.data[FORCE_LEGACY_MODE]
+            ) = await self._get_possible_endpoints_with_progress(
+                self.data[CONF_HOST],
+                self.data[CONF_PORT],
+                self.data[FORCE_LEGACY_MODE],
+                progress_callback=self._on_options_progress,
             )
 
             added_sensor_count = self._handle_new_sensors(
                 new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
             )
             _LOGGER.info("Added %i new sensors", added_sensor_count)
+            self._on_options_progress(
+                f"Added {added_sensor_count} newly discovered entities",
+                0.92,
+            )
 
             deleted_sensor_count = self._handle_deleted_sensors(
                 new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
             )
             _LOGGER.info("Deleted %i unavailable sensors", deleted_sensor_count)
+            self._on_options_progress(
+                f"Removed {deleted_sensor_count} unavailable entities",
+                0.95,
+            )
 
             self._handle_sensor_value_updates_from_enumeration(
                 new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
             )
             _LOGGER.info("Updated sensor values")
+            self._on_options_progress("Updated values for rediscovered entities", 0.98)
 
         elif self.update_sensor_values:
             # Update current sensor values only if requested and no re-enumeration is running.
+            self._on_options_progress("Refreshing values of selected entities", 0.3)
             await self._update_sensor_values()
+            self._on_options_progress("Finished refreshing selected entity values", 0.98)
 
-        return await self.async_step_user()
+        self._on_options_progress("Preparation finished", 1.0)
 
     async def async_step_user(self, user_input=None):
         """Manage the options."""

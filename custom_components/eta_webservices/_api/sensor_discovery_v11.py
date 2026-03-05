@@ -121,6 +121,7 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
         self, float_dict, switches_dict, text_dict, writable_dict
     ):
         """Enumerate all sensors using v1.1 methods."""
+        self._emit_progress("Loading endpoint list", 0.05)
         self._http.num_duplicates = 0
         all_endpoints = await self._http.get_sensors_dict()
         _LOGGER.debug("Got list of all endpoints: %s", all_endpoints)
@@ -147,30 +148,52 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
         _LOGGER.debug(
             "Found %d duplicate keys with multiple URIs", self._http.num_duplicates
         )
+        self._emit_progress(
+            f"Loaded {len(deduplicated_uris)} unique endpoints", 0.1
+        )
 
         # Fetch all data concurrently
         semaphore = asyncio.Semaphore(self._http.max_concurrent_requests)
 
         async def fetch_data_limited(uri):
             async with semaphore:
-                return await self._http.get_data_plus_raw(uri)
+                try:
+                    return uri, await self._http.get_data_plus_raw(uri)
+                except Exception as err:  # noqa: BLE001
+                    return uri, err
 
-        data_tasks = [fetch_data_limited(uri) for uri in deduplicated_uris]
-        data_results = await asyncio.gather(*data_tasks, return_exceptions=True)
+        data_tasks = [asyncio.create_task(fetch_data_limited(uri)) for uri in deduplicated_uris]
 
         endpoint_data: dict[str, tuple[float | str, str, dict]] = {}
-        for uri, result in zip(deduplicated_uris.keys(), data_results, strict=False):
+        total_data_tasks = len(data_tasks)
+        progress_step = max(1, total_data_tasks // 20) if total_data_tasks else 1
+        completed_data_tasks = 0
+
+        for task in asyncio.as_completed(data_tasks):
+            uri, result = await task
             if isinstance(result, Exception):
                 _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
             else:
                 endpoint_data[uri] = result  # pyright: ignore[reportArgumentType]
+            completed_data_tasks += 1
+            if (
+                completed_data_tasks == total_data_tasks
+                or completed_data_tasks % progress_step == 0
+            ):
+                progress = 0.1 + (0.6 * completed_data_tasks / max(total_data_tasks, 1))
+                self._emit_progress(
+                    f"Reading endpoint values {completed_data_tasks}/{total_data_tasks}",
+                    progress,
+                )
 
         # Sanitize duplicates
+        self._emit_progress("Resolving duplicate endpoints", 0.75)
         removed_count = self._sanitize_duplicate_nodes(all_endpoints, endpoint_data)
         if removed_count > 0:
             _LOGGER.info("Removed %d invalid URIs from duplicate nodes", removed_count)
 
         # Process endpoints
+        self._emit_progress("Classifying discovered entities", 0.85)
         for uri, key in deduplicated_uris.items():
             if uri not in endpoint_data:
                 continue
@@ -245,4 +268,8 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
             len(deduplicated_uris),
             total_uris,
             self._http.num_duplicates,
+        )
+        self._emit_progress(
+            f"Done: {valid_endpoints} entities discovered",
+            1.0,
         )
