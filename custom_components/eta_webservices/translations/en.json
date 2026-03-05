@@ -45,9 +45,15 @@
         "step": {
             "init": {
                 "title": "Options",
-                "description": "Choose what you want to do next. You can either only update the parallel API request limit, update values for already selected entities, or rediscover available entities and then update your selection. Higher parallel request values increase load on the ETA unit and may cause errors, especially on older systems.",
+                "description": "Update parallel API requests only: only the request limit is changed.\nUpdate selected entities: fetches current values for your already selected entities.\nRediscover available entities and update selected entities: refreshes the entity list and then lets you adjust your selection.",
                 "data": {
-                    "options_update_action": "Action",
+                    "options_update_action": "Action"
+                }
+            },
+            "parallel_requests": {
+                "title": "Parallel API requests",
+                "description": "Set how many ETA API requests may run at the same time. Lower values are more stable, while higher values can be faster but increase load on the ETA unit and may cause errors, especially on older systems.",
+                "data": {
                     "max_parallel_requests": "Maximum parallel API requests"
                 }
             },

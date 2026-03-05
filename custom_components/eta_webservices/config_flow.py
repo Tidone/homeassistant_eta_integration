@@ -193,7 +193,6 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         self, host: str, port: str, force_legacy_mode: bool
     ) -> None:
         """Discover endpoints while the config flow shows a native progress page."""
-        self.async_update_progress(0.1)
         try:
             (
                 self.data[FLOAT_DICT],
@@ -201,7 +200,6 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 self.data[TEXT_DICT],
                 self.data[WRITABLE_DICT],
             ) = await self._get_possible_endpoints(host, port, force_legacy_mode)
-            self.async_update_progress(1.0)
         except asyncio.CancelledError:
             self._endpoint_discovery_error = None
             raise
@@ -436,12 +434,15 @@ class EtaOptionsFlowHandler(OptionsFlow):
         return float_dict, switches_dict, text_dict, writable_dict
 
     async def async_step_init(self, user_input=None):  # noqa: D102
-        if self._get_runtime_config() is None:
+        current_data = self._get_runtime_config()
+        if current_data is None:
             return self.async_abort(reason="integration_busy")
+        self.max_parallel_requests = current_data.get(
+            MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
+        )
 
         if user_input is not None:
             selected_action = user_input[OPTIONS_UPDATE_ACTION]
-            self.max_parallel_requests = int(user_input[MAX_PARALLEL_REQUESTS])
 
             self.update_sensor_values = selected_action in (
                 OPTIONS_ACTION_UPDATE_SELECTED,
@@ -452,27 +453,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             )
 
             if not self.update_sensor_values and not self.enumerate_new_endpoints:
-                current_data = self._get_runtime_config()
-                if current_data is None:
-                    return self.async_abort(reason="integration_busy")
-                data = {
-                    CHOSEN_FLOAT_SENSORS: current_data[CHOSEN_FLOAT_SENSORS],
-                    CHOSEN_SWITCHES: current_data[CHOSEN_SWITCHES],
-                    CHOSEN_TEXT_SENSORS: current_data[CHOSEN_TEXT_SENSORS],
-                    CHOSEN_WRITABLE_SENSORS: current_data[CHOSEN_WRITABLE_SENSORS],
-                    FLOAT_DICT: current_data[FLOAT_DICT],
-                    SWITCHES_DICT: current_data[SWITCHES_DICT],
-                    TEXT_DICT: current_data[TEXT_DICT],
-                    WRITABLE_DICT: current_data[WRITABLE_DICT],
-                    MAX_PARALLEL_REQUESTS: self.max_parallel_requests,
-                    CONF_HOST: current_data[CONF_HOST],
-                    CONF_PORT: current_data[CONF_PORT],
-                    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: current_data.get(
-                        ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
-                    ),
-                    FORCE_LEGACY_MODE: current_data[FORCE_LEGACY_MODE],
-                }
-                return self.async_create_entry(title="", data=data)
+                return await self.async_step_parallel_requests()
 
             return await self._update_data_structures()
 
@@ -480,31 +461,39 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
-        parallel_request_options = ["1", "2", "3", "5", "8", "10", "15"]
+        is_german_ui = str(getattr(self.hass.config, "language", "en")).lower().startswith(
+            "de"
+        )
         update_action_options = [
             selector.SelectOptionDict(
                 value=OPTIONS_ACTION_PARALLEL_ONLY,
-                label="Update parallel API requests",
+                label=(
+                    "Nur parallele API-Anfragen ändern"
+                    if is_german_ui
+                    else "Update parallel API requests only"
+                ),
             ),
             selector.SelectOptionDict(
                 value=OPTIONS_ACTION_UPDATE_SELECTED,
-                label="Update selected entities",
+                label=(
+                    "Ausgewählte Entitäten aktualisieren"
+                    if is_german_ui
+                    else "Update selected entities"
+                ),
             ),
             selector.SelectOptionDict(
                 value=OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
-                label="Rediscover available entities and update selected entities",
+                label=(
+                    "Verfügbare Entitäten neu suchen und Auswahl aktualisieren"
+                    if is_german_ui
+                    else "Rediscover available entities and update selected entities"
+                ),
             ),
         ]
 
         current_data = self._get_runtime_config()
         if current_data is None:
             return self.async_abort(reason="integration_busy")
-        default_parallel_requests = current_data.get(
-            MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
-        )
-        default_parallel_requests = str(default_parallel_requests)
-        if default_parallel_requests not in parallel_request_options:
-            default_parallel_requests = str(DEFAULT_MAX_PARALLEL_REQUESTS)
 
         return self.async_show_form(
             step_id="init",
@@ -520,6 +509,49 @@ class EtaOptionsFlowHandler(OptionsFlow):
                             multiple=False,
                         )
                     ),
+                }
+            ),
+            errors=self._errors,
+        )
+
+    async def async_step_parallel_requests(self, user_input=None):
+        """Update only the max number of parallel API requests."""
+        current_data = self._get_runtime_config()
+        if current_data is None:
+            return self.async_abort(reason="integration_busy")
+
+        parallel_request_options = ["1", "2", "3", "5", "8", "10", "15"]
+        default_parallel_requests = str(
+            current_data.get(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+        )
+        if default_parallel_requests not in parallel_request_options:
+            default_parallel_requests = str(DEFAULT_MAX_PARALLEL_REQUESTS)
+
+        if user_input is not None:
+            self.max_parallel_requests = int(user_input[MAX_PARALLEL_REQUESTS])
+            data = {
+                CHOSEN_FLOAT_SENSORS: current_data[CHOSEN_FLOAT_SENSORS],
+                CHOSEN_SWITCHES: current_data[CHOSEN_SWITCHES],
+                CHOSEN_TEXT_SENSORS: current_data[CHOSEN_TEXT_SENSORS],
+                CHOSEN_WRITABLE_SENSORS: current_data[CHOSEN_WRITABLE_SENSORS],
+                FLOAT_DICT: current_data[FLOAT_DICT],
+                SWITCHES_DICT: current_data[SWITCHES_DICT],
+                TEXT_DICT: current_data[TEXT_DICT],
+                WRITABLE_DICT: current_data[WRITABLE_DICT],
+                MAX_PARALLEL_REQUESTS: self.max_parallel_requests,
+                CONF_HOST: current_data[CONF_HOST],
+                CONF_PORT: current_data[CONF_PORT],
+                ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: current_data.get(
+                    ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, []
+                ),
+                FORCE_LEGACY_MODE: current_data[FORCE_LEGACY_MODE],
+            }
+            return self.async_create_entry(title="", data=data)
+
+        return self.async_show_form(
+            step_id="parallel_requests",
+            data_schema=vol.Schema(
+                {
                     vol.Required(
                         MAX_PARALLEL_REQUESTS, default=default_parallel_requests
                     ): selector.SelectSelector(
