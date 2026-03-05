@@ -157,6 +157,12 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
 
         return await self._show_config_form_user(user_input)
 
+    async def async_remove(self) -> None:
+        """Clean up resources if the config flow is aborted/removed."""
+        if self._endpoint_discovery_task is not None and not self._endpoint_discovery_task.done():
+            self._endpoint_discovery_task.cancel()
+        self._restore_logging_level()
+
     async def async_step_discover_entities(self, user_input=None):
         """Show a dedicated progress step while endpoint discovery runs."""
         if self._endpoint_discovery_task is None:
@@ -184,23 +190,30 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         """Validate connectivity and discover endpoints in background."""
         self._on_discovery_progress("Testing ETA endpoint", 0.01)
         try:
-            valid = await asyncio.wait_for(self._test_url(host, port), timeout=20)
-        except TimeoutError:
-            _LOGGER.warning("ETA endpoint connectivity check timed out after 20s")
-            self._endpoint_discovery_error = "unknown_host"
-            return
-        except Exception:
-            _LOGGER.exception("Unexpected error while validating ETA endpoint")
-            self._endpoint_discovery_error = "unknown_host"
-            return
+            try:
+                valid = await asyncio.wait_for(self._test_url(host, port), timeout=20)
+            except TimeoutError:
+                _LOGGER.warning("ETA endpoint connectivity check timed out after 20s")
+                self._endpoint_discovery_error = "unknown_host"
+                return
+            except Exception:
+                _LOGGER.exception("Unexpected error while validating ETA endpoint")
+                self._endpoint_discovery_error = "unknown_host"
+                return
 
-        if valid != 1:
-            self._endpoint_discovery_error = (
-                "no_eta_endpoint" if valid == 0 else "unknown_host"
-            )
-            return
+            if valid != 1:
+                self._endpoint_discovery_error = (
+                    "no_eta_endpoint" if valid == 0 else "unknown_host"
+                )
+                return
 
-        await self._async_discover_possible_endpoints(host, port, force_legacy_mode)
+            await self._async_discover_possible_endpoints(host, port, force_legacy_mode)
+        except asyncio.CancelledError:
+            self._endpoint_discovery_error = None
+            raise
+        finally:
+            if self._endpoint_discovery_error is not None:
+                self._restore_logging_level()
 
     async def _async_discover_possible_endpoints(
         self, host: str, port: str, force_legacy_mode: bool
@@ -230,6 +243,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             )
         except asyncio.CancelledError:
             self._endpoint_discovery_error = None
+            self._restore_logging_level()
             raise
         except Exception:
             _LOGGER.exception("Exception while discovering ETA endpoints")
