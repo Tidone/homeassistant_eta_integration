@@ -60,9 +60,6 @@ This integration can be configured directly in Home Assistant via HACS:
 
 -   Your ETA pellets unit needs a static IP address! Either configure the IP adress directly on the ETA terminal, or set the DHCP server on your router to give the ETA unit a static lease.
 
-- If your pellets unit is behind a proxy (`nginx`, `Cloudflare`, etc.), setup and rediscovery can still take several minutes on large systems.
-  From version `1.3.2` onward, discovery runs in background tasks with progress updates, so the flow no longer relies on a single long blocking request.
-
 ## Updating the List of Sensors
 
 If the sensors on the ETA unit are changed, the integration can be updated to reflect that. This is useful for example if new sensors are added, which should be shown in HA.
