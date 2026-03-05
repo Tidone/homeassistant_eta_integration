@@ -44,11 +44,10 @@
         },
         "step": {
             "init": {
-                "title": "Aktualisierungsoptionen",
-                "description": "Wähle aus, ob Sensorwerte und/oder die Entitätsliste aktualisiert werden sollen. Höhere Werte für parallele Anfragen erhöhen die Last auf dem ETA-Gerät und können besonders bei älteren Anlagen zu Fehlern führen. Für ältere ETA-Systeme besser kleinere Werte verwenden.",
+                "title": "Optionen",
+                "description": "Wähle aus, was als Nächstes passieren soll. Du kannst nur die Anzahl der parallelen API-Anfragen ändern, Werte der bereits ausgewählten Entitäten aktualisieren oder die verfügbaren Entitäten neu suchen und danach die Auswahl aktualisieren. Höhere Werte für parallele Anfragen erhöhen die Last auf dem ETA-Gerät und können besonders bei älteren Anlagen zu Fehlern führen.",
                 "data": {
-                    "update_sensor_values": "Sensorwerte aktualisieren",
-                    "enumerate_new_endpoints": "Liste der Sensoren aktualisieren",
+                    "options_update_action": "Aktion",
                     "max_parallel_requests": "Maximale parallele API-Anfragen"
                 }
             },

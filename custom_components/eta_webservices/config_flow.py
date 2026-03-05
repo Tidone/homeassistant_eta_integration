@@ -30,8 +30,10 @@ from .const import (
     FORCE_LEGACY_MODE,
     INVISIBLE_UNITS,
     MAX_PARALLEL_REQUESTS,
-    OPTIONS_ENUMERATE_NEW_ENDPOINTS,
-    OPTIONS_UPDATE_SENSOR_VALUES,
+    OPTIONS_ACTION_PARALLEL_ONLY,
+    OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
+    OPTIONS_ACTION_UPDATE_SELECTED,
+    OPTIONS_UPDATE_ACTION,
     SWITCHES_DICT,
     TEXT_DICT,
     WRITABLE_DICT,
@@ -191,7 +193,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         self, host: str, port: str, force_legacy_mode: bool
     ) -> None:
         """Discover endpoints while the config flow shows a native progress page."""
-        self.async_update_progress(0.05)
+        self.async_update_progress(0.1)
         try:
             (
                 self.data[FLOAT_DICT],
@@ -438,9 +440,16 @@ class EtaOptionsFlowHandler(OptionsFlow):
             return self.async_abort(reason="integration_busy")
 
         if user_input is not None:
-            self.update_sensor_values = user_input[OPTIONS_UPDATE_SENSOR_VALUES]
-            self.enumerate_new_endpoints = user_input[OPTIONS_ENUMERATE_NEW_ENDPOINTS]
+            selected_action = user_input[OPTIONS_UPDATE_ACTION]
             self.max_parallel_requests = int(user_input[MAX_PARALLEL_REQUESTS])
+
+            self.update_sensor_values = selected_action in (
+                OPTIONS_ACTION_UPDATE_SELECTED,
+                OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
+            )
+            self.enumerate_new_endpoints = (
+                selected_action == OPTIONS_ACTION_REDISCOVER_AND_UPDATE
+            )
 
             if not self.update_sensor_values and not self.enumerate_new_endpoints:
                 current_data = self._get_runtime_config()
@@ -472,6 +481,21 @@ class EtaOptionsFlowHandler(OptionsFlow):
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
         parallel_request_options = ["1", "2", "3", "5", "8", "10", "15"]
+        update_action_options = [
+            selector.SelectOptionDict(
+                value=OPTIONS_ACTION_PARALLEL_ONLY,
+                label="Update parallel API requests",
+            ),
+            selector.SelectOptionDict(
+                value=OPTIONS_ACTION_UPDATE_SELECTED,
+                label="Update selected entities",
+            ),
+            selector.SelectOptionDict(
+                value=OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
+                label="Rediscover available entities and update selected entities",
+            ),
+        ]
+
         current_data = self._get_runtime_config()
         if current_data is None:
             return self.async_abort(reason="integration_busy")
@@ -487,11 +511,15 @@ class EtaOptionsFlowHandler(OptionsFlow):
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        OPTIONS_UPDATE_SENSOR_VALUES, default=False
-                    ): cv.boolean,
-                    vol.Required(
-                        OPTIONS_ENUMERATE_NEW_ENDPOINTS, default=False
-                    ): cv.boolean,
+                        OPTIONS_UPDATE_ACTION,
+                        default=OPTIONS_ACTION_PARALLEL_ONLY,
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=update_action_options,
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                            multiple=False,
+                        )
+                    ),
                     vol.Required(
                         MAX_PARALLEL_REQUESTS, default=default_parallel_requests
                     ): selector.SelectSelector(

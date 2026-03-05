@@ -22,6 +22,10 @@ AUTO_SELECT_ALL_ENTITIES = "auto_select_all_entities"
 
 OPTIONS_UPDATE_SENSOR_VALUES = "update_sensor_values"
 OPTIONS_ENUMERATE_NEW_ENDPOINTS = "enumerate_new_endpoints"
+OPTIONS_UPDATE_ACTION = "options_update_action"
+OPTIONS_ACTION_PARALLEL_ONLY = "update_parallel_requests"
+OPTIONS_ACTION_UPDATE_SELECTED = "update_selected_entities"
+OPTIONS_ACTION_REDISCOVER_AND_UPDATE = "rediscover_and_update_entities"
 ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION = (
     "ignore_decimal_places_restriction_for_writable_entities"
 )
