@@ -105,17 +105,6 @@ def _sanitize_selected_entity_ids(
     )
 
 
-def _is_unspecified_host(host: str) -> bool:
-    """Return True if host is an unspecified IP placeholder like 0.0.0.0 or ::."""
-    normalized_host = host.strip().strip("[]")
-    if not normalized_host:
-        return True
-    try:
-        return ipaddress.ip_address(normalized_host).is_unspecified
-    except ValueError:
-        return False
-
-
 def _is_invalid_host_input(host: str) -> bool:
     """Return True if host input is malformed or unusable for ETA requests."""
     normalized_host = host.strip()
@@ -123,7 +112,7 @@ def _is_invalid_host_input(host: str) -> bool:
         return True
 
     # Users should only enter host/IP, never full URLs or paths.
-    if "://" in normalized_host or "/" in normalized_host:
+    if "/" in normalized_host:
         return True
 
     # Bracketed form is only valid for IPv6 literals like [2001:db8::1].
@@ -378,7 +367,9 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_HOST, default=user_input[CONF_HOST]): str,
-                    vol.Required(CONF_PORT, default=user_input[CONF_PORT]): str,
+                    vol.Required(CONF_PORT, default=user_input[CONF_PORT]): vol.All(
+                        vol.Coerce(int), vol.Range(min=1, max=65535)
+                    ),
                     vol.Required(FORCE_LEGACY_MODE, default=False): cv.boolean,
                     vol.Required(ENABLE_DEBUG_LOGGING, default=False): cv.boolean,
                 }
