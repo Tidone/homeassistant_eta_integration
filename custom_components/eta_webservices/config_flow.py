@@ -2,7 +2,9 @@
 
 import asyncio
 import copy
+import ipaddress
 import logging
+import re
 
 import voluptuous as vol
 
@@ -40,6 +42,7 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+_HOSTNAME_LABEL_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?$")
 
 
 def _build_discovered_entity_placeholders(
@@ -102,6 +105,62 @@ def _sanitize_selected_entity_ids(
     )
 
 
+def _is_unspecified_host(host: str) -> bool:
+    """Return True if host is an unspecified IP placeholder like 0.0.0.0 or ::."""
+    normalized_host = host.strip().strip("[]")
+    if not normalized_host:
+        return True
+    try:
+        return ipaddress.ip_address(normalized_host).is_unspecified
+    except ValueError:
+        return False
+
+
+def _is_invalid_host_input(host: str) -> bool:
+    """Return True if host input is malformed or unusable for ETA requests."""
+    normalized_host = host.strip()
+    if not normalized_host:
+        return True
+
+    # Users should only enter host/IP, never full URLs or paths.
+    if "://" in normalized_host or "/" in normalized_host:
+        return True
+
+    # Bracketed form is only valid for IPv6 literals like [2001:db8::1].
+    if normalized_host.startswith("[") or normalized_host.endswith("]"):
+        if not (normalized_host.startswith("[") and normalized_host.endswith("]")):
+            return True
+        inner_host = normalized_host[1:-1]
+        try:
+            parsed_ip = ipaddress.ip_address(inner_host)
+        except ValueError:
+            return True
+        return parsed_ip.version != 6 or parsed_ip.is_unspecified
+
+    # Unbracketed colon hosts are malformed for host:port URI construction.
+    if ":" in normalized_host:
+        return True
+
+    # Accept valid IPv4 directly.
+    try:
+        return ipaddress.ip_address(normalized_host).is_unspecified
+    except ValueError:
+        pass
+
+    # Otherwise require a valid hostname (RFC-like labels).
+    if len(normalized_host) > 253:
+        return True
+    labels = normalized_host.rstrip(".").split(".")
+    if not labels:
+        return True
+    if any(not label for label in labels):
+        return True
+    if any(_HOSTNAME_LABEL_RE.match(label) is None for label in labels):
+        return True
+
+    return False
+
+
 class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for Eta."""
 
@@ -135,6 +194,11 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         #     return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
+            user_input[CONF_HOST] = str(user_input[CONF_HOST]).strip()
+            if _is_invalid_host_input(user_input[CONF_HOST]):
+                self._errors["base"] = "unknown_host"
+                return await self._show_config_form_user(user_input)
+
             platform_entries = self._async_current_entries()
             for entry in platform_entries:
                 if entry.data.get(CONF_HOST, "") == user_input[CONF_HOST]:
