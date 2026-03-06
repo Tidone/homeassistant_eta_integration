@@ -2095,6 +2095,22 @@
       "endpoint_type": "TEXT",
       "value": 0.6
     },
+    "eta_192_168_0_25__kessel_zählerstände_wassermenge": {
+      "url": "/79/10531/0/0/2274",
+      "valid_values": null,
+      "friendly_name": "Kessel > Zählerstände > Wassermenge",
+      "unit": "m³",
+      "endpoint_type": "TEXT",
+      "value": 11.2365
+    },
+    "eta_192_168_0_25__kessel_zählerstände_durchfluss": {
+      "url": "/264/10891/0/0/12380",
+      "valid_values": null,
+      "friendly_name": "Kessel > Zählerstände > Durchfluss",
+      "unit": "m³/h",
+      "endpoint_type": "TEXT",
+      "value": 0.52
+    },
     "eta_192_168_0_25__kessel_zählerstände_volllaststunden": {
       "url": "/40/10021/0/0/12153",
       "valid_values": null,

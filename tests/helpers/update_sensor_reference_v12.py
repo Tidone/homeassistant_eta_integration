@@ -237,11 +237,20 @@ async def run_update(args) -> int:
         # Load fixtures
         print("Loading fixtures...")
         endpoint_data = load_json(args.endpoint_data)
-        reference_values = load_json(args.reference_values)
+        if args.reference_values.exists():
+            reference_values = load_json(args.reference_values)
+            print(f"  Loaded reference data from {args.reference_values}")
+        else:
+            reference_values = {
+                "float_dict": {},
+                "switches_dict": {},
+                "text_dict": {},
+                "writable_dict": {},
+            }
+            print(f"  Reference file not found, will create: {args.reference_values}")
         print(
             f"  Loaded {len(endpoint_data)} endpoint responses from {args.endpoint_data}"
         )
-        print(f"  Loaded reference data from {args.reference_values}")
 
         # Create mocked API
         print(f"\nCreating mocked API (host={args.host}, port={args.port})...")
@@ -301,8 +310,9 @@ async def run_update(args) -> int:
 
         # Create backup and save updated reference
         if updater.stats["added"] > 0 or updater.stats["updated"] > 0:
-            backup_path = create_backup(args.reference_values)
-            print(f"\n✓ Created backup: {backup_path}")
+            if args.reference_values.exists():
+                backup_path = create_backup(args.reference_values)
+                print(f"\n✓ Created backup: {backup_path}")
 
             save_json(args.reference_values, updated_reference)
             print(f"✓ Updated: {args.reference_values}")
