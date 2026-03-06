@@ -115,6 +115,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         self._old_logging_level = logging.NOTSET
         self._endpoint_discovery_task: asyncio.Task | None = None
         self._endpoint_discovery_error: str | None = None
+        self._pending_user_error: str | None = None
 
     def _on_discovery_progress(self, message: str, progress: float | None) -> None:
         """Forward discovery progress updates to HA's progress tracking."""
@@ -125,6 +126,9 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
         self._errors = {}
+        if self._pending_user_error is not None:
+            self._errors["base"] = self._pending_user_error
+            self._pending_user_error = None
 
         # Uncomment the next 2 lines if only a single instance of the integration is allowed:
         # if self._async_current_entries():
@@ -151,9 +155,9 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             return await self.async_step_discover_entities()
 
         user_input = {}
-        # Provide defaults for form
-        user_input[CONF_HOST] = "0.0.0.0"
-        user_input[CONF_PORT] = "8080"
+        # Keep previously entered values when coming back from the progress screen.
+        user_input[CONF_HOST] = self.data.get(CONF_HOST, "0.0.0.0")
+        user_input[CONF_PORT] = self.data.get(CONF_PORT, "8080")
 
         return await self._show_config_form_user(user_input)
 
@@ -181,9 +185,10 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
 
         if self._endpoint_discovery_error is not None:
             self._restore_logging_level()
+            self._pending_user_error = self._endpoint_discovery_error
             self._endpoint_discovery_task = None
-            self._errors["base"] = self._endpoint_discovery_error
-            return await self._show_config_form_user(self.data)
+            self._endpoint_discovery_error = None
+            return self.async_show_progress_done(next_step_id="user")
 
         self._endpoint_discovery_task = None
         return self.async_show_progress_done(next_step_id="select_entities")
@@ -463,6 +468,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.advanced_options_writable_sensors = []
         self._options_update_task: asyncio.Task | None = None
         self._options_update_error: str | None = None
+        self._pending_init_error: str | None = None
 
     def _get_runtime_config(self) -> dict | None:
         """Return the loaded runtime config for this entry if available."""
@@ -500,6 +506,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def async_step_init(self, user_input=None):  # noqa: D102
         self._errors = {}
+        if self._pending_init_error is not None:
+            self._errors["base"] = self._pending_init_error
+            self._pending_init_error = None
         current_data = self._get_runtime_config()
         if current_data is None:
             return self.async_abort(reason="integration_busy")
@@ -542,9 +551,10 @@ class EtaOptionsFlowHandler(OptionsFlow):
             )
 
         if self._options_update_error is not None:
+            self._pending_init_error = self._options_update_error
             self._options_update_task = None
-            self._errors["base"] = self._options_update_error
-            return await self._show_initial_option_screen()
+            self._options_update_error = None
+            return self.async_show_progress_done(next_step_id="init")
 
         self._options_update_task = None
         return self.async_show_progress_done(next_step_id="user")
