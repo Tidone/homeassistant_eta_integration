@@ -72,6 +72,8 @@ FLOAT_SENSOR_UNITS = [
     "s",
     "°C",
     "%rH",
+    "m³",
+    "m³/h",
     CUSTOM_UNIT_UNITLESS,
 ]
 # The inclusion of CUSTOM_UNIT_UNITLESS in FLOAT_SENSOR_UNITS will also detect the serial number as a float sensor,

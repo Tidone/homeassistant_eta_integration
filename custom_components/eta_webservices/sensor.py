@@ -267,6 +267,8 @@ def _determine_device_class(unit):
         "mV": SensorDeviceClass.VOLTAGE,
         "s": SensorDeviceClass.DURATION,
         "%rH": SensorDeviceClass.HUMIDITY,
+        "m³": SensorDeviceClass.VOLUME,
+        "m³/h": SensorDeviceClass.VOLUME_FLOW_RATE,
     }
 
     if unit in unit_dict_eta:
