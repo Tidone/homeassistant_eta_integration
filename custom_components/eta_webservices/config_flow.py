@@ -112,6 +112,8 @@ def _is_invalid_host_input(host: str) -> bool:
         return True
 
     # Users should only enter host/IP, never full URLs or paths.
+    # This also prevents port forwarding via DDNS servies,
+    # but leaving the ETA terminal accessible from the internet is a terrible idea anyway.
     if "/" in normalized_host:
         return True
 
