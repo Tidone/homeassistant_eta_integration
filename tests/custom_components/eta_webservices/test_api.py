@@ -9,6 +9,127 @@ from custom_components.eta_webservices.api import EtaAPI
 
 
 @pytest.mark.asyncio
+async def test_get_all_sensors_falls_back_to_v11_on_version_check_timeout(
+    monkeypatch,
+):
+    """Test timeout during API-version check falls back to compatibility discovery."""
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.25", 8080)
+    api.is_correct_api_version = AsyncMock(side_effect=TimeoutError())
+
+    route_calls: dict[str, int] = {"v11": 0, "v12": 0}
+    progress_updates: list[tuple[str, float | None]] = []
+
+    class FakeDiscoveryV11:
+        """Fake v1.1 discovery implementation."""
+
+        def __init__(self, http_client, progress_callback=None) -> None:
+            self._progress_callback = progress_callback
+
+        async def get_all_sensors(
+            self, float_dict, switches_dict, text_dict, writable_dict
+        ):
+            route_calls["v11"] += 1
+            if self._progress_callback is not None:
+                self._progress_callback("fake-v11-discovery", 0.2)
+
+    class FakeDiscoveryV12:
+        """Fake v1.2 discovery implementation."""
+
+        def __init__(self, http_client, progress_callback=None) -> None:
+            self._progress_callback = progress_callback
+
+        async def get_all_sensors(
+            self, float_dict, switches_dict, text_dict, writable_dict
+        ):
+            route_calls["v12"] += 1
+            if self._progress_callback is not None:
+                self._progress_callback("fake-v12-discovery", 0.2)
+
+    monkeypatch.setattr(
+        "custom_components.eta_webservices.api.SensorDiscoveryV11",
+        FakeDiscoveryV11,
+    )
+    monkeypatch.setattr(
+        "custom_components.eta_webservices.api.SensorDiscoveryV12",
+        FakeDiscoveryV12,
+    )
+
+    await api.get_all_sensors(
+        False,
+        {},
+        {},
+        {},
+        {},
+        progress_callback=lambda msg, prog: progress_updates.append((msg, prog)),
+    )
+
+    assert route_calls["v11"] == 1
+    assert route_calls["v12"] == 0
+    assert any("timed out" in msg for msg, _ in progress_updates)
+    assert any("compatibility discovery mode" in msg for msg, _ in progress_updates)
+
+
+@pytest.mark.asyncio
+async def test_get_all_sensors_reports_progress_for_v12_route(monkeypatch):
+    """Test progress callback receives startup updates and v1.2 route is used."""
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.25", 8080)
+    api.is_correct_api_version = AsyncMock(return_value=True)
+
+    route_calls: dict[str, int] = {"v11": 0, "v12": 0}
+    progress_updates: list[tuple[str, float | None]] = []
+
+    class FakeDiscoveryV12:
+        """Fake v1.2 discovery implementation."""
+
+        def __init__(self, http_client, progress_callback=None) -> None:
+            self._progress_callback = progress_callback
+
+        async def get_all_sensors(
+            self, float_dict, switches_dict, text_dict, writable_dict
+        ):
+            route_calls["v12"] += 1
+            if self._progress_callback is not None:
+                self._progress_callback("fake-v12-running", 0.4)
+
+    class FakeDiscoveryV11:
+        """Fake v1.1 discovery implementation."""
+
+        def __init__(self, http_client, progress_callback=None) -> None:
+            self._progress_callback = progress_callback
+
+        async def get_all_sensors(
+            self, float_dict, switches_dict, text_dict, writable_dict
+        ):
+            route_calls["v11"] += 1
+
+    monkeypatch.setattr(
+        "custom_components.eta_webservices.api.SensorDiscoveryV11",
+        FakeDiscoveryV11,
+    )
+    monkeypatch.setattr(
+        "custom_components.eta_webservices.api.SensorDiscoveryV12",
+        FakeDiscoveryV12,
+    )
+
+    await api.get_all_sensors(
+        False,
+        {},
+        {},
+        {},
+        {},
+        progress_callback=lambda msg, prog: progress_updates.append((msg, prog)),
+    )
+
+    assert route_calls["v12"] == 1
+    assert route_calls["v11"] == 0
+    assert ("Checking ETA API version", 0.01) in progress_updates
+    assert ("Using ETA API v1.2 discovery mode", 0.05) in progress_updates
+    assert ("fake-v12-running", 0.4) in progress_updates
+
+
+@pytest.mark.asyncio
 async def test_get_all_sensors_v12(load_fixture):
     """Test get_all_sensors with API v1.2 using real fixture data.
 

@@ -5,6 +5,7 @@ version detection and routing to the appropriate sensor discovery implementation
 """
 
 import asyncio
+from collections.abc import Callable
 import logging
 
 from packaging import version
@@ -59,7 +60,13 @@ class EtaAPI:
         )
 
     async def get_all_sensors(
-        self, force_legacy_mode, float_dict, switches_dict, text_dict, writable_dict
+        self,
+        force_legacy_mode,
+        float_dict,
+        switches_dict,
+        text_dict,
+        writable_dict,
+        progress_callback: Callable[[str, float | None], None] | None = None,
     ):
         """Enumerate all possible sensors on the ETA API.
 
@@ -72,15 +79,53 @@ class EtaAPI:
         :param text_dict: Dictionary which will be filled with all text sensors
         :param writable_dict: Dictionary which will be filled with all writable sensors
         """
-        if not force_legacy_mode and await self.is_correct_api_version():
+        if progress_callback is not None:
+            progress_callback("Checking ETA API version", 0.01)
+
+        is_new_api = False
+        if not force_legacy_mode:
+            try:
+                # Avoid long "no progress" stalls before discovery starts.
+                is_new_api = await asyncio.wait_for(
+                    self.is_correct_api_version(), timeout=20
+                )
+            except TimeoutError:
+                _LOGGER.warning(
+                    "ETA API version check timed out after 20s, falling back to legacy discovery mode"
+                )
+                if progress_callback is not None:
+                    progress_callback(
+                        "API version check timed out, using compatibility discovery",
+                        0.03,
+                    )
+            except Exception:  # noqa: BLE001
+                _LOGGER.warning(
+                    "ETA API version check failed, falling back to legacy discovery mode",
+                    exc_info=True,
+                )
+                if progress_callback is not None:
+                    progress_callback(
+                        "API version check failed, using compatibility discovery",
+                        0.03,
+                    )
+
+        if is_new_api:
             # New version with varinfo endpoint detected
-            sensor_discovery = SensorDiscoveryV12(self._http)
+            if progress_callback is not None:
+                progress_callback("Using ETA API v1.2 discovery mode", 0.05)
+            sensor_discovery = SensorDiscoveryV12(
+                self._http, progress_callback=progress_callback
+            )
             await sensor_discovery.get_all_sensors(
                 float_dict, switches_dict, text_dict, writable_dict
             )
         else:
             # varinfo not available -> fall back to compatibility mode
-            sensor_discovery = SensorDiscoveryV11(self._http)
+            if progress_callback is not None:
+                progress_callback("Using ETA compatibility discovery mode", 0.05)
+            sensor_discovery = SensorDiscoveryV11(
+                self._http, progress_callback=progress_callback
+            )
             await sensor_discovery.get_all_sensors(
                 float_dict, switches_dict, text_dict, writable_dict
             )

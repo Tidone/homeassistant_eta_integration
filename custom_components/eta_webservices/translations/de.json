@@ -42,6 +42,9 @@
         "abort": {
             "integration_busy": "Die Integration wird gerade noch gestartet oder neu geladen. Bitte warte einen Moment und versuche das Konfigurieren dann erneut."
         },
+        "progress": {
+            "prepare_entities": "Entitätsdaten werden im Hintergrund vorbereitet. Das kann bei großen Anlagen mehrere Minuten dauern. Home Assistant fährt automatisch fort, sobald der Vorgang abgeschlossen ist."
+        },
         "step": {
             "init": {
                 "title": "Optionen",
@@ -79,6 +82,7 @@
         },
         "error": {
             "wrong_api_version": "API Version des ETA Geräts ist zu alt. Einige Entitäten werden möglicherweise nicht oder falsch erkannt. Aktualisiere die Firmware deines ETA Geräts auf die aktuellste Firmware, falls möglich.",
+            "endpoint_discovery_failed": "Die Suche nach verfügbaren Entitäten ist fehlgeschlagen. Bitte versuche es erneut und prüfe die Protokolle, falls das Problem bestehen bleibt.",
             "value_update_error": "Mindestens ein Endpunkt konnte nicht aktualisiert werden. Du musst die Liste der verfügbaren Sensoren eventuell aktualisieren..",
             "unavailable_sensors": "Mindestens ein ausgewählter Sensor ist nicht mehr verfügbar oder wurde verschoben. Bitte überprüfe die Listen der ausgewählten Sensoren auf fehlende oder falsch detektierte Sensoren. Du findest eine Liste der betroffenen Sensoren am Ende."
         }
