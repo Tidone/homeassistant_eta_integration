@@ -19,7 +19,8 @@
                     "chosen_float_sensors": "Possible sensors",
                     "chosen_switches": "Possible switches",
                     "chosen_text_sensors": "Possible state sensors",
-                    "chosen_writable_sensors": "Possible writable sensors"
+                    "chosen_writable_sensors": "Possible writable sensors",
+                    "chosen_pending_sensors": "Possible pending sensors, which may become available later"
                 }
             }
         },
@@ -69,6 +70,7 @@
                     "chosen_switches": "Possible switches",
                     "chosen_text_sensors": "Possible state sensors",
                     "chosen_writable_sensors": "Possible writable sensors",
+                    "chosen_pending_sensors": "Possible pending sensors, which may become available later",
                     "unavailable_sensors": "Unavailable sensors"
                 }
             },

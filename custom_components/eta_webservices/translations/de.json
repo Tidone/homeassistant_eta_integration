@@ -19,7 +19,8 @@
                     "chosen_float_sensors": "Sensoren",
                     "chosen_switches": "Schalter",
                     "chosen_text_sensors": "Zustandssensoren",
-                    "chosen_writable_sensors": "Schreibbare Sensoren"
+                    "chosen_writable_sensors": "Schreibbare Sensoren",
+                    "chosen_pending_sensors": "Sensoren, die erst später verfügbar werden könnten"
                 }
             }
         },
@@ -69,6 +70,7 @@
                     "chosen_switches": "Schalter",
                     "chosen_text_sensors": "Zustandssensoren",
                     "chosen_writable_sensors": "Schreibbare Sensoren",
+                    "chosen_pending_sensors": "Sensoren, die erst später verfügbar werden könnten",
                     "unavailable_sensors": "Nicht verfügbare Sensoren"
                 }
             },

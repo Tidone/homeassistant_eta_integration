@@ -66,7 +66,7 @@ class EtaAPI:
         switches_dict,
         text_dict,
         writable_dict,
-        pending_dict,,
+        pending_dict,
         progress_callback: Callable[[str, float | None], None] | None = None,
     ):
         """Enumerate all possible sensors on the ETA API.

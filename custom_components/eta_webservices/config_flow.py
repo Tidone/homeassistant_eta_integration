@@ -885,13 +885,15 @@ class EtaOptionsFlowHandler(OptionsFlow):
     def _verify_pending_sensors(
         self,
         new_pending_sensors: dict,
+        new_float_sensors: dict,
         current_float_sensors: dict,
     ) -> int:
         # Pending sensors which are already available as regular sensors can be removed from the pending sensors list
         deleted_pending_count = 0
-        for key in new_pending_sensors:
+        for key in list(new_pending_sensors.keys()):
             if key in current_float_sensors:
                 del new_pending_sensors[key]
+                new_float_sensors[key] = current_float_sensors[key]
                 deleted_pending_count += 1
         return deleted_pending_count
 
@@ -1074,7 +1076,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             )
 
             removed_pending_count = self._verify_pending_sensors(
-                new_pending_sensors, self.data[FLOAT_DICT]
+                new_pending_sensors, new_float_sensors, self.data[FLOAT_DICT]
             )
             _LOGGER.info(
                 "Verified pending sensors, removed %i sensors which are now available as regular sensors from the pending sensors list",
