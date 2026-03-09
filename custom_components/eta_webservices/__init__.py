@@ -9,6 +9,7 @@ from homeassistant.const import Platform
 
 from .const import (
     CHOSEN_FLOAT_SENSORS,
+    CHOSEN_PENDING_SENSORS,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
@@ -18,6 +19,8 @@ from .const import (
     FLOAT_DICT,
     FORCE_LEGACY_MODE,
     MAX_PARALLEL_REQUESTS,
+    PENDING_DICT,
+    PENDING_UPDATE_COORDINATOR,
     REQUEST_SEMAPHORE,
     SENSOR_UPDATE_COORDINATOR,
     TEXT_DICT,
@@ -26,6 +29,7 @@ from .const import (
 )
 from .coordinator import (
     ETAErrorUpdateCoordinator,
+    ETAPendingNodeCoordinator,
     ETASensorUpdateCoordinator,
     ETAWritableUpdateCoordinator,
 )
@@ -50,9 +54,7 @@ async def async_setup_entry(
     hass.data.setdefault(DOMAIN, {})
     config = dict(entry.data)
     # Registers update listener to update config entry when options are updated.
-    unsub_options_update_listener = entry.add_update_listener(options_update_listener)
-    # Store a reference to the unsubscribe function to cleanup if an entry is unloaded.
-    config["unsub_options_update_listener"] = unsub_options_update_listener
+    entry.async_on_unload(entry.add_update_listener(options_update_listener))
 
     # Merge the options with the config
     # The options are set if a user configures the integration after the initial set-up
@@ -69,9 +71,11 @@ async def async_setup_entry(
     error_coordinator = ETAErrorUpdateCoordinator(hass, config)
     sensor_coordinator = ETASensorUpdateCoordinator(hass, config)
     writable_coordinator = ETAWritableUpdateCoordinator(hass, config)
+    pending_coordinator = ETAPendingNodeCoordinator(hass, config, entry)
     config[ERROR_UPDATE_COORDINATOR] = error_coordinator
     config[SENSOR_UPDATE_COORDINATOR] = sensor_coordinator
     config[WRITABLE_UPDATE_COORDINATOR] = writable_coordinator
+    config[PENDING_UPDATE_COORDINATOR] = pending_coordinator
 
     # Prime coordinators once before entities are added to avoid initial update bursts.
     await error_coordinator.async_config_entry_first_refresh()
@@ -82,6 +86,11 @@ async def async_setup_entry(
 
     # Forward the setup to the sensor platform.
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Schedule the pending-node check after platform setup so that the
+    # options_update_listener (registered above) is already in place before
+    # any promotion fires and updates the options.
+    hass.async_create_task(pending_coordinator.async_refresh())
 
     await async_setup_services(hass, entry)
 
@@ -96,8 +105,6 @@ async def async_migrate_entry(  # noqa: D103
     # also make sure to move currently selected sensors
     def migrate_to_v6(new_data: dict[str, Any]):
         # Merge the options with the initial data to make sure we operate on the most recent data
-        if config_entry.options:
-            new_data.update(config_entry.options)
 
         chosen_custom_unit_sensors = [
             entry
@@ -128,18 +135,29 @@ async def async_migrate_entry(  # noqa: D103
         # and add them to the TEXT_DICT instead
         new_data[TEXT_DICT].update(custom_unit_sensors)
 
+    def migrate_to_v7(new_data: dict[str, Any]):
+        new_data.setdefault(PENDING_DICT, {})
+        new_data.setdefault(CHOSEN_PENDING_SENSORS, [])
+
+    def _get_new_data():
+        new_data = config_entry.data.copy()
+        if config_entry.options:
+            new_data.update(config_entry.options)
+        return new_data
+
     _LOGGER.debug("Migrating from version %s", config_entry.version)
 
-    new_version = 6
+    new_version = 7
 
     if config_entry.version == 1:
-        new_data = config_entry.data.copy()
+        new_data = _get_new_data()
 
         new_data[WRITABLE_DICT] = []
         new_data[CHOSEN_WRITABLE_SENSORS] = []
         new_data[FORCE_LEGACY_MODE] = False
 
         migrate_to_v6(new_data)
+        migrate_to_v7(new_data)
 
         hass.config_entries.async_update_entry(
             config_entry,
@@ -148,11 +166,12 @@ async def async_migrate_entry(  # noqa: D103
             version=new_version,
         )
     elif config_entry.version == 2:
-        new_data = config_entry.data.copy()
+        new_data = _get_new_data()
 
         new_data[FORCE_LEGACY_MODE] = False
 
         migrate_to_v6(new_data)
+        migrate_to_v7(new_data)
 
         hass.config_entries.async_update_entry(
             config_entry,
@@ -161,8 +180,18 @@ async def async_migrate_entry(  # noqa: D103
             version=new_version,
         )
     elif config_entry.version in (3, 4, 5):
-        new_data = config_entry.data.copy()
+        new_data = _get_new_data()
         migrate_to_v6(new_data)
+        migrate_to_v7(new_data)
+        hass.config_entries.async_update_entry(
+            config_entry,
+            data=new_data,
+            options={},
+            version=new_version,
+        )
+    elif config_entry.version == 6:
+        new_data = _get_new_data()
+        migrate_to_v7(new_data)
         hass.config_entries.async_update_entry(
             config_entry,
             data=new_data,
@@ -191,9 +220,6 @@ async def async_unload_entry(
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
     if unload_ok:
-        # Remove options_update_listener.
-        hass.data[DOMAIN][entry.entry_id]["unsub_options_update_listener"]()
-
         # Remove config entry from domain.
         hass.data[DOMAIN].pop(entry.entry_id)
 

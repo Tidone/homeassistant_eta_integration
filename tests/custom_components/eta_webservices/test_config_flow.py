@@ -12,23 +12,27 @@ def test_sanitize_selected_entity_ids_removes_cross_category_duplicates():
     selected_switches = ["b", "c", "c"]
     selected_text_sensors = ["a", "c", "d", "d"]
     selected_writable_sensors = ["w1", "w1"]
+    selected_pending_sensors = ["a", "d", "e", "e"]
 
     (
         sanitized_float_sensors,
         sanitized_switches,
         sanitized_text_sensors,
         sanitized_writable_sensors,
+        sanitized_pending_sensors,
     ) = _sanitize_selected_entity_ids(
         selected_float_sensors,
         selected_switches,
         selected_text_sensors,
         selected_writable_sensors,
+        selected_pending_sensors,
     )
 
     assert sanitized_float_sensors == ["a", "b"]
     assert sanitized_switches == ["c"]
     assert sanitized_text_sensors == ["d"]
     assert sanitized_writable_sensors == ["w1"]
+    assert sanitized_pending_sensors == ["e"]
 
 
 def test_sanitize_selected_entity_ids_keeps_non_overlapping_selections():
@@ -37,23 +41,27 @@ def test_sanitize_selected_entity_ids_keeps_non_overlapping_selections():
     selected_switches = ["switch_1"]
     selected_text_sensors = ["text_1"]
     selected_writable_sensors = ["writable_1", "writable_2"]
+    selected_pending_sensors = ["pending_1"]
 
     (
         sanitized_float_sensors,
         sanitized_switches,
         sanitized_text_sensors,
         sanitized_writable_sensors,
+        sanitized_pending_sensors,
     ) = _sanitize_selected_entity_ids(
         selected_float_sensors,
         selected_switches,
         selected_text_sensors,
         selected_writable_sensors,
+        selected_pending_sensors,
     )
 
     assert sanitized_float_sensors == selected_float_sensors
     assert sanitized_switches == selected_switches
     assert sanitized_text_sensors == selected_text_sensors
     assert sanitized_writable_sensors == selected_writable_sensors
+    assert sanitized_pending_sensors == selected_pending_sensors
 
 
 def test_is_invalid_host_input_rejects_malformed_hosts():

@@ -6,6 +6,7 @@ from asyncio import timeout
 from datetime import timedelta
 import logging
 
+from homeassistant import config_entries
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -14,6 +15,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from .api import EtaAPI, ETAEndpoint, ETAError
 from .const import (
     CHOSEN_FLOAT_SENSORS,
+    CHOSEN_PENDING_SENSORS,
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
@@ -24,6 +26,7 @@ from .const import (
     DOMAIN,
     FLOAT_DICT,
     MAX_PARALLEL_REQUESTS,
+    PENDING_DICT,
     REQUEST_SEMAPHORE,
     REQUEST_TIMEOUT,
     SWITCHES_DICT,
@@ -34,6 +37,9 @@ from .const import (
 DATA_SCAN_INTERVAL = timedelta(minutes=1)
 # The error endpoint does not have to be updated as often.
 ERROR_SCAN_INTERVAL = timedelta(minutes=2)
+# The pending node coordinator doen't need to run often
+#  since pending nodes are expected to be valid for more than a few minutes at a time
+PENDING_SCAN_INTERVAL = timedelta(minutes=5)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -268,3 +274,94 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
             for sensor in self.chosen_writable_sensors
         }
         return await eta_client.get_all_data(sensor_list)
+
+
+class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
+    """Periodically re-checks pending nodes and promotes them to float sensors when valid."""
+
+    def __init__(
+        self, hass: HomeAssistant, config: dict, entry: config_entries.ConfigEntry
+    ) -> None:
+        """Initialize."""
+        self.entry = entry
+        self.host = config.get(CONF_HOST)
+        self.port = config.get(CONF_PORT)
+        self.session = async_get_clientsession(hass)
+        self.max_parallel_requests = int(config.get(MAX_PARALLEL_REQUESTS, 5))
+        self.request_semaphore = config.get(REQUEST_SEMAPHORE)
+        # Keep a live reference so config_flow rediscoveries update us automatically.
+        self.pending_dict: dict[str, ETAEndpoint] = config.get(PENDING_DICT, {})
+
+        super().__init__(
+            hass,
+            _LOGGER,
+            name=DOMAIN,
+            update_interval=PENDING_SCAN_INTERVAL,
+        )
+
+    def _create_eta_client(self):
+        return EtaAPI(
+            self.session,
+            self.host,
+            self.port,
+            max_concurrent_requests=self.max_parallel_requests,
+            request_semaphore=self.request_semaphore,
+        )
+
+    async def _async_update_data(self) -> bool:
+        """Check pending nodes and promote any that have become valid."""
+        if not self.pending_dict:
+            return False
+
+        eta_client = self._create_eta_client()
+        pending_uris = {info["url"]: {} for info in self.pending_dict.values()}
+
+        # Concurrent var-endpoint fetch — a numeric value means the node is now valid.
+        async with timeout(REQUEST_TIMEOUT):
+            all_values = await eta_client.get_all_data(pending_uris)
+
+        promoted: dict[str, ETAEndpoint] = {}
+        for unique_key, endpoint_info in list(self.pending_dict.items()):
+            uri = endpoint_info["url"]
+            value = all_values.get(uri, None)
+            if not isinstance(value, (int, float)):
+                continue
+
+            # Fetch (value, unit) so we can fully populate the ETAEndpoint.
+            async with timeout(REQUEST_TIMEOUT):
+                live_value, live_unit = await eta_client.get_data(uri)
+            updated: ETAEndpoint = {
+                **endpoint_info,
+                "value": live_value,
+                "unit": live_unit,
+            }  # type: ignore[typeddict-item]
+            promoted[unique_key] = updated
+
+        if not promoted:
+            return False
+
+        # Build the effective config dict (data overridden by options, same as async_setup_entry).
+        current = {**self.entry.data}
+        if self.entry.options:
+            current.update(self.entry.options)
+
+        for unique_key, endpoint in promoted.items():
+            current.setdefault(PENDING_DICT, {}).pop(unique_key, None)
+            self.pending_dict.pop(unique_key, None)
+            current.setdefault(FLOAT_DICT, {})[unique_key] = endpoint
+
+            # Auto-promote pre-selected pending sensors to CHOSEN_FLOAT_SENSORS.
+            chosen_pending: list[str] = current.setdefault(CHOSEN_PENDING_SENSORS, [])
+            if unique_key in chosen_pending:
+                chosen_pending.remove(unique_key)
+                current.setdefault(CHOSEN_FLOAT_SENSORS, []).append(unique_key)
+
+            _LOGGER.info(
+                "Pending sensor %s is now valid (unit=%s), promoting to float sensor",
+                unique_key,
+                endpoint["unit"],
+            )
+
+        # Persist as options — the existing options_update_listener triggers a reload.
+        self.hass.config_entries.async_update_entry(self.entry, options=current)
+        return True

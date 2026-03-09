@@ -186,7 +186,7 @@ async def test_get_all_sensors_v12(load_fixture):
     writable_dict = {}
 
     # Execute the public method with force_legacy_mode=False
-    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict, {})
     
     # Assertions
     # Verify expected entries from target values
@@ -397,7 +397,7 @@ async def test_get_all_sensors_v12_handles_exceptions():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict, {})
 
     # Valid sensor should be in float_dict
     assert len(float_dict) > 0, "Valid float sensor should be added to float_dict"
@@ -463,7 +463,7 @@ async def test_get_all_sensors_v12_skips_duplicates(load_fixture):
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict, {})
 
     # Verify that the duplicate endpoint was only queried once
     varinfo_key = "/user/varinfo//120/10111/0/0/12271"
@@ -533,7 +533,7 @@ async def test_get_all_sensors_v11(load_fixture):
     writable_dict = {}
 
     # Execute the public method with force_legacy_mode=False
-    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict, {})
     
     # Assertions
     # Verify expected entries from reference values
@@ -738,7 +738,7 @@ async def test_get_all_sensors_v11_distinguishes_sensor_types():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict, {})
 
     # Verify sensor type identification
     assert len(float_dict) > 0, "Float sensor should be added"
@@ -804,7 +804,7 @@ async def test_get_all_sensors_v11_skips_duplicates():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict, {})
 
     # Verify duplicate was only queried once
     var_key = "/user/var//120/10101/0/0/12197"
@@ -873,7 +873,7 @@ async def test_get_all_sensors_force_legacy_mode(load_fixture):
     writable_dict = {}
 
     # Execute with force_legacy_mode=True
-    await api.get_all_sensors(True, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(True, float_dict, switches_dict, text_dict, writable_dict, {})
 
     # Verify version check was NOT called (short-circuit evaluation)
     assert len(version_check_called) == 0, "is_correct_api_version should not be called when force_legacy_mode=True"
@@ -977,7 +977,7 @@ async def test_get_all_sensors_v12_respects_concurrent_request_limit():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict, {})
 
     # Verify concurrent limit was respected
     assert max_concurrent <= api._http.max_concurrent_requests, (
@@ -1062,7 +1062,7 @@ async def test_get_all_sensors_v11_respects_concurrent_request_limit():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict)
+    await api.get_all_sensors(False, float_dict, switches_dict, text_dict, writable_dict, {})
 
     # Verify concurrent limit was respected
     assert max_concurrent <= api._http.max_concurrent_requests, (

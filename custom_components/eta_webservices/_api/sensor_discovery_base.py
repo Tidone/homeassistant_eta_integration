@@ -83,6 +83,7 @@ class SensorDiscoveryBase(ABC):
         switches_dict: dict,
         text_dict: dict,
         writable_dict: dict,
+        pending_dict: dict,
     ):
         """Discover and enumerate all sensors.
 
@@ -90,4 +91,5 @@ class SensorDiscoveryBase(ABC):
         :param switches_dict: Dictionary to fill with switch sensors
         :param text_dict: Dictionary to fill with text sensors
         :param writable_dict: Dictionary to fill with writable sensors
+        :param pending_dict: Dictionary to fill with pending sensors (v1.2 only)
         """

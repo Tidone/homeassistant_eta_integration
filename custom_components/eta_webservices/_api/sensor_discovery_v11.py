@@ -118,7 +118,7 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
     # runlength w/ optimizations (sem=10): 7s
 
     async def get_all_sensors(
-        self, float_dict, switches_dict, text_dict, writable_dict
+        self, float_dict, switches_dict, text_dict, writable_dict, pending_dict
     ):
         """Enumerate all sensors using v1.1 methods."""
         self._emit_progress("Loading endpoint list", 0.05)
