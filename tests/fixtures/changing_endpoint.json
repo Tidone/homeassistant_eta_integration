@@ -1,0 +1,10 @@
+{
+    "invalid": {
+        "/user/var//40/10021/0/11108/0": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<eta version=\"1.0\" xmlns=\"http://www.eta.co.at/rest/v1\">\n  <value uri=\"/user/var/40/10021/0/11108/0\" strValue=\"---\" unit=\"\" decPlaces=\"1\" scaleFactor=\"100\" advTextOffset=\"0\">0</value>\n</eta>\n",
+        "/user/varinfo//40/10021/0/11108/0": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<eta version=\"1.0\" xmlns=\"http://www.eta.co.at/rest/v1\">\n  <varInfo uri=\"/user/varinfo/40/10021/0/11108/0\">\n    <variable uri=\"40/10021/0/11108/0\" name=\"Restsauerstoff\" fullName=\"Eing\u00e4nge &gt; Restsauerstoff\" unit=\"\" decPlaces=\"1\" scaleFactor=\"100\" advTextOffset=\"0\" isWritable=\"0\">\n      <type>DEFAULT</type>\n    </variable>\n  </varInfo>\n</eta>\n"
+    },
+    "valid": {
+        "/user/var//40/10021/0/11108/0": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<eta version=\"1.0\" xmlns=\"http://www.eta.co.at/rest/v1\">\n  <value uri=\"/user/var/40/10021/0/11108/0\" strValue=\"20,6\" unit=\"%\" decPlaces=\"1\" scaleFactor=\"100\" advTextOffset=\"0\">2064</value>\n</eta>\n",
+        "/user/varinfo//40/10021/0/11108/0": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<eta version=\"1.0\" xmlns=\"http://www.eta.co.at/rest/v1\">\n  <varInfo uri=\"/user/varinfo/40/10021/0/11108/0\">\n    <variable uri=\"40/10021/0/11108/0\" name=\"Restsauerstoff\" fullName=\"Eing\u00e4nge &gt; Restsauerstoff\" unit=\"%\" decPlaces=\"1\" scaleFactor=\"100\" advTextOffset=\"0\" isWritable=\"0\">\n      <type>DEFAULT</type>\n    </variable>\n  </varInfo>\n</eta>\n"
+    }
+}

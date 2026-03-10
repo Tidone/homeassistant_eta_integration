@@ -38,7 +38,7 @@ DATA_SCAN_INTERVAL = timedelta(minutes=1)
 # The error endpoint does not have to be updated as often.
 ERROR_SCAN_INTERVAL = timedelta(minutes=2)
 # The pending node coordinator doen't need to run often
-#  since pending nodes are expected to be valid for more than a few minutes at a time
+# since pending nodes are expected to be valid for more than a few minutes at a time
 PENDING_SCAN_INTERVAL = timedelta(minutes=5)
 
 _LOGGER = logging.getLogger(__name__)
@@ -299,6 +299,9 @@ class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
             update_interval=PENDING_SCAN_INTERVAL,
         )
 
+        # Dummy listener to ensure coordinator doesn't stop when no entities are attached.
+        self.async_add_listener(lambda: None)
+
     def _create_eta_client(self):
         return EtaAPI(
             self.session,
@@ -334,7 +337,7 @@ class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
                 **endpoint_info,
                 "value": live_value,
                 "unit": live_unit,
-            }  # type: ignore[typeddict-item]
+            }
             promoted[unique_key] = updated
 
         if not promoted:

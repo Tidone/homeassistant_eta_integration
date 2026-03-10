@@ -13,7 +13,7 @@
             },
             "select_entities": {
                 "title": "Choose entities",
-                "description": "Select which discovered ETA entities should be added to Home Assistant.\n\nSensors: {float_count}\nSwitches: {switch_count}\nState sensors: {text_count}\nWritable sensors: {writable_count}\n**Total: {total_count}**\n\nEnable auto-select-all if you want to add everything at once. On large systems this can create several hundred entities.",
+                "description": "Select which discovered ETA entities should be added to Home Assistant.\n\nSensors: {float_count}\nSwitches: {switch_count}\nState sensors: {text_count}\nWritable sensors: {writable_count}\nPending sensors: {pending_count}\n**Total: {total_count}**\n\nEnable auto-select-all if you want to add everything at once. On large systems this can create several hundred entities.",
                 "data": {
                     "auto_select_all_entities": "Automatically select all discovered entities",
                     "chosen_float_sensors": "Possible sensors",
@@ -63,7 +63,7 @@
             },
             "user": {
                 "title": "Choose entities",
-                "description": "Select which discovered ETA entities should be added to Home Assistant.\n\nSensors: {float_count}\nSwitches: {switch_count}\nState sensors: {text_count}\nWritable sensors: {writable_count}\n**Total: {total_count}**\n\nEnable auto-select-all if you want to add everything at once. On large systems this can create several hundred entities.",
+                "description": "Select which discovered ETA entities should be added to Home Assistant.\n\nSensors: {float_count}\nSwitches: {switch_count}\nState sensors: {text_count}\nWritable sensors: {writable_count}\nPending sensors: {pending_count}\n**Total: {total_count}**\n\nEnable auto-select-all if you want to add everything at once. On large systems this can create several hundred entities.",
                 "data": {
                     "auto_select_all_entities": "Automatically select all discovered entities",
                     "chosen_float_sensors": "Possible sensors",

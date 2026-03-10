@@ -891,6 +891,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         # Pending sensors which are already available as regular sensors can be removed from the pending sensors list
         deleted_pending_count = 0
         for key in list(new_pending_sensors.keys()):
+            # Pending sensors will only be promoted to float sensors, so we don't need to check the other sensor categories here
             if key in current_float_sensors:
                 del new_pending_sensors[key]
                 new_float_sensors[key] = current_float_sensors[key]
