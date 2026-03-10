@@ -2,7 +2,7 @@
 
 import pytest
 from copy import deepcopy
-from unittest.mock import AsyncMock, MagicMock, Mock
+from unittest.mock import AsyncMock, MagicMock, Mock, patch
 from aiohttp import ClientSession
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
@@ -192,8 +192,20 @@ async def test_valid_node_does_not_go_to_pending_dict():
 # ---------------------------------------------------------------------------
 
 
+@pytest.fixture
+def mock_client_session():
+    """Patch async_get_clientsession so coordinator.__init__ never creates a real session."""
+    with patch(
+        "custom_components.eta_webservices.coordinator.async_get_clientsession",
+        return_value=MagicMock(spec=ClientSession),
+    ):
+        yield
+
+
 @pytest.mark.asyncio
-async def test_coordinator_promotes_valid_pending_node(hass: HomeAssistant):
+async def test_coordinator_promotes_valid_pending_node(
+    hass: HomeAssistant, mock_client_session
+):
     """_async_update_data must promote a pending node when get_all_data returns numeric."""
     pending_key = "eta_192_168_0_25__eingänge_restsauerstoff"
     pending_endpoint = {
@@ -263,7 +275,7 @@ async def test_coordinator_promotes_valid_pending_node(hass: HomeAssistant):
 
 @pytest.mark.asyncio
 async def test_coordinator_promotes_preselected_pending_node_to_chosen_float(
-    hass: HomeAssistant,
+    hass: HomeAssistant, mock_client_session
 ):
     """A pre-selected pending node must also be added to CHOSEN_FLOAT_SENSORS on promotion."""
     pending_key = "eta_192_168_0_25__eingänge_restsauerstoff"
@@ -321,7 +333,7 @@ async def test_coordinator_promotes_preselected_pending_node_to_chosen_float(
 
 
 @pytest.mark.asyncio
-async def test_coordinator_no_promotion_when_still_invalid(hass: HomeAssistant):
+async def test_coordinator_no_promotion_when_still_invalid(hass: HomeAssistant, mock_client_session):
     """_async_update_data must return False if no pending node has become valid."""
     pending_key = "eta_192_168_0_25__eingänge_restsauerstoff"
     pending_endpoint = {
@@ -362,7 +374,7 @@ async def test_coordinator_no_promotion_when_still_invalid(hass: HomeAssistant):
 
 
 @pytest.mark.asyncio
-async def test_coordinator_returns_false_with_empty_pending_dict(hass: HomeAssistant):
+async def test_coordinator_returns_false_with_empty_pending_dict(hass: HomeAssistant, mock_client_session):
     """_async_update_data must short-circuit and return False if pending_dict is empty."""
     config = {"host": "192.168.0.25", "port": 8080, PENDING_DICT: {}}
 
