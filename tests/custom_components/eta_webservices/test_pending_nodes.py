@@ -2,9 +2,8 @@
 
 import pytest
 from copy import deepcopy
-from unittest.mock import AsyncMock, MagicMock, Mock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 from aiohttp import ClientSession
-from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 
 from custom_components.eta_webservices.api import EtaAPI
@@ -193,6 +192,12 @@ async def test_valid_node_does_not_go_to_pending_dict():
 
 
 @pytest.fixture
+def mock_hass():
+    """Lightweight MagicMock standing in for HomeAssistant; avoids real event-loop machinery."""
+    return MagicMock()
+
+
+@pytest.fixture
 def mock_client_session():
     """Patch async_get_clientsession so coordinator.__init__ never creates a real session."""
     with patch(
@@ -203,9 +208,7 @@ def mock_client_session():
 
 
 @pytest.mark.asyncio
-async def test_coordinator_promotes_valid_pending_node(
-    hass: HomeAssistant, mock_client_session
-):
+async def test_coordinator_promotes_valid_pending_node(mock_hass, mock_client_session):
     """_async_update_data must promote a pending node when get_all_data returns numeric."""
     pending_key = "eta_192_168_0_25__eingänge_restsauerstoff"
     pending_endpoint = {
@@ -236,10 +239,9 @@ async def test_coordinator_promotes_valid_pending_node(
         CHOSEN_PENDING_SENSORS: [],
     }
     entry.options = {}
+    entry.pref_disable_polling = False
 
-    hass.config_entries.async_update_entry = Mock()
-
-    coordinator = ETAPendingNodeCoordinator(hass, config, entry)
+    coordinator = ETAPendingNodeCoordinator(mock_hass, config, entry)
 
     # Mock the ETA client created inside the coordinator.
     mock_eta_client = MagicMock()
@@ -257,8 +259,8 @@ async def test_coordinator_promotes_valid_pending_node(
     )
 
     # async_update_entry must have been called with the promoted data.
-    hass.config_entries.async_update_entry.assert_called_once()
-    call_kwargs = hass.config_entries.async_update_entry.call_args
+    mock_hass.config_entries.async_update_entry.assert_called_once()
+    call_kwargs = mock_hass.config_entries.async_update_entry.call_args
     new_options = (
         call_kwargs[1]["options"] if "options" in call_kwargs[1] else call_kwargs[0][1]
     )
@@ -273,9 +275,10 @@ async def test_coordinator_promotes_valid_pending_node(
     )
 
 
+
 @pytest.mark.asyncio
 async def test_coordinator_promotes_preselected_pending_node_to_chosen_float(
-    hass: HomeAssistant, mock_client_session
+    mock_hass, mock_client_session
 ):
     """A pre-selected pending node must also be added to CHOSEN_FLOAT_SENSORS on promotion."""
     pending_key = "eta_192_168_0_25__eingänge_restsauerstoff"
@@ -307,10 +310,9 @@ async def test_coordinator_promotes_preselected_pending_node_to_chosen_float(
         CHOSEN_PENDING_SENSORS: [pending_key],
     }
     entry.options = {}
+    entry.pref_disable_polling = False
 
-    hass.config_entries.async_update_entry = Mock()
-
-    coordinator = ETAPendingNodeCoordinator(hass, config, entry)
+    coordinator = ETAPendingNodeCoordinator(mock_hass, config, entry)
 
     mock_eta_client = MagicMock()
     mock_eta_client.get_all_data = AsyncMock(return_value={PENDING_URI: 20.64})
@@ -319,7 +321,7 @@ async def test_coordinator_promotes_preselected_pending_node_to_chosen_float(
 
     await coordinator._async_update_data()
 
-    call_kwargs = hass.config_entries.async_update_entry.call_args
+    call_kwargs = mock_hass.config_entries.async_update_entry.call_args
     new_options = (
         call_kwargs[1]["options"] if "options" in call_kwargs[1] else call_kwargs[0][1]
     )
@@ -333,7 +335,7 @@ async def test_coordinator_promotes_preselected_pending_node_to_chosen_float(
 
 
 @pytest.mark.asyncio
-async def test_coordinator_no_promotion_when_still_invalid(hass: HomeAssistant, mock_client_session):
+async def test_coordinator_no_promotion_when_still_invalid(mock_hass, mock_client_session):
     """_async_update_data must return False if no pending node has become valid."""
     pending_key = "eta_192_168_0_25__eingänge_restsauerstoff"
     pending_endpoint = {
@@ -355,10 +357,9 @@ async def test_coordinator_no_promotion_when_still_invalid(hass: HomeAssistant, 
     entry = MagicMock(spec=ConfigEntry)
     entry.data = {PENDING_DICT: deepcopy(pending_dict)}
     entry.options = {}
+    entry.pref_disable_polling = False
 
-    hass.config_entries.async_update_entry = Mock()
-
-    coordinator = ETAPendingNodeCoordinator(hass, config, entry)
+    coordinator = ETAPendingNodeCoordinator(mock_hass, config, entry)
 
     mock_eta_client = MagicMock()
     # Still "---" — not a numeric value
@@ -370,19 +371,20 @@ async def test_coordinator_no_promotion_when_still_invalid(hass: HomeAssistant, 
     assert result is False, (
         "_async_update_data should return False when no nodes promoted"
     )
-    hass.config_entries.async_update_entry.assert_not_called()
+    mock_hass.config_entries.async_update_entry.assert_not_called()
 
 
 @pytest.mark.asyncio
-async def test_coordinator_returns_false_with_empty_pending_dict(hass: HomeAssistant, mock_client_session):
+async def test_coordinator_returns_false_with_empty_pending_dict(mock_hass, mock_client_session):
     """_async_update_data must short-circuit and return False if pending_dict is empty."""
     config = {"host": "192.168.0.25", "port": 8080, PENDING_DICT: {}}
 
     entry = MagicMock(spec=ConfigEntry)
     entry.data = {PENDING_DICT: {}}
     entry.options = {}
+    entry.pref_disable_polling = False
 
-    coordinator = ETAPendingNodeCoordinator(hass, config, entry)
+    coordinator = ETAPendingNodeCoordinator(mock_hass, config, entry)
     coordinator._create_eta_client = MagicMock()  # must not be called
 
     result = await coordinator._async_update_data()

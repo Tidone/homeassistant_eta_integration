@@ -297,6 +297,7 @@ class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
             _LOGGER,
             name=DOMAIN,
             update_interval=PENDING_SCAN_INTERVAL,
+            config_entry=entry,
         )
 
         # Dummy listener to ensure coordinator doesn't stop when no entities are attached.
