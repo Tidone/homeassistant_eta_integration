@@ -21,22 +21,6 @@ _LOGGER = logging.getLogger(__name__)
 class SensorDiscoveryV12(SensorDiscoveryBase):
     """ETA API v1.2 specific sensor discovery implementation."""
 
-    @staticmethod
-    def _is_numeric_value(value: float | str) -> bool:
-        """Return True if a value can be interpreted as a number."""
-        if isinstance(value, bool):
-            return False
-        if isinstance(value, (int, float)):
-            return True
-        normalized_value = str(value).strip().replace(",", ".")
-        if normalized_value == "":
-            return False
-        try:
-            float(normalized_value)
-        except ValueError:
-            return False
-        return True
-
     def _is_switch(
         self, endpoint_info: ETAEndpoint, raw_value: str | None = None
     ) -> bool:
@@ -515,38 +499,18 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
 
                     value, unit = data_result
                     endpoint_info["value"] = value
-                    previous_unit = endpoint_info["unit"]
-
-                    # Preserve a previously known non-empty unit when the current
-                    # value response is transient/non-numeric and reports no unit.
-                    # ETA endpoints like Restsauerstoff can temporarily return
-                    # strValue="---" and unit="", which must not drop the sensor.
-                    keep_previous_unit = (
-                        previous_unit not in CUSTOM_UNITS
-                        and previous_unit != ""
-                        and unit == ""
-                        and not self._is_numeric_value(value)
-                    )
                     if (
-                        not keep_previous_unit
-                        and unit != previous_unit
-                        and previous_unit not in CUSTOM_UNITS
+                        unit != endpoint_info["unit"]
+                        and endpoint_info["unit"] not in CUSTOM_UNITS
                         # update the unit of the sensor if they are different, but only if we didn't assign a custom unit to the sensor
                     ):
                         _LOGGER.debug(
                             "Correcting unit for sensor %s from '%s' to '%s'",
                             unique_key,
-                            previous_unit,
+                            endpoint_info["unit"],
                             unit,
                         )
                         endpoint_info["unit"] = unit
-                    elif keep_previous_unit:
-                        _LOGGER.debug(
-                            "Keeping previous unit '%s' for sensor %s because ETA returned transient value '%s' with empty unit",
-                            previous_unit,
-                            unique_key,
-                            value,
-                        )
                     if (
                         endpoint_info["endpoint_type"] == "DEFAULT"
                         and endpoint_info["unit"] == ""
