@@ -139,18 +139,18 @@ async def async_migrate_entry(  # noqa: D103
         new_data.setdefault(PENDING_DICT, {})
         new_data.setdefault(CHOSEN_PENDING_SENSORS, [])
 
-    def _get_new_data():
-        new_data = config_entry.data.copy()
+    def _get_current_data():
+        current_data = config_entry.data.copy()
         if config_entry.options:
-            new_data.update(config_entry.options)
-        return new_data
+            current_data.update(config_entry.options)
+        return current_data
 
     _LOGGER.debug("Migrating from version %s", config_entry.version)
 
     new_version = 7
 
     if config_entry.version == 1:
-        new_data = _get_new_data()
+        new_data = _get_current_data()
 
         new_data[WRITABLE_DICT] = []
         new_data[CHOSEN_WRITABLE_SENSORS] = []
@@ -166,7 +166,7 @@ async def async_migrate_entry(  # noqa: D103
             version=new_version,
         )
     elif config_entry.version == 2:
-        new_data = _get_new_data()
+        new_data = _get_current_data()
 
         new_data[FORCE_LEGACY_MODE] = False
 
@@ -180,7 +180,7 @@ async def async_migrate_entry(  # noqa: D103
             version=new_version,
         )
     elif config_entry.version in (3, 4, 5):
-        new_data = _get_new_data()
+        new_data = _get_current_data()
         migrate_to_v6(new_data)
         migrate_to_v7(new_data)
         hass.config_entries.async_update_entry(
@@ -190,7 +190,7 @@ async def async_migrate_entry(  # noqa: D103
             version=new_version,
         )
     elif config_entry.version == 6:
-        new_data = _get_new_data()
+        new_data = _get_current_data()
         migrate_to_v7(new_data)
         hass.config_entries.async_update_entry(
             config_entry,

@@ -1286,6 +1286,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
         # don't show errors from previous pages here
         self._errors = {}
 
+        writable_dict = self.data[WRITABLE_DICT]
+
         return self.async_show_form(
             step_id="advanced_options",
             data_schema=vol.Schema(
@@ -1300,7 +1302,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                             options=[
                                 selector.SelectOptionDict(
                                     value=key,
-                                    label=f"{self.data[WRITABLE_DICT][key]['friendly_name']} ({self.data[WRITABLE_DICT][key]['value']} {self.data[WRITABLE_DICT][key]['unit'] if self.data[WRITABLE_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                                    label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                                 )
                                 for key in self.advanced_options_writable_sensors
                             ],
@@ -1313,6 +1315,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
             errors=self._errors,
         )
 
+    # TODO This method is almost the same as the one in the config_flow above.
+    # Maybe we can refactor them to use a common base method to reduce code duplication.
     async def _show_config_form_endpoint(
         self,
         current_chosen_sensors,
@@ -1333,6 +1337,11 @@ class EtaOptionsFlowHandler(OptionsFlow):
             float_count, switch_count, text_count, writable_count, pending_count
         )
 
+        float_dict = self.data[FLOAT_DICT]
+        switches_dict = self.data[SWITCHES_DICT]
+        text_dict = self.data[TEXT_DICT]
+        writable_dict = self.data[WRITABLE_DICT]
+
         schema = {
             vol.Required(
                 AUTO_SELECT_ALL_ENTITIES, default=self.auto_select_all_entities
@@ -1344,9 +1353,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     options=[
                         selector.SelectOptionDict(
                             value=key,
-                            label=f"{self.data[FLOAT_DICT][key]['friendly_name']} ({self.data[FLOAT_DICT][key]['value']} {self.data[FLOAT_DICT][key]['unit'] if self.data[FLOAT_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                            label=f"{float_dict[key]['friendly_name']} ({float_dict[key]['value']} {float_dict[key]['unit'] if float_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                         )
-                        for key in self.data[FLOAT_DICT]
+                        for key in float_dict
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
                     multiple=True,
@@ -1359,9 +1368,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     options=[
                         selector.SelectOptionDict(
                             value=key,
-                            label=f"{self.data[SWITCHES_DICT][key]['friendly_name']} ({self.data[SWITCHES_DICT][key]['value']})",
+                            label=f"{switches_dict[key]['friendly_name']} ({switches_dict[key]['value']})",
                         )
-                        for key in self.data[SWITCHES_DICT]
+                        for key in switches_dict
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
                     multiple=True,
@@ -1374,9 +1383,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     options=[
                         selector.SelectOptionDict(
                             value=key,
-                            label=f"{self.data[TEXT_DICT][key]['friendly_name']} ({self.data[TEXT_DICT][key]['value']})",
+                            label=f"{text_dict[key]['friendly_name']} ({text_dict[key]['value']})",
                         )
-                        for key in self.data[TEXT_DICT]
+                        for key in text_dict
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
                     multiple=True,
@@ -1389,9 +1398,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     options=[
                         selector.SelectOptionDict(
                             value=key,
-                            label=f"{self.data[WRITABLE_DICT][key]['friendly_name']} ({self.data[WRITABLE_DICT][key]['value']} {self.data[WRITABLE_DICT][key]['unit'] if self.data[WRITABLE_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                            label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                         )
-                        for key in self.data[WRITABLE_DICT]
+                        for key in writable_dict
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
                     multiple=True,
@@ -1401,6 +1410,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
         pending_dict = self.data.get(PENDING_DICT, {})
         if pending_dict:
+            # the other chosen lists were created using the HA entity map,
+            # but pending sensors don't have entities yet, so we can get the list from the local data dict directly
             current_chosen_pending = self.data.get(CHOSEN_PENDING_SENSORS, [])
             schema[
                 vol.Optional(CHOSEN_PENDING_SENSORS, default=current_chosen_pending)
