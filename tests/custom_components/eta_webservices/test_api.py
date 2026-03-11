@@ -1625,6 +1625,40 @@ async def test_get_data_with_force_string_handling():
 
 
 @pytest.mark.asyncio
+async def test_get_data_float_endpoint_preserves_precision():
+    """Test that get_data correctly handles floating-point raw values.
+
+    This test verifies:
+    - Endpoints with a float unit (m³) are parsed as numeric
+    - The raw #text value is used directly (not strValue/decPlaces)
+    - Floating-point precision in #text is preserved after scaling
+    """
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.1", 8080)
+
+    float_endpoint_xml = (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">\n'
+        ' <value advTextOffset="0" unit="m³" uri="/user/var//79/10531/0/0/2274"'
+        ' strValue="11,2" scaleFactor="1" decPlaces="1">11.2365</value>\n'
+        "</eta>\n"
+    )
+
+    async def mock_get_request(suffix):
+        response = AsyncMock()
+        response.text = AsyncMock(return_value=float_endpoint_xml)
+        return response
+
+    api._http.get_request = mock_get_request
+
+    value, unit = await api.get_data("/79/10531/0/0/2274")
+
+    assert unit == "m³"
+    assert isinstance(value, float)
+    assert value == pytest.approx(11.2365)
+
+
+@pytest.mark.asyncio
 async def test_get_all_data_fetches_multiple_sensors(load_fixture):
     """Test that get_all_data fetches data from multiple sensors in parallel.
 
