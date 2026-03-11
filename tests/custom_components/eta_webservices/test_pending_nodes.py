@@ -53,6 +53,26 @@ INVALID_VARINFO_XML = (
     "</eta>"
 )
 
+VALID_VARINFO_IEEE754_XML = (
+    '<?xml version="1.0" encoding="utf-8"?>'
+    '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+    "  <varInfo>"
+    '    <variable uri="40/10021/0/11108/0" name="Restsauerstoff"'
+    '     fullName="Eing\u00e4nge &gt; Restsauerstoff" unit=""'
+    '     decPlaces="4" scaleFactor="1" advTextOffset="0" isWritable="0">'
+    "      <type>IEEE-754</type>"
+    "    </variable>"
+    "  </varInfo>"
+    "</eta>"
+)
+
+INVALID_PERMISSION_VAR_XML = (
+    '<?xml version="1.0" encoding="utf-8"?>'
+    '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+    "  <error>Invalid permission</error>"
+    "</eta>"
+)
+
 VALID_VAR_XML = (
     '<?xml version="1.0" encoding="utf-8"?>'
     '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
@@ -275,7 +295,6 @@ async def test_coordinator_promotes_valid_pending_node(mock_hass, mock_client_se
     )
 
 
-
 @pytest.mark.asyncio
 async def test_coordinator_promotes_preselected_pending_node_to_chosen_float(
     mock_hass, mock_client_session
@@ -335,7 +354,9 @@ async def test_coordinator_promotes_preselected_pending_node_to_chosen_float(
 
 
 @pytest.mark.asyncio
-async def test_coordinator_no_promotion_when_still_invalid(mock_hass, mock_client_session):
+async def test_coordinator_no_promotion_when_still_invalid(
+    mock_hass, mock_client_session
+):
     """_async_update_data must return False if no pending node has become valid."""
     pending_key = "eta_192_168_0_25__eingänge_restsauerstoff"
     pending_endpoint = {
@@ -375,7 +396,9 @@ async def test_coordinator_no_promotion_when_still_invalid(mock_hass, mock_clien
 
 
 @pytest.mark.asyncio
-async def test_coordinator_returns_false_with_empty_pending_dict(mock_hass, mock_client_session):
+async def test_coordinator_returns_false_with_empty_pending_dict(
+    mock_hass, mock_client_session
+):
     """_async_update_data must short-circuit and return False if pending_dict is empty."""
     config = {"host": "192.168.0.25", "port": 8080, PENDING_DICT: {}}
 
@@ -391,3 +414,59 @@ async def test_coordinator_returns_false_with_empty_pending_dict(mock_hass, mock
 
     assert result is False
     coordinator._create_eta_client.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_pending_node_with_invalid_permission_error():
+    """A node with IEEE-754 / empty unit whose var endpoint returns an 'Invalid
+    permission' error must still land in pending_dict.
+    """
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.25", 8080)
+    api.is_correct_api_version = AsyncMock(return_value=True)
+
+    api._http.get_sensors_dict = AsyncMock(
+        return_value=_build_minimal_sensors_dict(PENDING_URI)
+    )
+
+    async def mock_get_request(suffix: str):
+        if suffix == PENDING_VARINFO_PATH:
+            return _make_response(VALID_VARINFO_IEEE754_XML)
+        return _make_response(
+            '<?xml version="1.0" encoding="utf-8"?><eta version="1.0"/>'
+        )
+
+    api._http.get_request = mock_get_request
+
+    # Simulate what happens when xmltodict.parse(error_xml)["eta"]["value"]
+    # raises KeyError because the response contains <error> instead of <value>.
+    api._http.get_data = AsyncMock(side_effect=KeyError("value"))
+
+    float_dict: dict = {}
+    switches_dict: dict = {}
+    text_dict: dict = {}
+    writable_dict: dict = {}
+    pending_dict: dict = {}
+
+    await api.get_all_sensors(
+        False, float_dict, switches_dict, text_dict, writable_dict, pending_dict
+    )
+
+    # The node must end up in pending_dict despite the get_data failure.
+    assert len(pending_dict) == 1, (
+        f"Expected 1 pending node (IEEE-754 + Invalid permission), got {len(pending_dict)}"
+    )
+    pending_key = next(iter(pending_dict))
+    assert "restsauerstoff" in pending_key.lower(), (
+        f"Pending key should contain sensor name, got: {pending_key}"
+    )
+    pending_entry = pending_dict[pending_key]
+    assert pending_entry["url"] == PENDING_URI
+    assert pending_entry["unit"] == ""
+    assert pending_entry["endpoint_type"] == "IEEE-754"
+
+    # Must not appear in any other dict.
+    assert float_dict == {}, f"float_dict should be empty, got: {list(float_dict)}"
+    assert switches_dict == {}, "switches_dict should be empty"
+    assert text_dict == {}, "text_dict should be empty"
+    assert writable_dict == {}, "writable_dict should be empty"

@@ -575,7 +575,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                     else:
                         text_dict[unique_key] = endpoint_info
                 elif (
-                    unit == ""
+                    endpoint_info["unit"] == ""
                     and (
                         endpoint_info["endpoint_type"] == "DEFAULT"
                         or endpoint_info["endpoint_type"] == "IEEE-754"

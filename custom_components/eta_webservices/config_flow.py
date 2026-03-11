@@ -1159,27 +1159,27 @@ class EtaOptionsFlowHandler(OptionsFlow):
             selected_float_sensors = (
                 list(self.data[FLOAT_DICT].keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_FLOAT_SENSORS]
+                else user_input.get(CHOSEN_FLOAT_SENSORS, [])
             )
             selected_switches = (
                 list(self.data[SWITCHES_DICT].keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_SWITCHES]
+                else user_input.get(CHOSEN_SWITCHES, [])
             )
             selected_text_sensors = (
                 list(self.data[TEXT_DICT].keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_TEXT_SENSORS]
+                else user_input.get(CHOSEN_TEXT_SENSORS, [])
             )
             selected_writable_sensors = (
                 list(self.data[WRITABLE_DICT].keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_WRITABLE_SENSORS]
+                else user_input.get(CHOSEN_WRITABLE_SENSORS, [])
             )
             selected_pending_sensors = (
                 list(self.data.get(PENDING_DICT, {}).keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_PENDING_SENSORS]
+                else user_input.get(CHOSEN_PENDING_SENSORS, [])
             )
             (
                 selected_float_sensors,
