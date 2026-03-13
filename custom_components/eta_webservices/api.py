@@ -66,6 +66,7 @@ class EtaAPI:
         switches_dict,
         text_dict,
         writable_dict,
+        pending_dict,
         progress_callback: Callable[[str, float | None], None] | None = None,
     ):
         """Enumerate all possible sensors on the ETA API.
@@ -78,6 +79,7 @@ class EtaAPI:
         :param switches_dict: Dictionary which will be filled with all switch sensors
         :param text_dict: Dictionary which will be filled with all text sensors
         :param writable_dict: Dictionary which will be filled with all writable sensors
+        :param pending_dict: Dictionary which will be filled with pending sensors (v1.2 only)
         """
         if progress_callback is not None:
             progress_callback("Checking ETA API version", 0.01)
@@ -117,7 +119,7 @@ class EtaAPI:
                 self._http, progress_callback=progress_callback
             )
             await sensor_discovery.get_all_sensors(
-                float_dict, switches_dict, text_dict, writable_dict
+                float_dict, switches_dict, text_dict, writable_dict, pending_dict
             )
         else:
             # varinfo not available -> fall back to compatibility mode
@@ -127,7 +129,7 @@ class EtaAPI:
                 self._http, progress_callback=progress_callback
             )
             await sensor_discovery.get_all_sensors(
-                float_dict, switches_dict, text_dict, writable_dict
+                float_dict, switches_dict, text_dict, writable_dict, pending_dict
             )
 
     async def does_endpoint_exists(self):

@@ -21,6 +21,7 @@ from .const import (
     ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
     AUTO_SELECT_ALL_ENTITIES,
     CHOSEN_FLOAT_SENSORS,
+    CHOSEN_PENDING_SENSORS,
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
@@ -36,6 +37,7 @@ from .const import (
     OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
     OPTIONS_ACTION_UPDATE_SELECTED,
     OPTIONS_UPDATE_ACTION,
+    PENDING_DICT,
     SWITCHES_DICT,
     TEXT_DICT,
     WRITABLE_DICT,
@@ -46,16 +48,23 @@ _HOSTNAME_LABEL_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?
 
 
 def _build_discovered_entity_placeholders(
-    float_count: int, switch_count: int, text_count: int, writable_count: int
+    float_count: int,
+    switch_count: int,
+    text_count: int,
+    writable_count: int,
+    pending_count: int,
 ) -> dict[str, str]:
     """Build placeholders for discovered entity counts."""
-    total_count = float_count + switch_count + text_count + writable_count
+    total_count = (
+        float_count + switch_count + text_count + writable_count + pending_count
+    )
     return {
         "float_count": str(float_count),
         "switch_count": str(switch_count),
         "text_count": str(text_count),
         "writable_count": str(writable_count),
         "total_count": str(total_count),
+        "pending_count": str(pending_count),
     }
 
 
@@ -64,7 +73,8 @@ def _sanitize_selected_entity_ids(
     selected_switches: list[str],
     selected_text_sensors: list[str],
     selected_writable_sensors: list[str],
-) -> tuple[list[str], list[str], list[str], list[str]]:
+    selected_pending_sensors: list[str],
+) -> tuple[list[str], list[str], list[str], list[str], list[str]]:
     """Ensure selected entity IDs are unique across categories.
 
     The same unique_id must never be selected in multiple regular sensor
@@ -85,16 +95,32 @@ def _sanitize_selected_entity_ids(
         for sensor_id in dict.fromkeys(selected_text_sensors)
         if sensor_id not in float_set and sensor_id not in switch_set
     ]
+    text_set = set(sanitized_text_sensors)
+    sanitized_pending_sensors = [
+        sensor_id
+        for sensor_id in dict.fromkeys(selected_pending_sensors)
+        if sensor_id not in float_set
+        and sensor_id not in switch_set
+        and sensor_id not in text_set
+    ]
     sanitized_writable_sensors = list(dict.fromkeys(selected_writable_sensors))
 
     removed_from_switches = len(selected_switches) - len(sanitized_switches)
     removed_from_text_sensors = len(selected_text_sensors) - len(sanitized_text_sensors)
-    if removed_from_switches > 0 or removed_from_text_sensors > 0:
+    removed_from_pending_sensors = len(selected_pending_sensors) - len(
+        sanitized_pending_sensors
+    )
+    if (
+        removed_from_switches > 0
+        or removed_from_text_sensors > 0
+        or removed_from_pending_sensors > 0
+    ):
         _LOGGER.info(
             "Removed duplicate selected entity IDs across categories: "
-            "switches=%d, text_sensors=%d",
+            "switches=%d, text_sensors=%d, pending_sensors=%d",
             removed_from_switches,
             removed_from_text_sensors,
+            removed_from_pending_sensors,
         )
 
     return (
@@ -102,6 +128,7 @@ def _sanitize_selected_entity_ids(
         sanitized_switches,
         sanitized_text_sensors,
         sanitized_writable_sensors,
+        sanitized_pending_sensors,
     )
 
 
@@ -155,7 +182,7 @@ def _is_invalid_host_input(host: str) -> bool:
 class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for Eta."""
 
-    VERSION = 6
+    VERSION = 7
     CONNECTION_CLASS = CONN_CLASS_CLOUD_POLL
 
     def __init__(self) -> None:
@@ -289,6 +316,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 self.data[SWITCHES_DICT],
                 self.data[TEXT_DICT],
                 self.data[WRITABLE_DICT],
+                self.data[PENDING_DICT],
             ) = await self._get_possible_endpoints(
                 host,
                 port,
@@ -300,6 +328,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 + len(self.data[SWITCHES_DICT])
                 + len(self.data[TEXT_DICT])
                 + len(self.data[WRITABLE_DICT])
+                + len(self.data[PENDING_DICT])
             )
             self._on_discovery_progress(
                 f"Discovery finished: {total_entities} entities found",
@@ -327,23 +356,27 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
                 selected_switches = list(self.data[SWITCHES_DICT].keys())
                 selected_text_sensors = list(self.data[TEXT_DICT].keys())
                 selected_writable_sensors = list(self.data[WRITABLE_DICT].keys())
+                selected_pending_sensors = list(self.data.get(PENDING_DICT, {}).keys())
             else:
                 selected_float_sensors = user_input.get(CHOSEN_FLOAT_SENSORS, [])
                 selected_switches = user_input.get(CHOSEN_SWITCHES, [])
                 selected_text_sensors = user_input.get(CHOSEN_TEXT_SENSORS, [])
                 selected_writable_sensors = user_input.get(CHOSEN_WRITABLE_SENSORS, [])
+                selected_pending_sensors = user_input.get(CHOSEN_PENDING_SENSORS, [])
 
             (
                 self.data[CHOSEN_FLOAT_SENSORS],
                 self.data[CHOSEN_SWITCHES],
                 self.data[CHOSEN_TEXT_SENSORS],
                 self.data[CHOSEN_WRITABLE_SENSORS],
+                self.data[CHOSEN_PENDING_SENSORS],
             ) = _sanitize_selected_entity_ids(
                 # Keep selection lists category-unique before persisting the entry.
                 selected_float_sensors,
                 selected_switches,
                 selected_text_sensors,
                 selected_writable_sensors,
+                selected_pending_sensors,
             )
 
             # Restore old logging level
@@ -391,73 +424,90 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         switches_dict: dict[str, ETAEndpoint] = self.data[SWITCHES_DICT]
         text_dict: dict[str, ETAEndpoint] = self.data[TEXT_DICT]
         writable_dict: dict[str, ETAEndpoint] = self.data[WRITABLE_DICT]
+        pending_dict: dict[str, ETAEndpoint] = self.data.get(PENDING_DICT, {})
         float_count = len(sensors_dict)
         switch_count = len(switches_dict)
         text_count = len(text_dict)
         writable_count = len(writable_dict)
+        pending_count = len(pending_dict)
         count_placeholders = _build_discovered_entity_placeholders(
-            float_count, switch_count, text_count, writable_count
+            float_count, switch_count, text_count, writable_count, pending_count
         )
+
+        schema: dict = {
+            vol.Required(AUTO_SELECT_ALL_ENTITIES, default=False): cv.boolean,
+            vol.Optional(CHOSEN_FLOAT_SENSORS): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{sensors_dict[key]['friendly_name']} ({sensors_dict[key]['value']} {sensors_dict[key]['unit'] if sensors_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
+                        )
+                        for key in sensors_dict
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            ),
+            vol.Optional(CHOSEN_SWITCHES): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{switches_dict[key]['friendly_name']} ({switches_dict[key]['value']})",
+                        )
+                        for key in switches_dict
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            ),
+            vol.Optional(CHOSEN_TEXT_SENSORS): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{text_dict[key]['friendly_name']} ({text_dict[key]['value']})",
+                        )
+                        for key in text_dict
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            ),
+            vol.Optional(CHOSEN_WRITABLE_SENSORS): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
+                        )
+                        for key in writable_dict
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            ),
+        }
+
+        if pending_dict:
+            schema[vol.Optional(CHOSEN_PENDING_SENSORS)] = selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{pending_dict[key]['friendly_name']} (pending — activates automatically)",
+                        )
+                        for key in pending_dict
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            )
 
         return self.async_show_form(
             step_id="select_entities",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(AUTO_SELECT_ALL_ENTITIES, default=False): cv.boolean,
-                    vol.Optional(CHOSEN_FLOAT_SENSORS): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{sensors_dict[key]['friendly_name']} ({sensors_dict[key]['value']} {sensors_dict[key]['unit'] if sensors_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
-                                )
-                                for key in sensors_dict
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                        )
-                    ),
-                    vol.Optional(CHOSEN_SWITCHES): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{switches_dict[key]['friendly_name']} ({switches_dict[key]['value']})",
-                                )
-                                for key in switches_dict
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                        )
-                    ),
-                    vol.Optional(CHOSEN_TEXT_SENSORS): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{text_dict[key]['friendly_name']} ({text_dict[key]['value']})",
-                                )
-                                for key in text_dict
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                        )
-                    ),
-                    vol.Optional(CHOSEN_WRITABLE_SENSORS): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[
-                                selector.SelectOptionDict(
-                                    value=key,
-                                    label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
-                                )
-                                for key in writable_dict
-                            ],
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                            multiple=True,
-                        )
-                    ),
-                }
-            ),
+            data_schema=vol.Schema(schema),
             errors=self._errors,
             description_placeholders=count_placeholders,
         )
@@ -475,24 +525,27 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         switches_dict = {}
         text_dict = {}
         writable_dict = {}
+        pending_dict = {}
         await eta_client.get_all_sensors(
             force_legacy_mode,
             float_dict,
             switches_dict,
             text_dict,
             writable_dict,
+            pending_dict,
             progress_callback=progress_callback,
         )
 
         _LOGGER.debug(
-            "Queried sensors: Number of float sensors: %i, Number of switches: %i, Number of text sensors: %i, Number of writable sensors: %i",
+            "Queried sensors: Number of float sensors: %i, Number of switches: %i, Number of text sensors: %i, Number of writable sensors: %i, Number of pending sensors: %i",
             len(float_dict),
             len(switches_dict),
             len(text_dict),
             len(writable_dict),
+            len(pending_dict),
         )
 
-        return float_dict, switches_dict, text_dict, writable_dict
+        return float_dict, switches_dict, text_dict, writable_dict, pending_dict
 
     async def _test_url(self, host, port):
         """Return true if host port is valid."""
@@ -544,16 +597,18 @@ class EtaOptionsFlowHandler(OptionsFlow):
         switches_dict = {}
         text_dict = {}
         writable_dict = {}
+        pending_dict = {}
         await eta_client.get_all_sensors(
             force_legacy_mode,
             float_dict,
             switches_dict,
             text_dict,
             writable_dict,
+            pending_dict,
             progress_callback=progress_callback,
         )
 
-        return float_dict, switches_dict, text_dict, writable_dict
+        return float_dict, switches_dict, text_dict, writable_dict, pending_dict
 
     def _on_options_progress(self, message: str, progress: float | None) -> None:
         """Forward options progress updates to HA's progress tracking."""
@@ -707,10 +762,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 CHOSEN_SWITCHES: current_data[CHOSEN_SWITCHES],
                 CHOSEN_TEXT_SENSORS: current_data[CHOSEN_TEXT_SENSORS],
                 CHOSEN_WRITABLE_SENSORS: current_data[CHOSEN_WRITABLE_SENSORS],
+                CHOSEN_PENDING_SENSORS: current_data.get(CHOSEN_PENDING_SENSORS, []),
                 FLOAT_DICT: current_data[FLOAT_DICT],
                 SWITCHES_DICT: current_data[SWITCHES_DICT],
                 TEXT_DICT: current_data[TEXT_DICT],
                 WRITABLE_DICT: current_data[WRITABLE_DICT],
+                PENDING_DICT: current_data.get(PENDING_DICT, {}),
                 MAX_PARALLEL_REQUESTS: self.max_parallel_requests,
                 CONF_HOST: current_data[CONF_HOST],
                 CONF_PORT: current_data[CONF_PORT],
@@ -825,12 +882,29 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     self.data[WRITABLE_DICT][entity]["url"]
                 ]
 
+    def _verify_pending_sensors(
+        self,
+        new_pending_sensors: dict,
+        new_float_sensors: dict,
+        current_float_sensors: dict,
+    ) -> int:
+        # Pending sensors which are already available as regular sensors can be removed from the pending sensors list
+        deleted_pending_count = 0
+        for key in list(new_pending_sensors.keys()):
+            # Pending sensors will only be promoted to float sensors, so we don't need to check the other sensor categories here
+            if key in current_float_sensors:
+                del new_pending_sensors[key]
+                new_float_sensors[key] = current_float_sensors[key]
+                deleted_pending_count += 1
+        return deleted_pending_count
+
     def _handle_new_sensors(
         self,
         new_float_sensors: dict,
         new_switches: dict,
         new_text_sensors: dict,
         new_writable_sensors: dict,
+        new_pending_sensors: dict,
     ):
         added_sensor_count = 0
         # Add newly detected sensors to the lists of available sensors
@@ -854,6 +928,11 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 added_sensor_count += 1
                 self.data[WRITABLE_DICT][key] = value
 
+        for key, value in new_pending_sensors.items():
+            if key not in self.data[PENDING_DICT]:
+                added_sensor_count += 1
+                self.data[PENDING_DICT][key] = value
+
         return added_sensor_count
 
     def _handle_deleted_sensors(
@@ -862,6 +941,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         new_switches: dict,
         new_text_sensors: dict,
         new_writable_sensors: dict,
+        new_pending_sensors: dict,
     ):
         deleted_sensor_count = 0
         # Delete sensors which are no longer available
@@ -905,6 +985,14 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     self.unavailable_sensors[key] = self.data[WRITABLE_DICT][key]
                 del self.data[WRITABLE_DICT][key]
 
+        for key in list(self.data[PENDING_DICT].keys()):
+            if key not in new_pending_sensors:
+                deleted_sensor_count += 1
+                self.data[CHOSEN_PENDING_SENSORS] = [
+                    k for k in self.data[CHOSEN_PENDING_SENSORS] if k != key
+                ]
+                del self.data[PENDING_DICT][key]
+
         return deleted_sensor_count
 
     def _handle_sensor_value_updates_from_enumeration(
@@ -942,10 +1030,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
             SWITCHES_DICT,
             TEXT_DICT,
             WRITABLE_DICT,
+            PENDING_DICT,
             CHOSEN_FLOAT_SENSORS,
             CHOSEN_SWITCHES,
             CHOSEN_TEXT_SENSORS,
             CHOSEN_WRITABLE_SENSORS,
+            CHOSEN_PENDING_SENSORS,
             FORCE_LEGACY_MODE,
         ]:
             self.data[key] = copy.copy(current_data[key])
@@ -954,12 +1044,14 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.data[CHOSEN_SWITCHES],
             self.data[CHOSEN_TEXT_SENSORS],
             self.data[CHOSEN_WRITABLE_SENSORS],
+            self.data[CHOSEN_PENDING_SENSORS],
         ) = _sanitize_selected_entity_ids(
             # Normalize historic options data before applying updates.
             self.data[CHOSEN_FLOAT_SENSORS],
             self.data[CHOSEN_SWITCHES],
             self.data[CHOSEN_TEXT_SENSORS],
             self.data[CHOSEN_WRITABLE_SENSORS],
+            self.data[CHOSEN_PENDING_SENSORS],
         )
         # ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION can be unset, so we have to handle it separately
         self.data[ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION] = (
@@ -976,6 +1068,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 new_switches,
                 new_text_sensors,
                 new_writable_sensors,
+                new_pending_sensors,
             ) = await self._get_possible_endpoints_with_progress(
                 self.data[CONF_HOST],
                 self.data[CONF_PORT],
@@ -983,8 +1076,20 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 progress_callback=self._on_options_progress,
             )
 
+            removed_pending_count = self._verify_pending_sensors(
+                new_pending_sensors, new_float_sensors, self.data[FLOAT_DICT]
+            )
+            _LOGGER.info(
+                "Verified pending sensors, removed %i sensors which are now available as regular sensors from the pending sensors list",
+                removed_pending_count,
+            )
+
             added_sensor_count = self._handle_new_sensors(
-                new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
+                new_float_sensors,
+                new_switches,
+                new_text_sensors,
+                new_writable_sensors,
+                new_pending_sensors,
             )
             _LOGGER.info("Added %i new sensors", added_sensor_count)
             self._on_options_progress(
@@ -993,7 +1098,11 @@ class EtaOptionsFlowHandler(OptionsFlow):
             )
 
             deleted_sensor_count = self._handle_deleted_sensors(
-                new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
+                new_float_sensors,
+                new_switches,
+                new_text_sensors,
+                new_writable_sensors,
+                new_pending_sensors,
             )
             _LOGGER.info("Deleted %i unavailable sensors", deleted_sensor_count)
             self._on_options_progress(
@@ -1050,34 +1159,41 @@ class EtaOptionsFlowHandler(OptionsFlow):
             selected_float_sensors = (
                 list(self.data[FLOAT_DICT].keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_FLOAT_SENSORS]
+                else user_input.get(CHOSEN_FLOAT_SENSORS, [])
             )
             selected_switches = (
                 list(self.data[SWITCHES_DICT].keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_SWITCHES]
+                else user_input.get(CHOSEN_SWITCHES, [])
             )
             selected_text_sensors = (
                 list(self.data[TEXT_DICT].keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_TEXT_SENSORS]
+                else user_input.get(CHOSEN_TEXT_SENSORS, [])
             )
             selected_writable_sensors = (
                 list(self.data[WRITABLE_DICT].keys())
                 if self.auto_select_all_entities
-                else user_input[CHOSEN_WRITABLE_SENSORS]
+                else user_input.get(CHOSEN_WRITABLE_SENSORS, [])
+            )
+            selected_pending_sensors = (
+                list(self.data.get(PENDING_DICT, {}).keys())
+                if self.auto_select_all_entities
+                else user_input.get(CHOSEN_PENDING_SENSORS, [])
             )
             (
                 selected_float_sensors,
                 selected_switches,
                 selected_text_sensors,
                 selected_writable_sensors,
+                selected_pending_sensors,
             ) = _sanitize_selected_entity_ids(
                 # Prevent cross-category duplicates from being written back via options.
                 selected_float_sensors,
                 selected_switches,
                 selected_text_sensors,
                 selected_writable_sensors,
+                selected_pending_sensors,
             )
             removed_entities = [
                 entity_map_sensors[entity_id]
@@ -1114,10 +1230,12 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 CHOSEN_SWITCHES: selected_switches,
                 CHOSEN_TEXT_SENSORS: selected_text_sensors,
                 CHOSEN_WRITABLE_SENSORS: selected_writable_sensors,
+                CHOSEN_PENDING_SENSORS: selected_pending_sensors,
                 FLOAT_DICT: self.data[FLOAT_DICT],
                 SWITCHES_DICT: self.data[SWITCHES_DICT],
                 TEXT_DICT: self.data[TEXT_DICT],
                 WRITABLE_DICT: self.data[WRITABLE_DICT],
+                PENDING_DICT: self.data[PENDING_DICT],
                 MAX_PARALLEL_REQUESTS: self.data[MAX_PARALLEL_REQUESTS],
                 CONF_HOST: self.data[CONF_HOST],
                 CONF_PORT: self.data[CONF_PORT],
@@ -1168,6 +1286,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
         # don't show errors from previous pages here
         self._errors = {}
 
+        writable_dict = self.data[WRITABLE_DICT]
+
         return self.async_show_form(
             step_id="advanced_options",
             data_schema=vol.Schema(
@@ -1182,7 +1302,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                             options=[
                                 selector.SelectOptionDict(
                                     value=key,
-                                    label=f"{self.data[WRITABLE_DICT][key]['friendly_name']} ({self.data[WRITABLE_DICT][key]['value']} {self.data[WRITABLE_DICT][key]['unit'] if self.data[WRITABLE_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                                    label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                                 )
                                 for key in self.advanced_options_writable_sensors
                             ],
@@ -1195,6 +1315,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
             errors=self._errors,
         )
 
+    # TODO This method is almost the same as the one in the config_flow above.
+    # Maybe we can refactor them to use a common base method to reduce code duplication.
     async def _show_config_form_endpoint(
         self,
         current_chosen_sensors,
@@ -1210,9 +1332,15 @@ class EtaOptionsFlowHandler(OptionsFlow):
         switch_count = len(self.data[SWITCHES_DICT])
         text_count = len(self.data[TEXT_DICT])
         writable_count = len(self.data[WRITABLE_DICT])
+        pending_count = len(self.data.get(PENDING_DICT, {}))
         count_placeholders = _build_discovered_entity_placeholders(
-            float_count, switch_count, text_count, writable_count
+            float_count, switch_count, text_count, writable_count, pending_count
         )
+
+        float_dict = self.data[FLOAT_DICT]
+        switches_dict = self.data[SWITCHES_DICT]
+        text_dict = self.data[TEXT_DICT]
+        writable_dict = self.data[WRITABLE_DICT]
 
         schema = {
             vol.Required(
@@ -1225,9 +1353,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     options=[
                         selector.SelectOptionDict(
                             value=key,
-                            label=f"{self.data[FLOAT_DICT][key]['friendly_name']} ({self.data[FLOAT_DICT][key]['value']} {self.data[FLOAT_DICT][key]['unit'] if self.data[FLOAT_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                            label=f"{float_dict[key]['friendly_name']} ({float_dict[key]['value']} {float_dict[key]['unit'] if float_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                         )
-                        for key in self.data[FLOAT_DICT]
+                        for key in float_dict
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
                     multiple=True,
@@ -1240,9 +1368,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     options=[
                         selector.SelectOptionDict(
                             value=key,
-                            label=f"{self.data[SWITCHES_DICT][key]['friendly_name']} ({self.data[SWITCHES_DICT][key]['value']})",
+                            label=f"{switches_dict[key]['friendly_name']} ({switches_dict[key]['value']})",
                         )
-                        for key in self.data[SWITCHES_DICT]
+                        for key in switches_dict
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
                     multiple=True,
@@ -1255,9 +1383,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     options=[
                         selector.SelectOptionDict(
                             value=key,
-                            label=f"{self.data[TEXT_DICT][key]['friendly_name']} ({self.data[TEXT_DICT][key]['value']})",
+                            label=f"{text_dict[key]['friendly_name']} ({text_dict[key]['value']})",
                         )
-                        for key in self.data[TEXT_DICT]
+                        for key in text_dict
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
                     multiple=True,
@@ -1270,15 +1398,36 @@ class EtaOptionsFlowHandler(OptionsFlow):
                     options=[
                         selector.SelectOptionDict(
                             value=key,
-                            label=f"{self.data[WRITABLE_DICT][key]['friendly_name']} ({self.data[WRITABLE_DICT][key]['value']} {self.data[WRITABLE_DICT][key]['unit'] if self.data[WRITABLE_DICT][key]['unit'] not in INVISIBLE_UNITS else ''})",
+                            label=f"{writable_dict[key]['friendly_name']} ({writable_dict[key]['value']} {writable_dict[key]['unit'] if writable_dict[key]['unit'] not in INVISIBLE_UNITS else ''})",
                         )
-                        for key in self.data[WRITABLE_DICT]
+                        for key in writable_dict
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
                     multiple=True,
                 )
             ),
         }
+
+        pending_dict = self.data.get(PENDING_DICT, {})
+        if pending_dict:
+            # the other chosen lists were created using the HA entity map,
+            # but pending sensors don't have entities yet, so we can get the list from the local data dict directly
+            current_chosen_pending = self.data.get(CHOSEN_PENDING_SENSORS, [])
+            schema[
+                vol.Optional(CHOSEN_PENDING_SENSORS, default=current_chosen_pending)
+            ] = selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(
+                            value=key,
+                            label=f"{pending_dict[key]['friendly_name']} (pending — activates automatically)",
+                        )
+                        for key in pending_dict
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    multiple=True,
+                )
+            )
 
         if len(self.unavailable_sensors) > 0:
             # Add list of unavailable sensors to the schema if necessary

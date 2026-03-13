@@ -326,7 +326,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
     # runlength w/ optimizations (sem=10): 177s
 
     async def get_all_sensors(  # noqa: C901
-        self, float_dict, switches_dict, text_dict, writable_dict
+        self, float_dict, switches_dict, text_dict, writable_dict, pending_dict
     ):
         """Enumerate all sensors using v1.2 methods."""
         self._emit_progress("Loading endpoint list", 0.05)
@@ -574,6 +574,21 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                         )
                     else:
                         text_dict[unique_key] = endpoint_info
+                elif (
+                    endpoint_info["unit"] == ""
+                    and (
+                        endpoint_info["endpoint_type"] == "DEFAULT"
+                        or endpoint_info["endpoint_type"] == "IEEE-754"
+                    )
+                    # ignore sensors with an empty value
+                    and data_results.get(uri, (None,))[0] != ""
+                    # and ignore sensors with a value of "xxx". Both of these are indicators of invalid sensors.
+                    and data_results.get(uri, (None,))[0] != "xxx"
+                ):
+                    _LOGGER.debug(
+                        "Found pending endpoint %s, adding to pending_dict", uri
+                    )
+                    pending_dict[unique_key] = endpoint_info
                 else:
                     _LOGGER.debug("Not adding endpoint %s: Unknown type", uri)
 
