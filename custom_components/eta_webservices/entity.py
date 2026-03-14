@@ -135,7 +135,9 @@ class EtaWritableSensorEntity(
         )
         CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
 
-        self.handle_data_updates(float(coordinator.data[self.uri]))
+        self.handle_data_updates(
+            float(coordinator.data.get(self.uri, endpoint_info["value"]))
+        )
 
     @abstractmethod
     def handle_data_updates(self, data: float) -> None:  # noqa: D102
