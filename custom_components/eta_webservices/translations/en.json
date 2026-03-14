@@ -49,16 +49,17 @@
         "step": {
             "init": {
                 "title": "Options",
-                "description": "Update parallel API requests only: only the request limit is changed.\nUpdate selected entities: fetches current values for your already selected entities.\nRediscover available entities and update selected entities: refreshes the entity list and then lets you adjust your selection.",
+                "description": "**Update API & polling settings**: the request limit and update interval are changed.\n**Update selected entities**: update the list of entities added to Home Assistant.\n**Rediscover available entities and update selected entities**: refreshes the entity list and then lets you adjust your selection.",
                 "data": {
                     "options_update_action": "Action"
                 }
             },
             "parallel_requests": {
-                "title": "Parallel API requests",
-                "description": "Set how many ETA API requests may run at the same time. Lower values are more stable, while higher values can be faster but increase load on the ETA unit and may cause errors, especially on older systems.",
+                "title": "API & polling settings",
+                "description": "Set how many ETA API requests may run at the same time and how often sensor values are fetched. Lower parallel-request values are more stable; a shorter update interval gives more responsive data but increases load on the ETA unit.",
                 "data": {
-                    "max_parallel_requests": "Maximum parallel API requests"
+                    "max_parallel_requests": "Maximum parallel API requests",
+                    "update_interval": "Sensor update interval (seconds)"
                 }
             },
             "user": {

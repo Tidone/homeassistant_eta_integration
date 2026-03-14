@@ -10,7 +10,7 @@ author nigl, Tidone
 
 from __future__ import annotations
 
-from datetime import time, timedelta
+from datetime import time
 import logging
 
 import voluptuous as vol
@@ -56,7 +56,6 @@ from .entity import EtaCoordinatedSensorEntity, EtaErrorEntity, EtaWritableSenso
 from .utils import get_native_unit
 
 _LOGGER = logging.getLogger(__name__)
-SCAN_INTERVAL = timedelta(minutes=1)
 
 WRITE_TIMESLOT_SCHEMA: VolDictType = {
     vol.Required("begin"): cv.time,

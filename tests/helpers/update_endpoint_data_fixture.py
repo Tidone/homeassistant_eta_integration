@@ -96,11 +96,9 @@ class FixtureUpdater:
         """
         logging.info("Fetching menu...")
         try:
-            response = await self.api._get_request("/user/menu")
+            response = await self.api._http.get_request("/user/menu")  # type: ignore
             if response.status != 200:
-                raise RuntimeError(
-                    f"Menu fetch failed with status {response.status}"
-                )
+                raise RuntimeError(f"Menu fetch failed with status {response.status}")
             menu_xml = await response.text()
             logging.debug(f"Menu XML length: {len(menu_xml)} bytes")
             return menu_xml
@@ -243,7 +241,7 @@ class FixtureUpdater:
             # Fetch varinfo
             varinfo_key = f"/user/varinfo/{uri}"
             try:
-                response = await self.api._get_request(varinfo_key)
+                response = await self.api._http.get_request(varinfo_key)  # type: ignore
                 xml = await response.text()
                 result[varinfo_key] = xml
                 self.stats["varinfo_success"] += 1
@@ -256,7 +254,7 @@ class FixtureUpdater:
             # Fetch var
             var_key = f"/user/var/{uri}"
             try:
-                response = await self.api._get_request(var_key)
+                response = await self.api._http.get_request(var_key)  # type: ignore
                 xml = await response.text()
                 result[var_key] = xml
                 self.stats["var_success"] += 1
@@ -268,9 +266,7 @@ class FixtureUpdater:
 
             return result
 
-    async def fetch_all_endpoints(
-        self, uri_to_fub: Dict[str, str]
-    ) -> Dict[str, str]:
+    async def fetch_all_endpoints(self, uri_to_fub: Dict[str, str]) -> Dict[str, str]:
         """Fetch all endpoint data with rate limiting.
 
         Args:
@@ -374,9 +370,7 @@ class FixtureUpdater:
         # Create backup if requested and file exists
         if backup and self.fixture_path.exists():
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            backup_path = self.fixture_path.with_suffix(
-                f".json.backup.{timestamp}"
-            )
+            backup_path = self.fixture_path.with_suffix(f".json.backup.{timestamp}")
             logging.info(f"Creating backup: {backup_path.name}")
             try:
                 backup_path.write_text(self.fixture_path.read_text())
@@ -436,7 +430,7 @@ class FixtureUpdater:
         """
         logging.info(f"Connecting to ETA device at {self.host}:{self.port}...")
         try:
-            if await self.api.does_endpoint_exists():
+            if await self.api.does_endpoint_exists():  # type: ignore
                 logging.info("✓ API connection successful")
                 return True
             else:
@@ -461,15 +455,15 @@ class FixtureUpdater:
             + self.stats["var_success"]
             + self.stats["var_failed"]
         )
-        total_success = (
-            self.stats["varinfo_success"] + self.stats["var_success"]
-        )
+        total_success = self.stats["varinfo_success"] + self.stats["var_success"]
         total_failed = self.stats["varinfo_failed"] + self.stats["var_failed"]
 
         print("\n" + "=" * 60)
         print("=== Summary ===")
         print(f"Duration: {minutes}m {seconds}s")
-        print(f"Endpoints: {total_endpoints} ({total_success} success, {total_failed} failed)")
+        print(
+            f"Endpoints: {total_endpoints} ({total_success} success, {total_failed} failed)"
+        )
         print(
             f"Changes: {self.stats['added']} added, "
             f"{self.stats['updated']} updated, "
@@ -486,7 +480,9 @@ class FixtureUpdater:
         print(f"\nFixture: {self.fixture_path}")
         print("\nNext steps:")
         print(f"  1. Review changes: git diff {self.fixture_path}")
-        print("  2. Run tests: pytest tests/custom_components/eta_webservices/test_api.py")
+        print(
+            "  2. Run tests: pytest tests/custom_components/eta_webservices/test_api.py"
+        )
         print(f"  3. Commit: git add {self.fixture_path}")
         print("=" * 60)
 
@@ -520,9 +516,7 @@ class FixtureUpdater:
             endpoint_data = await self.fetch_all_endpoints(uri_to_fub)
             new_fixture_data.update(endpoint_data)
 
-            total_success = (
-                self.stats["varinfo_success"] + self.stats["var_success"]
-            )
+            total_success = self.stats["varinfo_success"] + self.stats["var_success"]
             total_failed = self.stats["varinfo_failed"] + self.stats["var_failed"]
             logging.info(
                 f"✓ Fetched {total_success + total_failed} endpoints "
@@ -536,9 +530,7 @@ class FixtureUpdater:
                 existing_fixture = {}
 
             # Merge data
-            merged_data = self.merge_fixture_data(
-                existing_fixture, new_fixture_data
-            )
+            merged_data = self.merge_fixture_data(existing_fixture, new_fixture_data)
 
             # Save fixture
             self.save_fixture(merged_data)

@@ -14,6 +14,7 @@ from .const import (
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     DEFAULT_MAX_PARALLEL_REQUESTS,
+    DEFAULT_UPDATE_INTERVAL,
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
@@ -24,6 +25,7 @@ from .const import (
     REQUEST_SEMAPHORE,
     SENSOR_UPDATE_COORDINATOR,
     TEXT_DICT,
+    UPDATE_INTERVAL,
     WRITABLE_DICT,
     WRITABLE_UPDATE_COORDINATOR,
 )
@@ -63,6 +65,9 @@ async def async_setup_entry(
 
     config[MAX_PARALLEL_REQUESTS] = int(
         config.get(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+    )
+    config[UPDATE_INTERVAL] = int(
+        config.get(UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
     )
     # Share one limiter across all API users of this config entry
     # so startup and periodic updates cannot overload slower ETA units.
