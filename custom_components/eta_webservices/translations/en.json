@@ -110,6 +110,15 @@
             }
         }
     },
+    "selector": {
+        "options_update_action": {
+            "options": {
+                "update_parallel_requests": "Update API & polling settings",
+                "update_selected_entities": "Update selected entities",
+                "rediscover_and_update_entities": "Rediscover available entities and update selected entities"
+            }
+        }
+    },
     "services": {
         "write_value": {
             "name": "Set value",

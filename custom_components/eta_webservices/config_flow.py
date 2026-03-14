@@ -696,36 +696,6 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
-        is_german_ui = (
-            str(getattr(self.hass.config, "language", "en")).lower().startswith("de")
-        )
-        update_action_options = [
-            selector.SelectOptionDict(
-                value=OPTIONS_ACTION_PARALLEL_ONLY,
-                label=(
-                    "API- & Aktualisierungseinstellungen ändern"
-                    if is_german_ui
-                    else "Update API & polling settings"
-                ),
-            ),
-            selector.SelectOptionDict(
-                value=OPTIONS_ACTION_UPDATE_SELECTED,
-                label=(
-                    "Ausgewählte Entitäten aktualisieren"
-                    if is_german_ui
-                    else "Update selected entities"
-                ),
-            ),
-            selector.SelectOptionDict(
-                value=OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
-                label=(
-                    "Verfügbare Entitäten neu suchen und Auswahl aktualisieren"
-                    if is_german_ui
-                    else "Rediscover available entities and update selected entities"
-                ),
-            ),
-        ]
-
         current_data = self._get_runtime_config()
         if current_data is None:
             return self.async_abort(reason="integration_busy")
@@ -739,9 +709,14 @@ class EtaOptionsFlowHandler(OptionsFlow):
                         default=OPTIONS_ACTION_PARALLEL_ONLY,
                     ): selector.SelectSelector(
                         selector.SelectSelectorConfig(
-                            options=update_action_options,
+                            options=[
+                                OPTIONS_ACTION_PARALLEL_ONLY,
+                                OPTIONS_ACTION_UPDATE_SELECTED,
+                                OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
+                            ],
                             mode=selector.SelectSelectorMode.DROPDOWN,
                             multiple=False,
+                            translation_key="options_update_action",
                         )
                     ),
                 }
