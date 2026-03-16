@@ -49,16 +49,17 @@
         "step": {
             "init": {
                 "title": "Optionen",
-                "description": "Nur parallele API-Anfragen ändern: Es wird nur das Anfrage-Limit angepasst.\nAusgewählte Entitäten aktualisieren: Es werden aktuelle Werte für deine bereits ausgewählten Entitäten geladen.\nVerfügbare Entitäten neu suchen und Auswahl aktualisieren: Die Entitätsliste wird neu gesucht und danach kannst du deine Auswahl anpassen.",
+                "description": "**API- & Aktualisierungseinstellungen ändern**: Anfrage-Limit und Aktualisierungsintervall werden angepasst.\n**Ausgewählte Entitäten aktualisieren**: Wähle aus welche Entitäten zu Home Assistant hinzugefügt werden sollen.\n**Verfügbare Entitäten neu suchen und Auswahl aktualisieren**: Die Entitätsliste wird neu gesucht und danach kannst du deine Auswahl anpassen.",
                 "data": {
                     "options_update_action": "Aktion"
                 }
             },
             "parallel_requests": {
-                "title": "Parallele API-Anfragen",
-                "description": "Lege fest, wie viele ETA-API-Anfragen gleichzeitig ausgeführt werden dürfen. Niedrige Werte sind stabiler, höhere Werte können schneller sein, belasten das ETA-Gerät aber stärker und können besonders bei älteren Anlagen zu Fehlern führen.",
+                "title": "API- & Aktualisierungseinstellungen",
+                "description": "Lege fest, wie viele ETA-API-Anfragen gleichzeitig ausgeführt werden dürfen und wie oft Sensorwerte abgerufen werden. Niedrige Parallelwerte sind stabiler; ein kürzeres Intervall liefert aktuellere Daten, belastet das ETA-Gerät aber stärker.",
                 "data": {
-                    "max_parallel_requests": "Maximale parallele API-Anfragen"
+                    "max_parallel_requests": "Maximale parallele API-Anfragen",
+                    "update_interval": "Sensor-Aktualisierungsintervall (Sekunden)"
                 }
             },
             "user": {
@@ -106,6 +107,15 @@
             },
             "latest_error_sensor": {
                 "name": "Neuester aktiver Fehler"
+            }
+        }
+    },
+    "selector": {
+        "options_update_action": {
+            "options": {
+                "update_parallel_requests": "API- & Aktualisierungseinstellungen ändern",
+                "update_selected_entities": "Ausgewählte Entitäten aktualisieren",
+                "rediscover_and_update_entities": "Verfügbare Entitäten neu suchen und Auswahl aktualisieren"
             }
         }
     },

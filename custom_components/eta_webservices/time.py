@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import time, timedelta
+from datetime import time
 import logging
 
 from homeassistant import config_entries
@@ -22,8 +22,6 @@ from .coordinator import ETAWritableUpdateCoordinator
 from .entity import EtaWritableSensorEntity
 
 _LOGGER = logging.getLogger(__name__)
-
-SCAN_INTERVAL = timedelta(minutes=1)
 
 
 async def async_setup_entry(
@@ -64,7 +62,6 @@ class EtaTime(TimeEntity, EtaWritableSensorEntity):
 
         # set an initial value to avoid errors. This will be overwritten by the coordinator immediately after initialization.
         self._attr_native_value = time(hour=19)
-        self._attr_should_poll = True
 
     def handle_data_updates(self, data: float) -> None:
         """Calculate the actual time from the minutes since midnight and set the entity's value."""

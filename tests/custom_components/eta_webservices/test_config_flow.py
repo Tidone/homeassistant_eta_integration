@@ -17,12 +17,14 @@ from custom_components.eta_webservices.const import (
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    DEFAULT_UPDATE_INTERVAL,
     FLOAT_DICT,
     FORCE_LEGACY_MODE,
     MAX_PARALLEL_REQUESTS,
     PENDING_DICT,
     SWITCHES_DICT,
     TEXT_DICT,
+    UPDATE_INTERVAL,
     WRITABLE_DICT,
 )
 
@@ -53,6 +55,8 @@ def _make_runtime_config(overrides=None):
         CHOSEN_PENDING_SENSORS: [],
         FORCE_LEGACY_MODE: False,
         MAX_PARALLEL_REQUESTS: 5,
+        UPDATE_INTERVAL: DEFAULT_UPDATE_INTERVAL,
+        ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
     }
     if overrides:
         base.update(overrides)
@@ -65,6 +69,7 @@ def _make_flow(
     enumerate_new_endpoints=False,
     update_sensor_values=False,
     max_parallel_requests=5,
+    update_interval=DEFAULT_UPDATE_INTERVAL,
 ):
     """Return an EtaOptionsFlowHandler wired up for unit testing."""
     flow = EtaOptionsFlowHandler()
@@ -72,6 +77,7 @@ def _make_flow(
     flow.enumerate_new_endpoints = enumerate_new_endpoints
     flow.update_sensor_values = update_sensor_values
     flow.max_parallel_requests = max_parallel_requests
+    flow.update_interval = update_interval
     if runtime_config is not None:
         flow._get_runtime_config = Mock(return_value=runtime_config)
     flow.async_abort = Mock(return_value="aborted")
@@ -204,21 +210,9 @@ async def test_prepare_data_structures_copies_all_keys_from_runtime_config():
 
     await flow._prepare_data_structures()
 
-    for key in [
-        CONF_HOST,
-        CONF_PORT,
-        FLOAT_DICT,
-        SWITCHES_DICT,
-        TEXT_DICT,
-        WRITABLE_DICT,
-        PENDING_DICT,
-        CHOSEN_FLOAT_SENSORS,
-        CHOSEN_SWITCHES,
-        CHOSEN_TEXT_SENSORS,
-        CHOSEN_WRITABLE_SENSORS,
-        CHOSEN_PENDING_SENSORS,
-        FORCE_LEGACY_MODE,
-    ]:
+    assert len(flow.data) == len(config), "flow.data has unexpected number of keys"
+
+    for key in config:
         assert key in flow.data, f"Key {key!r} missing from flow.data"
         assert flow.data[key] == config[key], f"flow.data[{key!r}] mismatch"
 
@@ -246,6 +240,17 @@ async def test_prepare_data_structures_stores_max_parallel_requests():
     await flow._prepare_data_structures()
 
     assert flow.data[MAX_PARALLEL_REQUESTS] == 3
+
+
+@pytest.mark.asyncio
+async def test_prepare_data_structures_stores_update_interval():
+    """self.data[UPDATE_INTERVAL] equals flow.update_interval."""
+    config = _make_runtime_config()
+    flow = _make_flow(config, update_interval=30)
+
+    await flow._prepare_data_structures()
+
+    assert flow.data[UPDATE_INTERVAL] == 30
 
 
 @pytest.mark.asyncio
@@ -707,6 +712,7 @@ def _flow_for_update_sensor_values(overrides=None):
     flow.data[CONF_HOST] = "192.168.0.25"
     flow.data[CONF_PORT] = 8080
     flow.data[MAX_PARALLEL_REQUESTS] = 5
+    flow.data[UPDATE_INTERVAL] = DEFAULT_UPDATE_INTERVAL
     return flow
 
 
@@ -819,3 +825,53 @@ async def test_update_sensor_values_standard_unit_text_does_not_force_string():
 
     called_sensor_list = mock_eta.get_all_data.call_args[0][0]
     assert called_sensor_list["/t1"].get("force_string_handling") is False
+
+
+# ---------------------------------------------------------------------------
+# async_step_parallel_requests
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_parallel_requests_step_shows_form_with_both_fields():
+    """No user_input → shows form containing MAX_PARALLEL_REQUESTS and UPDATE_INTERVAL."""
+    config = _make_runtime_config()
+    flow = _make_flow(config)
+    flow.async_show_form = Mock(return_value="form_result")
+
+    result = await flow.async_step_parallel_requests(user_input=None)
+
+    assert result == "form_result"
+    schema_keys = {
+        str(k) for k in flow.async_show_form.call_args.kwargs["data_schema"].schema
+    }
+    assert MAX_PARALLEL_REQUESTS in schema_keys
+    assert UPDATE_INTERVAL in schema_keys
+
+
+@pytest.mark.asyncio
+async def test_parallel_requests_step_saves_update_interval():
+    """User submits → update_interval integer is stored in the options entry data."""
+    config = _make_runtime_config()
+    flow = _make_flow(config)
+    flow.async_create_entry = Mock(return_value="entry_result")
+
+    result = await flow.async_step_parallel_requests(
+        user_input={MAX_PARALLEL_REQUESTS: "5", UPDATE_INTERVAL: "30"}
+    )
+
+    assert result == "entry_result"
+    saved_data = flow.async_create_entry.call_args.kwargs["data"]
+    assert saved_data[UPDATE_INTERVAL] == 30
+
+
+@pytest.mark.asyncio
+async def test_parallel_requests_step_aborts_when_no_runtime_config():
+    """_get_runtime_config returns None → step aborts immediately."""
+    flow = EtaOptionsFlowHandler()
+    flow._get_runtime_config = Mock(return_value=None)
+    flow.async_abort = Mock(return_value="aborted")
+
+    result = await flow.async_step_parallel_requests(user_input=None)
+
+    assert result == "aborted"

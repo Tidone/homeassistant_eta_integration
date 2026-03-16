@@ -67,6 +67,8 @@ REQUEST_TIMEOUT = 60
 DEFAULT_MAX_PARALLEL_REQUESTS = 5
 MAX_PARALLEL_REQUESTS = "max_parallel_requests"
 REQUEST_SEMAPHORE = "request_semaphore"
+DEFAULT_UPDATE_INTERVAL = 60  # seconds
+UPDATE_INTERVAL = "update_interval"
 
 STARTUP_MESSAGE = f"""
 -------------------------------------------------------------------

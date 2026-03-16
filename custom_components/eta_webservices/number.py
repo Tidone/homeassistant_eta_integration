@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
 import logging
 
 import voluptuous as vol
@@ -36,8 +35,6 @@ from .entity import EtaWritableSensorEntity
 from .utils import get_native_unit
 
 _LOGGER = logging.getLogger(__name__)
-
-SCAN_INTERVAL = timedelta(minutes=1)
 
 WRITE_VALUE_SCALED_SCHEMA: VolDictType = {
     vol.Required("value"): vol.Number(),

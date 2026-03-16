@@ -240,6 +240,7 @@ def write_unparsed_csv(unparsed_data: dict, output_path: Path, uri_to_duplicates
         writer = csv.writer(f)
         # Update header with new columns
         writer.writerow([
+            "status",
             "node",
             "parsed_info",
             "duplicates",
@@ -264,6 +265,14 @@ def write_unparsed_csv(unparsed_data: dict, output_path: Path, uri_to_duplicates
             # Existing columns
             parsed_info = create_parsed_info(varinfo_metadata)
             raw_varinfo_xml = varinfo_metadata["raw_xml"]
+
+            # Status column: "error" > "duplicate" > ""
+            if varinfo_metadata["error"]:
+                status = "error"
+            elif uri in uri_to_duplicates:
+                status = "duplicate"
+            else:
+                status = ""
 
             # Duplicates column
             duplicate_uris = uri_to_duplicates.get(uri, [])
@@ -315,6 +324,7 @@ def write_unparsed_csv(unparsed_data: dict, output_path: Path, uri_to_duplicates
                 raw_var_xml = var_data.get("raw_xml", "")
 
             writer.writerow([
+                status,
                 uri,
                 parsed_info,
                 duplicates_str,

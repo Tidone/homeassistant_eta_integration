@@ -27,6 +27,7 @@ from .const import (
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNITS,
     DEFAULT_MAX_PARALLEL_REQUESTS,
+    DEFAULT_UPDATE_INTERVAL,
     DOMAIN,
     ENABLE_DEBUG_LOGGING,
     FLOAT_DICT,
@@ -40,6 +41,7 @@ from .const import (
     PENDING_DICT,
     SWITCHES_DICT,
     TEXT_DICT,
+    UPDATE_INTERVAL,
     WRITABLE_DICT,
 )
 
@@ -384,6 +386,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
 
             # User is done, create the config entry.
             self.data.setdefault(MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS)
+            self.data.setdefault(UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
             return self.async_create_entry(
                 title=f"ETA at {self.data[CONF_HOST]}", data=self.data
             )
@@ -574,6 +577,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.enumerate_new_endpoints = False
         self.auto_select_all_entities = False
         self.max_parallel_requests = DEFAULT_MAX_PARALLEL_REQUESTS
+        self.update_interval = DEFAULT_UPDATE_INTERVAL
         self.unavailable_sensors: dict = {}
         self.advanced_options_writable_sensors = []
         self._options_update_task: asyncio.Task | None = None
@@ -626,6 +630,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
             return self.async_abort(reason="integration_busy")
         self.max_parallel_requests = current_data.get(
             MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
+        )
+        self.update_interval = current_data.get(
+            UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL
         )
 
         if user_input is not None:
@@ -689,36 +696,6 @@ class EtaOptionsFlowHandler(OptionsFlow):
 
     async def _show_initial_option_screen(self):
         """Show the initial option form."""
-        is_german_ui = (
-            str(getattr(self.hass.config, "language", "en")).lower().startswith("de")
-        )
-        update_action_options = [
-            selector.SelectOptionDict(
-                value=OPTIONS_ACTION_PARALLEL_ONLY,
-                label=(
-                    "Nur parallele API-Anfragen ändern"
-                    if is_german_ui
-                    else "Update parallel API requests only"
-                ),
-            ),
-            selector.SelectOptionDict(
-                value=OPTIONS_ACTION_UPDATE_SELECTED,
-                label=(
-                    "Ausgewählte Entitäten aktualisieren"
-                    if is_german_ui
-                    else "Update selected entities"
-                ),
-            ),
-            selector.SelectOptionDict(
-                value=OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
-                label=(
-                    "Verfügbare Entitäten neu suchen und Auswahl aktualisieren"
-                    if is_german_ui
-                    else "Rediscover available entities and update selected entities"
-                ),
-            ),
-        ]
-
         current_data = self._get_runtime_config()
         if current_data is None:
             return self.async_abort(reason="integration_busy")
@@ -732,9 +709,14 @@ class EtaOptionsFlowHandler(OptionsFlow):
                         default=OPTIONS_ACTION_PARALLEL_ONLY,
                     ): selector.SelectSelector(
                         selector.SelectSelectorConfig(
-                            options=update_action_options,
+                            options=[
+                                OPTIONS_ACTION_PARALLEL_ONLY,
+                                OPTIONS_ACTION_UPDATE_SELECTED,
+                                OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
+                            ],
                             mode=selector.SelectSelectorMode.DROPDOWN,
                             multiple=False,
+                            translation_key="options_update_action",
                         )
                     ),
                 }
@@ -755,8 +737,16 @@ class EtaOptionsFlowHandler(OptionsFlow):
         if default_parallel_requests not in parallel_request_options:
             default_parallel_requests = str(DEFAULT_MAX_PARALLEL_REQUESTS)
 
+        update_interval_options = ["20", "30", "60", "90", "120"]
+        default_update_interval = str(
+            current_data.get(UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
+        )
+        if default_update_interval not in update_interval_options:
+            default_update_interval = str(DEFAULT_UPDATE_INTERVAL)
+
         if user_input is not None:
             self.max_parallel_requests = int(user_input[MAX_PARALLEL_REQUESTS])
+            self.update_interval = int(user_input[UPDATE_INTERVAL])
             data = {
                 CHOSEN_FLOAT_SENSORS: current_data[CHOSEN_FLOAT_SENSORS],
                 CHOSEN_SWITCHES: current_data[CHOSEN_SWITCHES],
@@ -769,6 +759,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 WRITABLE_DICT: current_data[WRITABLE_DICT],
                 PENDING_DICT: current_data.get(PENDING_DICT, {}),
                 MAX_PARALLEL_REQUESTS: self.max_parallel_requests,
+                UPDATE_INTERVAL: self.update_interval,
                 CONF_HOST: current_data[CONF_HOST],
                 CONF_PORT: current_data[CONF_PORT],
                 ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: current_data.get(
@@ -789,6 +780,18 @@ class EtaOptionsFlowHandler(OptionsFlow):
                             options=[
                                 selector.SelectOptionDict(value=value, label=str(value))
                                 for value in parallel_request_options
+                            ],
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                            multiple=False,
+                        )
+                    ),
+                    vol.Required(
+                        UPDATE_INTERVAL, default=default_update_interval
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=[
+                                selector.SelectOptionDict(value=v, label=f"{v}s")
+                                for v in update_interval_options
                             ],
                             mode=selector.SelectSelectorMode.DROPDOWN,
                             multiple=False,
@@ -1058,6 +1061,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             current_data.get(ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION, [])
         )
         self.data[MAX_PARALLEL_REQUESTS] = self.max_parallel_requests
+        self.data[UPDATE_INTERVAL] = self.update_interval
         self._on_options_progress("Loaded current configuration", 0.1)
 
         if self.enumerate_new_endpoints:
@@ -1237,6 +1241,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
                 WRITABLE_DICT: self.data[WRITABLE_DICT],
                 PENDING_DICT: self.data[PENDING_DICT],
                 MAX_PARALLEL_REQUESTS: self.data[MAX_PARALLEL_REQUESTS],
+                UPDATE_INTERVAL: self.data[UPDATE_INTERVAL],
                 CONF_HOST: self.data[CONF_HOST],
                 CONF_PORT: self.data[CONF_PORT],
                 ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: self.data[

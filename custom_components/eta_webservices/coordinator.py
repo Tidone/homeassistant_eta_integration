@@ -23,6 +23,7 @@ from .const import (
     CUSTOM_UNIT_TIMESLOT,
     CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
     CUSTOM_UNITS,
+    DEFAULT_UPDATE_INTERVAL,
     DOMAIN,
     FLOAT_DICT,
     MAX_PARALLEL_REQUESTS,
@@ -31,15 +32,9 @@ from .const import (
     REQUEST_TIMEOUT,
     SWITCHES_DICT,
     TEXT_DICT,
+    UPDATE_INTERVAL,
     WRITABLE_DICT,
 )
-
-DATA_SCAN_INTERVAL = timedelta(minutes=1)
-# The error endpoint does not have to be updated as often.
-ERROR_SCAN_INTERVAL = timedelta(minutes=2)
-# The pending node coordinator doen't need to run often
-# since pending nodes are expected to be valid for more than a few minutes at a time
-PENDING_SCAN_INTERVAL = timedelta(minutes=5)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,7 +54,9 @@ class ETAErrorUpdateCoordinator(DataUpdateCoordinator[list[ETAError]]):
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=ERROR_SCAN_INTERVAL,
+            update_interval=timedelta(
+                seconds=2 * int(config.get(UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
+            ),
         )
 
     def _create_eta_client(self):
@@ -127,7 +124,9 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=DATA_SCAN_INTERVAL,
+            update_interval=timedelta(
+                seconds=int(config.get(UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
+            ),
         )
 
     def _create_eta_client(self):
@@ -247,7 +246,9 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=DATA_SCAN_INTERVAL,
+            update_interval=timedelta(
+                seconds=int(config.get(UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
+            ),
         )
 
     def _create_eta_client(self):
@@ -296,7 +297,9 @@ class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=PENDING_SCAN_INTERVAL,
+            update_interval=timedelta(
+                seconds=5 * int(config.get(UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL))
+            ),
             config_entry=entry,
         )
 
