@@ -134,10 +134,11 @@ async def test_pending_node_goes_to_pending_dict(load_fixture):
     writable_dict: dict = {}
     pending_dict: dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, pending_dict
     )
 
+    assert result is True
     # The node must be in pending_dict.
     assert len(pending_dict) == 1, f"Expected 1 pending node, got {len(pending_dict)}"
 
@@ -198,10 +199,11 @@ async def test_valid_node_does_not_go_to_pending_dict():
     writable_dict: dict = {}
     pending_dict: dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, pending_dict
     )
 
+    assert result is True
     assert len(float_dict) == 1, f"Expected 1 float sensor, got {len(float_dict)}"
     assert pending_dict == {}, "Valid node must not appear in pending_dict"
 

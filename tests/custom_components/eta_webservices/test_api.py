@@ -55,7 +55,7 @@ async def test_get_all_sensors_falls_back_to_v11_on_version_check_timeout(
         FakeDiscoveryV12,
     )
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False,
         {},
         {},
@@ -65,6 +65,7 @@ async def test_get_all_sensors_falls_back_to_v11_on_version_check_timeout(
         progress_callback=lambda msg, prog: progress_updates.append((msg, prog)),
     )
 
+    assert result is False
     assert route_calls["v11"] == 1
     assert route_calls["v12"] == 0
     assert any("timed out" in msg for msg, _ in progress_updates)
@@ -114,7 +115,7 @@ async def test_get_all_sensors_reports_progress_for_v12_route(monkeypatch):
         FakeDiscoveryV12,
     )
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False,
         {},
         {},
@@ -124,6 +125,7 @@ async def test_get_all_sensors_reports_progress_for_v12_route(monkeypatch):
         progress_callback=lambda msg, prog: progress_updates.append((msg, prog)),
     )
 
+    assert result is True
     assert route_calls["v12"] == 1
     assert route_calls["v11"] == 0
     assert ("Checking ETA API version", 0.01) in progress_updates
@@ -186,10 +188,11 @@ async def test_get_all_sensors_v12(load_fixture):
     writable_dict = {}
 
     # Execute the public method with force_legacy_mode=False
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is True
     # Assertions
     # Verify expected entries from target values
     expected_float_entries = assignment_target_values.get("float_dict", {})
@@ -408,10 +411,11 @@ async def test_get_all_sensors_v12_handles_exceptions():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is True
     # Valid sensor should be in float_dict
     assert len(float_dict) > 0, "Valid float sensor should be added to float_dict"
     # Invalid endpoint should be skipped, not cause the method to fail
@@ -476,10 +480,11 @@ async def test_get_all_sensors_v12_skips_duplicates(load_fixture):
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is True
     # Verify that the duplicate endpoint was only queried once
     varinfo_key = "/user/varinfo//120/10111/0/0/12271"
     var_key = "/user/var//120/10111/0/0/12271"
@@ -546,10 +551,11 @@ async def test_get_all_sensors_v11(load_fixture):
     writable_dict = {}
 
     # Execute the public method with force_legacy_mode=False
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Assertions
     # Verify expected entries from reference values
     expected_float_entries = reference_values_v11.get("float_dict", {})
@@ -761,10 +767,11 @@ async def test_get_all_sensors_v11_distinguishes_sensor_types():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Verify sensor type identification
     assert len(float_dict) > 0, "Float sensor should be added"
     assert len(switches_dict) > 0, "Switch should be added"
@@ -829,10 +836,11 @@ async def test_get_all_sensors_v11_skips_duplicates():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Verify duplicate was only queried once
     var_key = "/user/var//120/10101/0/0/12197"
     assert call_count.get(var_key, 0) <= 1, (
@@ -899,10 +907,11 @@ async def test_get_all_sensors_force_legacy_mode(load_fixture):
     writable_dict = {}
 
     # Execute with force_legacy_mode=True
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         True, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Verify version check was NOT called (short-circuit evaluation)
     assert len(version_check_called) == 0, (
         "is_correct_api_version should not be called when force_legacy_mode=True"
@@ -1009,10 +1018,11 @@ async def test_get_all_sensors_v12_respects_concurrent_request_limit():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is True
     # Verify concurrent limit was respected
     assert max_concurrent <= api._http.max_concurrent_requests, (
         f"Maximum concurrent requests should be <= {api._http.max_concurrent_requests}, but was {max_concurrent}"
@@ -1098,10 +1108,11 @@ async def test_get_all_sensors_v11_respects_concurrent_request_limit():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Verify concurrent limit was respected
     assert max_concurrent <= api._http.max_concurrent_requests, (
         f"Maximum concurrent requests should be <= {api._http.max_concurrent_requests}, but was {max_concurrent}"

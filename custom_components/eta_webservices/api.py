@@ -68,7 +68,7 @@ class EtaAPI:
         writable_dict,
         pending_dict,
         progress_callback: Callable[[str, float | None], None] | None = None,
-    ):
+    ) -> bool:
         """Enumerate all possible sensors on the ETA API.
 
         Automatically routes to the appropriate version implementation based on
@@ -80,6 +80,9 @@ class EtaAPI:
         :param text_dict: Dictionary which will be filled with all text sensors
         :param writable_dict: Dictionary which will be filled with all writable sensors
         :param pending_dict: Dictionary which will be filled with pending sensors (v1.2 only)
+        :param progress_callback: Optional callback to report progress, takes a message and a progress value between 0 and 1
+        :return: True if the new API version was used, false if the legacy discovery mode was used
+        :rtype: boolean
         """
         if progress_callback is not None:
             progress_callback("Checking ETA API version", 0.01)
@@ -131,6 +134,7 @@ class EtaAPI:
             await sensor_discovery.get_all_sensors(
                 float_dict, switches_dict, text_dict, writable_dict, pending_dict
             )
+        return is_new_api
 
     async def does_endpoint_exists(self):
         """Returns true if the ETA API is accessible."""

@@ -534,7 +534,7 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         text_dict = {}
         writable_dict = {}
         pending_dict = {}
-        await eta_client.get_all_sensors(
+        new_api_version = await eta_client.get_all_sensors(
             force_legacy_mode,
             float_dict,
             switches_dict,
@@ -543,6 +543,9 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
             pending_dict,
             progress_callback=progress_callback,
         )
+
+        if not new_api_version:
+            self._errors["base"] = "legacy_mode_selected"
 
         _LOGGER.debug(
             "Queried sensors: Number of float sensors: %i, Number of switches: %i, Number of text sensors: %i, Number of writable sensors: %i, Number of pending sensors: %i",
@@ -607,7 +610,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         text_dict = {}
         writable_dict = {}
         pending_dict = {}
-        await eta_client.get_all_sensors(
+        new_api_version = await eta_client.get_all_sensors(
             force_legacy_mode,
             float_dict,
             switches_dict,
@@ -616,6 +619,9 @@ class EtaOptionsFlowHandler(OptionsFlow):
             pending_dict,
             progress_callback=progress_callback,
         )
+
+        if not new_api_version:
+            self._errors["base"] = "legacy_mode_selected"
 
         return float_dict, switches_dict, text_dict, writable_dict, pending_dict
 

@@ -27,7 +27,6 @@
         "error": {
             "unknown_host": "Konnte keine Verbindung zum ETA Gerät aufbauen: Falscher Host oder Port",
             "no_eta_endpoint": "Konnte keinen ETA Endpunkt finden. Hast du die Webservices in meinETA aktiviert?",
-            "wrong_api_version": "API Version des ETA Geräts ist zu alt. Einige Entitäten werden möglicherweise nicht oder falsch erkannt. Aktualisiere die Firmware deines ETA Geräts auf die aktuellste Firmware, falls möglich.",
             "legacy_mode_selected": "Alter API Modus wird verwendet. Einige Entitäten werden möglicherweise nicht oder falsch erkannt.",
             "endpoint_discovery_failed": "Die Suche nach ETA-Endpunkten ist unerwartet fehlgeschlagen. Bitte versuche es erneut und prüfe die Protokolle, falls das Problem bestehen bleibt.",
             "value_update_error": "Mindestens ein Endpunkt meldet einen Fehler. Die entsprechenden Entitäten werden in der Liste nicht angezeigt."
@@ -84,7 +83,7 @@
             }
         },
         "error": {
-            "wrong_api_version": "API Version des ETA Geräts ist zu alt. Einige Entitäten werden möglicherweise nicht oder falsch erkannt. Aktualisiere die Firmware deines ETA Geräts auf die aktuellste Firmware, falls möglich.",
+            "legacy_mode_selected": "Alter API Modus wird verwendet. Einige Entitäten werden möglicherweise nicht oder falsch erkannt.",
             "endpoint_discovery_failed": "Die Suche nach verfügbaren Entitäten ist fehlgeschlagen. Bitte versuche es erneut und prüfe die Protokolle, falls das Problem bestehen bleibt.",
             "value_update_error": "Mindestens ein Endpunkt konnte nicht aktualisiert werden. Du musst die Liste der verfügbaren Sensoren eventuell aktualisieren..",
             "unavailable_sensors": "Mindestens ein ausgewählter Sensor ist nicht mehr verfügbar oder wurde verschoben. Bitte überprüfe die Listen der ausgewählten Sensoren auf fehlende oder falsch detektierte Sensoren. Du findest eine Liste der betroffenen Sensoren am Ende."

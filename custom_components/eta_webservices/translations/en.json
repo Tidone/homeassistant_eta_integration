@@ -27,8 +27,7 @@
         "error": {
             "unknown_host": "Could not connect to the ETA terminal: Wrong host or port",
             "no_eta_endpoint": "Could not find a valid ETA endpoint. Did you enable the webservices in meinETA?",
-            "wrong_api_version": "API version of ETA terminal is too low. Some entities may not be detected. Please consider updating the firmware of your ETA terminal to the latest version.",
-            "legacy_mode_selected": "Using old API mode. Some entities may not be detected, or may be detected in the wrong category.",
+            "legacy_mode_selected": "Using legacy API mode. Some entities may not be detected, or may be detected in the wrong category.",
             "endpoint_discovery_failed": "ETA endpoint discovery failed unexpectedly. Please try again and check the logs if the problem persists.",
             "value_update_error": "At least one endpoint is reporting an error. The respective entities won't be shown in the list."
         },
@@ -84,7 +83,7 @@
             }
         },
         "error": {
-            "wrong_api_version": "API version of ETA terminal is too low. Some entities may not be detected. Please consider updating the firmware of your ETA terminal to the latest version.",
+            "legacy_mode_selected": "Using legacy API mode. Some entities may not be detected, or may be detected in the wrong category.",
             "endpoint_discovery_failed": "Rediscovering available entities failed. Please try again and check the logs if the problem persists.",
             "value_update_error": "At least one endpoint could not be updated. You may have to update the list of available sensors.",
             "unavailable_sensors": "One or more selected sensors are not available any more or have been moved to a different category. Please check the lists of selected sensors for any missing or wrong sensors. You can find a list of affected sensors at the bottom."
