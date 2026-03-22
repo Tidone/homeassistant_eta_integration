@@ -36,6 +36,7 @@ ERROR_UPDATE_COORDINATOR = "error_update_coordinator"
 WRITABLE_UPDATE_COORDINATOR = "writable_update_coordinator"
 SENSOR_UPDATE_COORDINATOR = "sensor_update_coordinator"
 PENDING_UPDATE_COORDINATOR = "pending_update_coordinator"
+LAST_COORDINATOR_WARNING_TIMESTAMP = "last_coordinator_warning_timestamp"
 
 CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT = "minutes_since_midnight"
 CUSTOM_UNIT_TIMESLOT = "timeslot"
@@ -51,7 +52,9 @@ CUSTOM_UNITS = [
 # Supported features for ETA entities
 # We have to use pre-defined events here because otherwise the services wouldn't show up in the UI
 SUPPORT_WRITE_TIMESLOT = calendar.const.CalendarEntityFeature.CREATE_EVENT
-SUPPORT_WRITE_TIMESLOT_WITH_TEMPERATURE = calendar.const.CalendarEntityFeature.DELETE_EVENT
+SUPPORT_WRITE_TIMESLOT_WITH_TEMPERATURE = (
+    calendar.const.CalendarEntityFeature.DELETE_EVENT
+)
 
 # Internal units which should not be shown to the user
 INVISIBLE_UNITS = [
@@ -69,6 +72,10 @@ MAX_PARALLEL_REQUESTS = "max_parallel_requests"
 REQUEST_SEMAPHORE = "request_semaphore"
 DEFAULT_UPDATE_INTERVAL = 60  # seconds
 UPDATE_INTERVAL = "update_interval"
+COORDINATOR_WARNING_INTERVAL = (
+    30 * 60
+)  # seconds between coordinator performance warnings
+
 
 STARTUP_MESSAGE = f"""
 -------------------------------------------------------------------

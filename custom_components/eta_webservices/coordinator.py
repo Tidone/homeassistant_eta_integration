@@ -5,6 +5,7 @@ from __future__ import annotations
 from asyncio import timeout
 from datetime import timedelta
 import logging
+import time
 
 from homeassistant import config_entries
 from homeassistant.const import CONF_HOST, CONF_PORT
@@ -19,6 +20,7 @@ from .const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
+    COORDINATOR_WARNING_INTERVAL,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     CUSTOM_UNIT_TIMESLOT,
     CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
@@ -26,6 +28,7 @@ from .const import (
     DEFAULT_UPDATE_INTERVAL,
     DOMAIN,
     FLOAT_DICT,
+    LAST_COORDINATOR_WARNING_TIMESTAMP,
     MAX_PARALLEL_REQUESTS,
     PENDING_DICT,
     REQUEST_SEMAPHORE,
@@ -100,6 +103,7 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
 
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
         """Initialize."""
+        self.config = config
         self.host = config.get(CONF_HOST)
         self.port = config.get(CONF_PORT)
         self.session = async_get_clientsession(hass)
@@ -192,6 +196,7 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
 
     async def _async_update_data(self) -> dict[str, float | str | bool]:
         """Update data via library."""
+        start_time = time.monotonic()
         eta_client = self._create_eta_client()
         data: dict[str, float | str | bool] = {}
 
@@ -226,6 +231,19 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
                         continue
                     data[switch] = int(result) == on_value
 
+        elapsed = time.monotonic() - start_time
+        if (
+            self.update_interval
+            and elapsed > self.update_interval.total_seconds()
+            and time.time() - self.config.get(LAST_COORDINATOR_WARNING_TIMESTAMP, 0)
+            > COORDINATOR_WARNING_INTERVAL
+        ):
+            _LOGGER.warning(
+                "Data update took %.2f seconds, which exceeds the configured update interval of %.0f seconds. Consider increasing the update interval to reduce load on the ETA terminal",
+                elapsed,
+                self.update_interval.total_seconds(),
+            )
+            self.config[LAST_COORDINATOR_WARNING_TIMESTAMP] = time.time()
         return data
 
 
@@ -234,6 +252,7 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
 
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
         """Initialize."""
+        self.config = config
         self.host = config.get(CONF_HOST)
         self.port = config.get(CONF_PORT)
         self.session = async_get_clientsession(hass)
@@ -265,6 +284,8 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
 
     async def _async_update_data(self) -> dict:
         """Update data via library."""
+        start_time = time.monotonic()
+
         eta_client = self._create_eta_client()
         sensor_list = {
             self.all_writable_sensors[sensor]["url"]: {
@@ -274,7 +295,22 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
             }
             for sensor in self.chosen_writable_sensors
         }
-        return await eta_client.get_all_data(sensor_list)
+
+        data = await eta_client.get_all_data(sensor_list)
+        elapsed = time.monotonic() - start_time
+        if (
+            self.update_interval
+            and elapsed > self.update_interval.total_seconds()
+            and time.time() - self.config.get(LAST_COORDINATOR_WARNING_TIMESTAMP, 0)
+            > COORDINATOR_WARNING_INTERVAL
+        ):
+            _LOGGER.warning(
+                "Writable data update took %.2f seconds, which exceeds the configured update interval of %.0f seconds. Consider increasing the update interval to reduce load on the ETA terminal",
+                elapsed,
+                self.update_interval.total_seconds(),
+            )
+            self.config[LAST_COORDINATOR_WARNING_TIMESTAMP] = time.time()
+        return data
 
 
 class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
