@@ -5,18 +5,22 @@ from unittest.mock import AsyncMock, Mock, MagicMock, patch
 from homeassistant.const import CONF_HOST, CONF_PORT
 
 from custom_components.eta_webservices.config_flow import (
+    _build_endpoint_selection_schema,
+    _format_endpoint_label,
     _is_invalid_host_input,
     _sanitize_selected_entity_ids,
     EtaOptionsFlowHandler,
 )
 from custom_components.eta_webservices.const import (
     ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION,
+    AUTO_SELECT_ALL_ENTITIES,
     CHOSEN_FLOAT_SENSORS,
     CHOSEN_PENDING_SENSORS,
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNIT_UNITLESS,
     DEFAULT_UPDATE_INTERVAL,
     FLOAT_DICT,
     FORCE_LEGACY_MODE,
@@ -875,3 +879,107 @@ async def test_parallel_requests_step_aborts_when_no_runtime_config():
     result = await flow.async_step_parallel_requests(user_input=None)
 
     assert result == "aborted"
+
+
+# ---------------------------------------------------------------------------
+# _format_endpoint_label
+# ---------------------------------------------------------------------------
+
+
+def test_format_endpoint_label_with_visible_unit():
+    """Standard unit is included in the label."""
+    sensor = _make_sensor(unit="°C", value=23.5)
+    assert _format_endpoint_label(sensor) == "Test sensor (23.5 °C)"
+
+
+def test_format_endpoint_label_with_invisible_unit():
+    """INVISIBLE_UNIT is omitted from the label."""
+    sensor = _make_sensor(unit=CUSTOM_UNIT_UNITLESS, value=5)
+    assert _format_endpoint_label(sensor) == "Test sensor (5)"
+
+
+def test_format_endpoint_label_with_empty_unit():
+    """Empty-string unit means no unit shown."""
+    sensor = _make_sensor(unit="", value="AUTO")
+    assert _format_endpoint_label(sensor) == "Test sensor (AUTO)"
+
+
+def test_format_endpoint_label_writable_sensor():
+    """Writable sensor with a visible unit shows the unit."""
+    sensor = _make_sensor(unit="kW", value=3.2)
+    assert _format_endpoint_label(sensor) == "Test sensor (3.2 kW)"
+
+
+def test_format_endpoint_label_switch():
+    """Switch sensor with empty unit shows only value."""
+    sensor = _make_sensor(unit="", value="EIN")
+    assert _format_endpoint_label(sensor) == "Test sensor (EIN)"
+
+
+def test_format_endpoint_label_text():
+    """Text sensor with empty unit shows only value."""
+    sensor = _make_sensor(unit="", value="Pellets")
+    assert _format_endpoint_label(sensor) == "Test sensor (Pellets)"
+
+
+# ---------------------------------------------------------------------------
+# _build_endpoint_selection_schema
+# ---------------------------------------------------------------------------
+
+
+def _schema_keys(schema: dict) -> set:
+    """Return the string key names from a raw voluptuous schema dict."""
+    return {k.schema for k in schema}
+
+
+def test_build_endpoint_selection_schema_includes_all_standard_categories():
+    """Schema contains AUTO_SELECT toggle and all four standard sensor selectors."""
+    data = _make_runtime_config(
+        {
+            FLOAT_DICT: {"f1": _make_sensor()},
+            SWITCHES_DICT: {"sw1": _make_sensor(unit="")},
+            TEXT_DICT: {"t1": _make_sensor(unit="")},
+            WRITABLE_DICT: {"w1": _make_sensor()},
+        }
+    )
+    schema = _build_endpoint_selection_schema(data)
+    keys = _schema_keys(schema)
+
+    assert AUTO_SELECT_ALL_ENTITIES in keys
+    assert CHOSEN_FLOAT_SENSORS in keys
+    assert CHOSEN_SWITCHES in keys
+    assert CHOSEN_TEXT_SENSORS in keys
+    assert CHOSEN_WRITABLE_SENSORS in keys
+    assert CHOSEN_PENDING_SENSORS not in keys
+
+
+def test_build_endpoint_selection_schema_omits_pending_when_empty():
+    """CHOSEN_PENDING_SENSORS key is absent when PENDING_DICT is empty."""
+    data = _make_runtime_config()
+    schema = _build_endpoint_selection_schema(data)
+    assert CHOSEN_PENDING_SENSORS not in _schema_keys(schema)
+
+
+def test_build_endpoint_selection_schema_includes_pending_when_non_empty():
+    """CHOSEN_PENDING_SENSORS key is present when PENDING_DICT has entries."""
+    data = _make_runtime_config({PENDING_DICT: {"p1": _make_sensor(url="/p1")}})
+    schema = _build_endpoint_selection_schema(data)
+    assert CHOSEN_PENDING_SENSORS in _schema_keys(schema)
+
+
+def test_build_endpoint_selection_schema_applies_defaults():
+    """Defaults passed via the defaults arg are set on the corresponding vol.Optional keys."""
+    data = _make_runtime_config({FLOAT_DICT: {"f1": _make_sensor()}})
+    defaults = {CHOSEN_FLOAT_SENSORS: ["f1"]}
+    schema = _build_endpoint_selection_schema(data, defaults=defaults)
+
+    float_key = next(k for k in schema if hasattr(k, "schema") and k.schema == CHOSEN_FLOAT_SENSORS)
+    assert float_key.default() == ["f1"]
+
+
+def test_build_endpoint_selection_schema_adds_unavailable_sensors_field():
+    """An 'unavailable_sensors' TextSelector key is added when unavailable_sensors is non-empty."""
+    data = _make_runtime_config()
+    unavailable = {"gone": _make_sensor(url="/gone")}
+    schema = _build_endpoint_selection_schema(data, unavailable_sensors=unavailable)
+    assert "unavailable_sensors" in _schema_keys(schema)
