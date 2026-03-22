@@ -1708,6 +1708,19 @@
       "url": "/40/10021/0/11123/2130",
       "value": 77.6
     },
+    "eta_192_168_0_25__kessel_ausgänge_kesselpumpe_mindestdurchfluss": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 1,
+        "dec_places": 2
+      },
+      "friendly_name": "Kessel > Kessel > Kesselpumpe > Mindestdurchfluss",
+      "unit": "°C",
+      "endpoint_type": "IEEE-754",
+      "url": "/264/10891/0/0/14005",
+      "value": 0.51
+    },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1": {
       "valid_values": null,
       "friendly_name": "Kessel > Ausgänge > Vorlaufmischer 1",
@@ -6755,6 +6768,19 @@
       "endpoint_type": "DEFAULT",
       "url": "/40/10021/0/11030/2102",
       "value": 3.0
+    },
+    "eta_192_168_0_25__kessel_ausgänge_kesselpumpe_mindestdurchfluss_writable": {
+      "valid_values": {
+        "scaled_min_value": 0.0,
+        "scaled_max_value": 100.0,
+        "scale_factor": 1,
+        "dec_places": 2
+      },
+      "friendly_name": "Kessel > Kessel > Kesselpumpe > Mindestdurchfluss",
+      "unit": "°C",
+      "endpoint_type": "IEEE-754",
+      "url": "/264/10891/0/0/14005",
+      "value": 0.51
     },
     "eta_192_168_0_25__kessel_zählerstände_inhalt_pelletsbehälter_writable": {
       "valid_values": {
