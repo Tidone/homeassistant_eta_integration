@@ -284,6 +284,11 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         self._on_discovery_progress("Testing ETA endpoint", 0.01)
         try:
             try:
+                # Wait a bit to make sure the UI has finished the transition to the progress view before we do the connectivity test.
+                # This should fix a race condition with the UI where the test finishes
+                # before the progress dialog is fully shown, causing the progress stop signal to get lost
+                # and the progress dialog to get stuck on a spinner indefinitely
+                await asyncio.sleep(0.5)
                 valid = await asyncio.wait_for(self._test_url(host, port), timeout=20)
             except TimeoutError:
                 _LOGGER.warning("ETA endpoint connectivity check timed out after 20s")
