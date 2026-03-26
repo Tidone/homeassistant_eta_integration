@@ -39,6 +39,7 @@ from .const import (
     OPTIONS_ACTION_UPDATE_SELECTED,
     OPTIONS_UPDATE_ACTION,
     PENDING_DICT,
+    REQUEST_SEMAPHORE,
     SWITCHES_DICT,
     TEXT_DICT,
     UPDATE_INTERVAL,
@@ -599,7 +600,14 @@ class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
         progress_callback=None,
     ):
         session = async_get_clientsession(self.hass)
-        eta_client = EtaAPI(session, host, port)
+        eta_client = EtaAPI(
+            session,
+            host,
+            port,
+            max_concurrent_requests=self.data.get(
+                MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
+            ),
+        )
         float_dict = {}
         switches_dict = {}
         text_dict = {}
@@ -657,6 +665,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.auto_select_all_entities = False
         self.max_parallel_requests = DEFAULT_MAX_PARALLEL_REQUESTS
         self.update_interval = DEFAULT_UPDATE_INTERVAL
+        self.request_semaphore: asyncio.Semaphore | None = None
         self.unavailable_sensors: dict = {}
         self.advanced_options_writable_sensors = []
         self._options_update_task: asyncio.Task | None = None
@@ -675,7 +684,15 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self, host, port, force_legacy_mode, progress_callback=None
     ):
         session = async_get_clientsession(self.hass)
-        eta_client = EtaAPI(session, host, port)
+        eta_client = EtaAPI(
+            session,
+            host,
+            port,
+            max_concurrent_requests=self.data.get(
+                MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
+            ),
+            request_semaphore=self.request_semaphore,
+        )
         float_dict = {}
         switches_dict = {}
         text_dict = {}
@@ -713,6 +730,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
         self.max_parallel_requests = current_data.get(
             MAX_PARALLEL_REQUESTS, DEFAULT_MAX_PARALLEL_REQUESTS
         )
+        self.request_semaphore = current_data.get(REQUEST_SEMAPHORE)
         self.update_interval = current_data.get(
             UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL
         )
@@ -891,6 +909,7 @@ class EtaOptionsFlowHandler(OptionsFlow):
             self.data[CONF_HOST],
             self.data[CONF_PORT],
             max_concurrent_requests=self.data[MAX_PARALLEL_REQUESTS],
+            request_semaphore=self.request_semaphore,
         )
 
         sensor_list: dict[str, dict[str, bool]] = {

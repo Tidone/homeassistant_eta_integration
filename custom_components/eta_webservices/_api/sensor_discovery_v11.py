@@ -150,15 +150,11 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
         )
         self._emit_progress(f"Loaded {len(deduplicated_uris)} unique endpoints", 0.1)
 
-        # Fetch all data concurrently
-        semaphore = asyncio.Semaphore(self._http.max_concurrent_requests)
-
         async def fetch_data_limited(uri):
-            async with semaphore:
-                try:
-                    return uri, await self._http.get_data_plus_raw(uri)
-                except Exception as err:  # noqa: BLE001
-                    return uri, err
+            try:
+                return uri, await self._http.get_data_plus_raw(uri)
+            except Exception as err:  # noqa: BLE001
+                return uri, err
 
         data_tasks = [
             asyncio.create_task(fetch_data_limited(uri)) for uri in deduplicated_uris

@@ -22,7 +22,7 @@ class APIClient:
         host: str,
         port: int,
         max_concurrent_requests: int = 5,
-        request_semaphore=None,
+        request_semaphore: asyncio.Semaphore | None = None,
     ) -> None:
         """Initialize HTTP client.
 
@@ -164,23 +164,9 @@ class APIClient:
         :return: List of all data
         :rtype: Dict[str, Any]
         """
-        # Create a semaphore to limit concurrent requests
-        semaphore = asyncio.Semaphore(self.max_concurrent_requests)
-
-        async def fetch_data_limited(
-            uri: str, force_number_handling: bool, force_string_handling: bool
-        ):
-            """Fetch data with concurrency limit."""
-            async with semaphore:
-                result, _ = await self.get_data(
-                    uri,
-                    force_number_handling=force_number_handling,
-                    force_string_handling=force_string_handling,
-                )
-                return result
 
         tasks = [
-            fetch_data_limited(
+            self.get_data(
                 uri,
                 force_number_handling=force_handlings.get(
                     "force_number_handling", False
@@ -198,7 +184,7 @@ class APIClient:
             if isinstance(result, BaseException):
                 _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
             else:
-                data_dict[uri] = result
+                data_dict[uri] = result[0]  # extract value from (value, unit) tuple
 
         return data_dict
 
@@ -235,11 +221,6 @@ class APIClient:
             )
 
         return errors
-
-    @property
-    def max_concurrent_requests(self) -> int:
-        """Get max concurrent requests."""
-        return self._max_concurrent_requests
 
     @property
     def host(self) -> str:

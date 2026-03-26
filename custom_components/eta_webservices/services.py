@@ -34,7 +34,7 @@ async def async_setup_services(hass: HomeAssistant, config_entry: ConfigEntry) -
 
     async def handle_write(call: ServiceCall):
         """Handle the service call."""
-        url = call.data.get("endpoint_url")
+        url = call.data.get("endpoint_url", "")
         value = call.data.get("value")
         begin = call.data.get("begin", None)
         end = call.data.get("end", None)

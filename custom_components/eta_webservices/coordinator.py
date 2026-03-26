@@ -47,8 +47,8 @@ class ETAErrorUpdateCoordinator(DataUpdateCoordinator[list[ETAError]]):
 
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
         """Initialize."""
-        self.host = config.get(CONF_HOST)
-        self.port = config.get(CONF_PORT)
+        self.host = config.get(CONF_HOST, "")
+        self.port = config.get(CONF_PORT, "")
         self.session = async_get_clientsession(hass)
         self.max_parallel_requests = int(config.get(MAX_PARALLEL_REQUESTS, 5))
         self.request_semaphore = config.get(REQUEST_SEMAPHORE)
@@ -104,8 +104,8 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
         """Initialize."""
         self.config = config
-        self.host = config.get(CONF_HOST)
-        self.port = config.get(CONF_PORT)
+        self.host = config.get(CONF_HOST, "")
+        self.port = config.get(CONF_PORT, "")
         self.session = async_get_clientsession(hass)
         self.max_parallel_requests = int(config.get(MAX_PARALLEL_REQUESTS, 5))
         self.request_semaphore = config.get(REQUEST_SEMAPHORE)
@@ -253,8 +253,8 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
         """Initialize."""
         self.config = config
-        self.host = config.get(CONF_HOST)
-        self.port = config.get(CONF_PORT)
+        self.host = config.get(CONF_HOST, "")
+        self.port = config.get(CONF_PORT, "")
         self.session = async_get_clientsession(hass)
         self.max_parallel_requests = int(config.get(MAX_PARALLEL_REQUESTS, 5))
         self.request_semaphore = config.get(REQUEST_SEMAPHORE)
@@ -321,8 +321,8 @@ class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
     ) -> None:
         """Initialize."""
         self.entry = entry
-        self.host = config.get(CONF_HOST)
-        self.port = config.get(CONF_PORT)
+        self.host = config.get(CONF_HOST, "")
+        self.port = config.get(CONF_PORT, "")
         self.session = async_get_clientsession(hass)
         self.max_parallel_requests = int(config.get(MAX_PARALLEL_REQUESTS, 5))
         self.request_semaphore = config.get(REQUEST_SEMAPHORE)
