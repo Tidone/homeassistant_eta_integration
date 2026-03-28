@@ -30,6 +30,8 @@ from .const import (
     FLOAT_DICT,
     LAST_COORDINATOR_WARNING_TIMESTAMP,
     MAX_PARALLEL_REQUESTS,
+    PAUSE_COORDINATORS_MAX_DURATION,
+    PAUSE_COORDINATORS_START_TIMESTAMP,
     PENDING_DICT,
     REQUEST_SEMAPHORE,
     REQUEST_TIMEOUT,
@@ -47,6 +49,7 @@ class ETAErrorUpdateCoordinator(DataUpdateCoordinator[list[ETAError]]):
 
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
         """Initialize."""
+        self.config = config
         self.host = config.get(CONF_HOST, "")
         self.port = config.get(CONF_PORT, "")
         self.session = async_get_clientsession(hass)
@@ -90,6 +93,19 @@ class ETAErrorUpdateCoordinator(DataUpdateCoordinator[list[ETAError]]):
 
     async def _async_update_data(self) -> list[ETAError]:
         """Update data via library."""
+        if (
+            (
+                pause_start_timestamp := self.config.get(
+                    PAUSE_COORDINATORS_START_TIMESTAMP
+                )
+            )
+            is not None
+            and time.time() - pause_start_timestamp < PAUSE_COORDINATORS_MAX_DURATION
+        ):
+            # Skip updates if the coordinators are paused because of a rediscovery in the options flow.
+            _LOGGER.debug("Skipping error update because coordinators are paused")
+            return []
+
         eta_client = self._create_eta_client()
 
         async with timeout(REQUEST_TIMEOUT):
@@ -196,6 +212,19 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
 
     async def _async_update_data(self) -> dict[str, float | str | bool]:
         """Update data via library."""
+        if (
+            (
+                pause_start_timestamp := self.config.get(
+                    PAUSE_COORDINATORS_START_TIMESTAMP
+                )
+            )
+            is not None
+            and time.time() - pause_start_timestamp < PAUSE_COORDINATORS_MAX_DURATION
+        ):
+            # Skip updates if the coordinators are paused because of a rediscovery in the options flow.
+            _LOGGER.debug("Skipping sensor update because coordinators are paused")
+            return {}
+
         start_time = time.monotonic()
         eta_client = self._create_eta_client()
         data: dict[str, float | str | bool] = {}
@@ -284,6 +313,19 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
 
     async def _async_update_data(self) -> dict:
         """Update data via library."""
+        if (
+            (
+                pause_start_timestamp := self.config.get(
+                    PAUSE_COORDINATORS_START_TIMESTAMP
+                )
+            )
+            is not None
+            and time.time() - pause_start_timestamp < PAUSE_COORDINATORS_MAX_DURATION
+        ):
+            # Skip updates if the coordinators are paused because of a rediscovery in the options flow.
+            _LOGGER.debug("Skipping writable update because coordinators are paused")
+            return {}
+
         start_time = time.monotonic()
 
         eta_client = self._create_eta_client()
@@ -320,6 +362,7 @@ class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
         self, hass: HomeAssistant, config: dict, entry: config_entries.ConfigEntry
     ) -> None:
         """Initialize."""
+        self.config = config
         self.entry = entry
         self.host = config.get(CONF_HOST, "")
         self.port = config.get(CONF_PORT, "")
@@ -354,6 +397,21 @@ class ETAPendingNodeCoordinator(DataUpdateCoordinator[bool]):
     async def _async_update_data(self) -> bool:
         """Check pending nodes and promote any that have become valid."""
         if not self.pending_dict:
+            return False
+
+        if (
+            (
+                pause_start_timestamp := self.config.get(
+                    PAUSE_COORDINATORS_START_TIMESTAMP
+                )
+            )
+            is not None
+            and time.time() - pause_start_timestamp < PAUSE_COORDINATORS_MAX_DURATION
+        ):
+            # Skip updates if the coordinators are paused because of a rediscovery in the options flow.
+            _LOGGER.debug(
+                "Skipping pending sensor update because coordinators are paused"
+            )
             return False
 
         eta_client = self._create_eta_client()

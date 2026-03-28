@@ -24,6 +24,8 @@ from custom_components.eta_webservices.const import (
     DEFAULT_UPDATE_INTERVAL,
     FLOAT_DICT,
     LAST_COORDINATOR_WARNING_TIMESTAMP,
+    PAUSE_COORDINATORS_MAX_DURATION,
+    PAUSE_COORDINATORS_START_TIMESTAMP,
     PENDING_DICT,
     SWITCHES_DICT,
     TEXT_DICT,
@@ -324,3 +326,206 @@ async def test_writable_coordinator_warns_again_after_warning_interval(
         await coordinator._async_update_data()
 
     assert mock_logger.warning.call_count == 2
+
+
+# ---------------------------------------------------------------------------
+# Pause behaviour tests
+# ---------------------------------------------------------------------------
+
+
+# -- ETASensorUpdateCoordinator ---------------------------------------------
+
+
+async def test_sensor_coordinator_skips_update_when_paused(mock_hass, mock_client_session):
+    """Returns {} immediately when PAUSE_COORDINATORS_START_TIMESTAMP is set and within window."""
+    config = _interval_config()
+    coordinator = ETASensorUpdateCoordinator(mock_hass, config)
+    coordinator._create_eta_client = MagicMock()
+
+    start_ts = 1000.0
+    config[PAUSE_COORDINATORS_START_TIMESTAMP] = start_ts
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.time.return_value = start_ts + 10  # well within 600 s window
+        result = await coordinator._async_update_data()
+
+    assert result == {}
+    coordinator._create_eta_client.assert_not_called()
+
+
+async def test_sensor_coordinator_resumes_when_pause_expires(mock_hass, mock_client_session):
+    """Proceeds normally once PAUSE_COORDINATORS_MAX_DURATION has elapsed."""
+    config = _interval_config()
+    coordinator = ETASensorUpdateCoordinator(mock_hass, config)
+    coordinator._create_eta_client = MagicMock(return_value=MagicMock())
+
+    start_ts = 1000.0
+    config[PAUSE_COORDINATORS_START_TIMESTAMP] = start_ts
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.time.return_value = start_ts + PAUSE_COORDINATORS_MAX_DURATION + 1
+        mock_time.monotonic.side_effect = [0.0, 1.0]  # elapsed < interval → no warning
+        await coordinator._async_update_data()
+
+    coordinator._create_eta_client.assert_called_once()
+
+
+async def test_sensor_coordinator_proceeds_when_no_pause_set(mock_hass, mock_client_session):
+    """Proceeds normally when PAUSE_COORDINATORS_START_TIMESTAMP is absent from config."""
+    config = _interval_config()  # no pause key
+    coordinator = ETASensorUpdateCoordinator(mock_hass, config)
+    coordinator._create_eta_client = MagicMock(return_value=MagicMock())
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.monotonic.side_effect = [0.0, 1.0]
+        await coordinator._async_update_data()
+
+    coordinator._create_eta_client.assert_called_once()
+
+
+# -- ETAWritableUpdateCoordinator -------------------------------------------
+
+
+async def test_writable_coordinator_skips_update_when_paused(mock_hass, mock_client_session):
+    """Returns {} immediately when PAUSE_COORDINATORS_START_TIMESTAMP is set and within window."""
+    coordinator = _make_writable_coordinator(mock_hass)
+
+    start_ts = 1000.0
+    coordinator.config[PAUSE_COORDINATORS_START_TIMESTAMP] = start_ts
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.time.return_value = start_ts + 10
+        result = await coordinator._async_update_data()
+
+    assert result == {}
+    coordinator._create_eta_client.assert_not_called()
+
+
+async def test_writable_coordinator_resumes_when_pause_expires(mock_hass, mock_client_session):
+    """Proceeds normally once PAUSE_COORDINATORS_MAX_DURATION has elapsed."""
+    coordinator = _make_writable_coordinator(mock_hass)
+
+    start_ts = 1000.0
+    coordinator.config[PAUSE_COORDINATORS_START_TIMESTAMP] = start_ts
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.time.return_value = start_ts + PAUSE_COORDINATORS_MAX_DURATION + 1
+        mock_time.monotonic.side_effect = [0.0, 1.0]
+        await coordinator._async_update_data()
+
+    coordinator._create_eta_client.assert_called_once()
+
+
+async def test_writable_coordinator_proceeds_when_no_pause_set(mock_hass, mock_client_session):
+    """Proceeds normally when PAUSE_COORDINATORS_START_TIMESTAMP is absent from config."""
+    coordinator = _make_writable_coordinator(mock_hass)
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.monotonic.side_effect = [0.0, 1.0]
+        await coordinator._async_update_data()
+
+    coordinator._create_eta_client.assert_called_once()
+
+
+# -- ETAPendingNodeCoordinator ----------------------------------------------
+
+
+def _make_pending_coordinator_with_sensors(mock_hass):
+    """Return an ETAPendingNodeCoordinator with a non-empty pending_dict and mocked client."""
+    config = _interval_config()
+    config[PENDING_DICT] = {"sensor1": {"url": "/120/1/0/0/1234", "unit": "°C"}}
+    entry = MagicMock(spec=ConfigEntry)
+    entry.pref_disable_polling = False
+    coordinator = ETAPendingNodeCoordinator(mock_hass, config, entry)
+    mock_client = MagicMock()
+    mock_client.get_all_data = AsyncMock(return_value={})
+    coordinator._create_eta_client = MagicMock(return_value=mock_client)
+    return coordinator
+
+
+async def test_pending_coordinator_skips_update_when_paused(mock_hass, mock_client_session):
+    """Returns False immediately when PAUSE_COORDINATORS_START_TIMESTAMP is set and within window."""
+    coordinator = _make_pending_coordinator_with_sensors(mock_hass)
+
+    start_ts = 1000.0
+    coordinator.config[PAUSE_COORDINATORS_START_TIMESTAMP] = start_ts
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.time.return_value = start_ts + 10
+        result = await coordinator._async_update_data()
+
+    assert result is False
+    coordinator._create_eta_client.assert_not_called()
+
+
+async def test_pending_coordinator_resumes_when_pause_expires(mock_hass, mock_client_session):
+    """Proceeds normally once PAUSE_COORDINATORS_MAX_DURATION has elapsed."""
+    coordinator = _make_pending_coordinator_with_sensors(mock_hass)
+
+    start_ts = 1000.0
+    coordinator.config[PAUSE_COORDINATORS_START_TIMESTAMP] = start_ts
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.time.return_value = start_ts + PAUSE_COORDINATORS_MAX_DURATION + 1
+        await coordinator._async_update_data()
+
+    coordinator._create_eta_client.assert_called_once()
+
+
+async def test_pending_coordinator_proceeds_when_no_pause_set(mock_hass, mock_client_session):
+    """Proceeds normally when PAUSE_COORDINATORS_START_TIMESTAMP is absent from config."""
+    coordinator = _make_pending_coordinator_with_sensors(mock_hass)
+
+    await coordinator._async_update_data()
+
+    coordinator._create_eta_client.assert_called_once()
+
+
+# -- ETAErrorUpdateCoordinator ----------------------------------------------
+
+
+def _make_error_coordinator(mock_hass):
+    """Return an ETAErrorUpdateCoordinator with a mocked ETA client."""
+    coordinator = ETAErrorUpdateCoordinator(mock_hass, _interval_config())
+    mock_client = MagicMock()
+    mock_client.get_errors = AsyncMock(return_value=[])
+    coordinator._create_eta_client = MagicMock(return_value=mock_client)
+    return coordinator
+
+
+async def test_error_coordinator_skips_update_when_paused(mock_hass, mock_client_session):
+    """Returns [] immediately when PAUSE_COORDINATORS_START_TIMESTAMP is set and within window."""
+    coordinator = _make_error_coordinator(mock_hass)
+
+    start_ts = 1000.0
+    coordinator.config[PAUSE_COORDINATORS_START_TIMESTAMP] = start_ts
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.time.return_value = start_ts + 10
+        result = await coordinator._async_update_data()
+
+    assert result == []
+    coordinator._create_eta_client.assert_not_called()
+
+
+async def test_error_coordinator_resumes_when_pause_expires(mock_hass, mock_client_session):
+    """Proceeds normally once PAUSE_COORDINATORS_MAX_DURATION has elapsed."""
+    coordinator = _make_error_coordinator(mock_hass)
+
+    start_ts = 1000.0
+    coordinator.config[PAUSE_COORDINATORS_START_TIMESTAMP] = start_ts
+
+    with patch(_TIME_MODULE) as mock_time:
+        mock_time.time.return_value = start_ts + PAUSE_COORDINATORS_MAX_DURATION + 1
+        await coordinator._async_update_data()
+
+    coordinator._create_eta_client.assert_called_once()
+
+
+async def test_error_coordinator_proceeds_when_no_pause_set(mock_hass, mock_client_session):
+    """Proceeds normally when PAUSE_COORDINATORS_START_TIMESTAMP is absent from config."""
+    coordinator = _make_error_coordinator(mock_hass)
+
+    await coordinator._async_update_data()
+
+    coordinator._create_eta_client.assert_called_once()

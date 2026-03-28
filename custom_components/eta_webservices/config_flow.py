@@ -5,6 +5,7 @@ import copy
 import ipaddress
 import logging
 import re
+import time
 
 import voluptuous as vol
 
@@ -38,6 +39,7 @@ from .const import (
     OPTIONS_ACTION_REDISCOVER_AND_UPDATE,
     OPTIONS_ACTION_UPDATE_SELECTED,
     OPTIONS_UPDATE_ACTION,
+    PAUSE_COORDINATORS_START_TIMESTAMP,
     PENDING_DICT,
     REQUEST_SEMAPHORE,
     SWITCHES_DICT,
@@ -693,6 +695,11 @@ class EtaOptionsFlowHandler(OptionsFlow):
             ),
             request_semaphore=self.request_semaphore,
         )
+        current_data = self._get_runtime_config()
+        if current_data is not None:
+            # Set a timestamp in the runtime config to signal coordinators to pause updates during endpoint discovery.
+            # Do not use a semaphore here because it is not guaranteed to be released if the task is cancelled.
+            current_data[PAUSE_COORDINATORS_START_TIMESTAMP] = time.time()
         float_dict = {}
         switches_dict = {}
         text_dict = {}
@@ -707,6 +714,8 @@ class EtaOptionsFlowHandler(OptionsFlow):
             pending_dict,
             progress_callback=progress_callback,
         )
+        if current_data is not None:
+            current_data[PAUSE_COORDINATORS_START_TIMESTAMP] = None
 
         if not new_api_version:
             self._errors["base"] = "legacy_mode_selected"

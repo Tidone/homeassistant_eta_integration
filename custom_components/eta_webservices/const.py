@@ -64,14 +64,17 @@ INVISIBLE_UNITS = [
     CUSTOM_UNIT_UNITLESS,
 ]
 
+MAX_PARALLEL_REQUESTS = "max_parallel_requests"
+REQUEST_SEMAPHORE = "request_semaphore"
+UPDATE_INTERVAL = "update_interval"
+PAUSE_COORDINATORS_START_TIMESTAMP = "pause_coordinators_start_timestamp"
+PAUSE_COORDINATORS_MAX_DURATION = 10 * 60  # seconds
+
 # Defaults
 DEFAULT_NAME = DOMAIN
 REQUEST_TIMEOUT = 60
 DEFAULT_MAX_PARALLEL_REQUESTS = 5
-MAX_PARALLEL_REQUESTS = "max_parallel_requests"
-REQUEST_SEMAPHORE = "request_semaphore"
 DEFAULT_UPDATE_INTERVAL = 60  # seconds
-UPDATE_INTERVAL = "update_interval"
 COORDINATOR_WARNING_INTERVAL = (
     30 * 60
 )  # seconds between coordinator performance warnings
