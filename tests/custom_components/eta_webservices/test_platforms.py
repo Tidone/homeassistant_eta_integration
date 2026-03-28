@@ -26,6 +26,8 @@ from custom_components.eta_webservices.const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
+    CUSTOM_UNIT_TIMESLOT,
+    CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
@@ -212,15 +214,20 @@ async def test_all_writable_and_non_writable_sensors_handled(
 
     With every sensor chosen simultaneously the platforms partition the work as:
     - sensor.py: every float sensor → EtaFloatSensor or EtaFloatWritableSensor (1 each);
-                 every text sensor  → EtaTextSensor, EtaTimeslotSensor, or
-                                      EtaTimeWritableSensor (1 each);
-                 writable timeslot sensors → EtaTimeslotSensor (1 each);
+                 non-timeslot text sensors without a writable counterpart → EtaTextSensor;
+                 minutes_since_midnight text sensors with a writable counterpart → EtaTimeWritableSensor;
+                 timeslot text sensors WITHOUT a writable counterpart → EtaTimeslotSensor;
+                 writable timeslot sensors → EtaTimeslotSensor (1 each, subsumes the
+                   text-side timeslot sensor when both are selected);
                  2 always-present error sensors.
     - number.py: writable sensors with regular / unitless units → EtaWritableNumberSensor.
     - time.py:   writable sensors with minutes_since_midnight   → EtaTime.
     - switch.py: every switch → EtaSwitch.
 
-    Total = len(float_dict) + len(text_dict) + len(writable_dict) + len(switches_dict) + 2.
+    Total = len(float_dict) + len(text_dict) + len(writable_dict) + len(switches_dict) + 2
+            - timeslot_text_with_writable_counterpart
+    (timeslot text sensors that have a writable counterpart are added only once, via the
+    writable loop, so they must be subtracted to avoid double-counting).
     """
     fixture = load_fixture("api_assignment_reference_values_v12.json")
     float_dict = fixture["float_dict"]
@@ -278,10 +285,23 @@ async def test_all_writable_and_non_writable_sensors_handled(
         await time_async_setup_entry(hass, config_entry, add_entities)
         await switch_async_setup_entry(hass, config_entry, add_entities)
 
-    # Every sensor produces exactly one entity across all platforms,
-    # plus the 2 always-present error sensors from sensor.py.
+    # Timeslot text sensors that also have a writable counterpart are added only once
+    # (via the writable timeslot loop in sensor.py), so subtract them to avoid
+    # double-counting them in both text_dict and writable_dict.
+    timeslot_text_with_writable = sum(
+        1
+        for k in text_dict
+        if text_dict[k]["unit"]
+        in [CUSTOM_UNIT_TIMESLOT, CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE]
+        and k + "_writable" in writable_dict
+    )
     assert len(all_entities) == (
-        len(float_dict) + len(text_dict) + len(writable_dict) + len(switch_dict) + 2
+        len(float_dict)
+        + len(text_dict)
+        + len(writable_dict)
+        + len(switch_dict)
+        + 2
+        - timeslot_text_with_writable
     )
 
 

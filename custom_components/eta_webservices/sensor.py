@@ -113,7 +113,7 @@ async def async_setup_entry(
 
     chosen_float_sensors = config[CHOSEN_FLOAT_SENSORS]
     chosen_writable_sensors = config[CHOSEN_WRITABLE_SENSORS]
-    # sensors don't use a coordinator if they are not also selected as writable endpoints,
+    # first add all normal float sensors
     sensors = [
         EtaFloatSensor(
             config,
@@ -125,10 +125,11 @@ async def async_setup_entry(
         for entity in chosen_float_sensors
         if entity + "_writable" not in chosen_writable_sensors
     ]
-    # sensors use a coordinator if they are also selected as writable endpoints,
-    # to be able to update the value immediately if the user writes a new value
+    # then add all float sensors which are also selected as writable sensors
     # this only handles cases where a sensor is selected as both, a writable sensor and a float sensor
     # the actual writable sensor is handled in the number entity
+    # fixme: This is a duplicate of the EtaFloatSensor class with a few differences in how the coordinator returns the data
+    # this will be refactored in a future PR
     sensors.extend(
         [
             EtaFloatWritableSensor(
@@ -145,7 +146,6 @@ async def async_setup_entry(
 
     chosen_text_sensors = config[CHOSEN_TEXT_SENSORS]
     # add the text sensors which are not also writable first
-    # these entities don't use a coordinator
     sensors.extend(
         [
             EtaTextSensor(
@@ -178,6 +178,9 @@ async def async_setup_entry(
         ]  # pyright: ignore[reportArgumentType]
     )
     # add the non-writable timeslot sensors first
+    # breaking change: all timeslot sensors which are also selected as writable sensors will now be ignored
+    # this leads to these sensors never being added to HA even if the user selects the "add all entities" option in the config or options flows.
+    # This was done because their value representation is the same as the writable timeslot sensors, leading to duplicate entities with the same value
     sensors.extend(
         [
             EtaTimeslotSensor(
@@ -191,6 +194,7 @@ async def async_setup_entry(
             for entity in chosen_text_sensors
             if config[TEXT_DICT][entity]["unit"]
             in [CUSTOM_UNIT_TIMESLOT, CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE]
+            and entity + "_writable" not in chosen_writable_sensors
         ]  # pyright: ignore[reportArgumentType]
     )
     # then add the writable timeslot sensors
