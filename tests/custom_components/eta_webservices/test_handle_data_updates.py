@@ -1,7 +1,9 @@
-"""Tests that _handle_coordinator_update sets _attr_native_value to None when the entity's
+"""Tests that _handle_coordinator_update clears the entity state when the entity's
 key is absent from the coordinator's data dict.
 
-Covers every non-error entity class across sensor.py, number.py and time.py.
+Covers every non-error entity class across sensor.py, number.py, time.py, and switch.py.
+- sensor/number/time entities: _attr_native_value → None
+- EtaSwitch: _attr_is_on → None
 Error entities (EtaNbrErrorsSensor, EtaLatestErrorSensor) are excluded because they receive
 the full error list from the coordinator rather than a value keyed by entity — the
 "missing key → None" pattern does not apply to them.
@@ -18,6 +20,7 @@ from custom_components.eta_webservices.const import (
     CUSTOM_UNIT_TIMESLOT,
 )
 from custom_components.eta_webservices.number import EtaWritableNumberSensor
+from custom_components.eta_webservices.switch import EtaSwitch
 from custom_components.eta_webservices.sensor import (
     EtaFloatSensor,
     EtaFloatWritableSensor,
@@ -47,6 +50,18 @@ def _make_config():
         CONF_HOST: "192.168.0.25",
         CONF_PORT: 9091,
         ADVANCED_OPTIONS_IGNORE_DECIMAL_PLACES_RESTRICTION: [],
+    }
+
+
+def _make_switch_endpoint(url=_URL):
+    """Minimal endpoint info for EtaSwitch (valid_values must be a dict)."""
+    return {
+        "url": url,
+        "value": True,
+        "valid_values": {"on_value": 1803, "off_value": 1802},
+        "friendly_name": "ETA > Test Switch",
+        "unit": "",
+        "endpoint_type": "DEFAULT",
     }
 
 
@@ -262,3 +277,28 @@ def test_eta_time_clears_value_when_key_missing(hass: HomeAssistant):
     _assert_clears_native_value(
         entity, coordinator, {_OTHER_URL: 0.0}
     )
+
+
+# ---------------------------------------------------------------------------
+# switch.py — EtaSwitch
+# ---------------------------------------------------------------------------
+
+
+def test_eta_switch_clears_is_on_when_key_missing(hass: HomeAssistant):
+    """EtaSwitch._attr_is_on is None when its unique_id is absent from data.
+
+    EtaSwitch does not use the handle_data_updates pattern; it sets _attr_is_on
+    directly in its own _handle_coordinator_update override.
+    """
+    coordinator = _make_sensor_coordinator(True)
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaSwitch(
+            _make_config(), hass, _UNIQUE_ID, _make_switch_endpoint(), coordinator
+        )
+
+    assert entity._attr_is_on is not None  # sanity: True after construction
+
+    coordinator.data = {_OTHER_UNIQUE_ID: True}
+    with patch.object(entity, "async_write_ha_state"):
+        entity._handle_coordinator_update()
+    assert entity._attr_is_on is None
