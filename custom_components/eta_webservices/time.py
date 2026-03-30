@@ -63,8 +63,16 @@ class EtaTime(TimeEntity, EtaWritableSensorEntity):
         # set an initial value to avoid errors. This will be overwritten by the coordinator immediately after initialization.
         self._attr_native_value = time(hour=19)
 
-    def handle_data_updates(self, data: float) -> None:
+    def handle_data_updates(self, data: float | None) -> None:
         """Calculate the actual time from the minutes since midnight and set the entity's value."""
+        if data is None:
+            _LOGGER.info(
+                "Sensor %s received None value; setting state to unavailable",
+                self.entity_id,
+            )
+            self._attr_native_value = None
+            return
+
         total_minutes = int(data)
         hours = total_minutes // 60
         minutes = total_minutes % 60

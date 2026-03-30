@@ -112,7 +112,13 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
             # calculate the step size based on the number of decimal places
             self._attr_native_step = pow(10, self.valid_values["dec_places"] * -1)
 
-    def handle_data_updates(self, data: float) -> None:  # noqa: D102
+    def handle_data_updates(self, data: float | None) -> None:  # noqa: D102
+        if data is None:
+            _LOGGER.info(
+                "Sensor %s received None value; setting state to unavailable",
+                self.entity_id,
+            )
+
         self._attr_native_value = data
 
     async def async_set_native_value(

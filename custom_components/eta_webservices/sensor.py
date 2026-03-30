@@ -330,10 +330,10 @@ class EtaFloatSensor(SensorEntity, EtaCoordinatedSensorEntity[float]):
         else:
             self._attr_state_class = SensorStateClass.MEASUREMENT
 
-    def handle_data_updates(self, data: float | str) -> None:  # noqa: D102
+    def handle_data_updates(self, data: float | str | None) -> None:  # noqa: D102
         numeric_value = _coerce_numeric_value(data)
         if numeric_value is None:
-            _LOGGER.debug(
+            _LOGGER.info(
                 "Sensor %s received non-numeric value '%s'; setting state to unavailable",
                 self.entity_id,
                 data,
@@ -369,10 +369,10 @@ class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
         else:
             self._attr_state_class = SensorStateClass.MEASUREMENT
 
-    def handle_data_updates(self, data: float | str) -> None:  # noqa: D102
+    def handle_data_updates(self, data: float | str | None) -> None:  # noqa: D102
         numeric_value = _coerce_numeric_value(data)
         if numeric_value is None:
-            _LOGGER.debug(
+            _LOGGER.info(
                 "Writable sensor %s received non-numeric value '%s'; setting state to unavailable",
                 self.entity_id,
                 data,
@@ -399,7 +399,12 @@ class EtaTextSensor(SensorEntity, EtaCoordinatedSensorEntity[str]):
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
         )
 
-    def handle_data_updates(self, data: str) -> None:  # noqa: D102
+    def handle_data_updates(self, data: str | None) -> None:  # noqa: D102
+        if data is None:
+            _LOGGER.info(
+                "Sensor %s received None value; setting state to unavailable",
+                self.entity_id,
+            )
         self._attr_native_value = data
 
 
@@ -521,7 +526,15 @@ class EtaTimeslotSensor(SensorEntity, EtaCoordinatedSensorEntity[str]):
 
         return start_time, end_time, optional_value
 
-    def handle_data_updates(self, data: str) -> None:  # noqa: D102
+    def handle_data_updates(self, data: str | None) -> None:  # noqa: D102
+        if data is None:
+            _LOGGER.info(
+                "Sensor %s received None value; setting state to unavailable",
+                self.entity_id,
+            )
+            self._attr_native_value = None
+            return
+
         start_time, end_time, temperature = self._parse_timeslot_value(str(data))
 
         if start_time == "" or end_time == "":
@@ -553,9 +566,17 @@ class EtaTimeWritableSensor(SensorEntity, EtaWritableSensorEntity):
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
         )
 
-    def handle_data_updates(self, data: float) -> None:  # noqa: D102
+    def handle_data_updates(self, data: float | None) -> None:  # noqa: D102
         # the coordinator returns the minutes since midnight, not the textual representation
         # so we have to calculate the textual representation here
+        if data is None:
+            _LOGGER.info(
+                "Sensor %s received None value; setting state to unavailable",
+                self.entity_id,
+            )
+            self._attr_native_value = None
+            return
+
         total_minutes = int(data)
         hours = total_minutes // 60
         minutes = total_minutes % 60
