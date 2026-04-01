@@ -1,13 +1,16 @@
 """Common entity definitions for the ETA sensor integration."""
 
 from abc import abstractmethod
-from typing import Generic, TypeVar, cast
+from typing import Any, Generic, TypeVar, cast
 
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity import Entity, generate_entity_id
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
 
 from .api import EtaAPI, ETAEndpoint
 from .const import (
@@ -83,7 +86,7 @@ class EtaCoordinatedSensorEntity(
 
     def __init__(  # noqa: D107
         self,
-        coordinator: ETASensorUpdateCoordinator,
+        coordinator: DataUpdateCoordinator[dict[str, Any]],
         config: dict,
         hass: HomeAssistant,
         unique_id: str,
@@ -96,7 +99,7 @@ class EtaCoordinatedSensorEntity(
         CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
 
         self._attr_should_poll = False
-        data = self.coordinator.data.get(self.unique_id)  # pyright: ignore[reportArgumentType]
+        data = self.coordinator.data.get(self.uri)
         self.handle_data_updates(cast(_EntityT, data) if data is not None else None)
 
     @abstractmethod
@@ -106,7 +109,7 @@ class EtaCoordinatedSensorEntity(
     @callback
     def _handle_coordinator_update(self) -> None:
         """Update attributes when the coordinator updates."""
-        data = self.coordinator.data.get(self.unique_id)  # pyright: ignore[reportArgumentType]
+        data = self.coordinator.data.get(self.uri)
         self.handle_data_updates(cast(_EntityT, data) if data is not None else None)
         super()._handle_coordinator_update()
 
@@ -118,7 +121,7 @@ class EtaWritableSensorEntity(
 
     def __init__(  # noqa: D107
         self,
-        coordinator: ETAWritableUpdateCoordinator,
+        coordinator: DataUpdateCoordinator[dict[str, Any]],
         config: dict,
         hass: HomeAssistant,
         unique_id: str,

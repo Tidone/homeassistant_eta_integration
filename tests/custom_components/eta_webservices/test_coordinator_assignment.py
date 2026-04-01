@@ -87,8 +87,8 @@ def _assert_coordinator_assignments(all_entities, sensor_coordinator, writable_c
             continue
 
         if entity.coordinator is sensor_coordinator:
-            assert entity.unique_id in sensor_coordinator.data, (
-                f"{type(entity).__name__} {entity.unique_id!r} missing from sensor_coordinator.data"
+            assert entity.uri in sensor_coordinator.data, (
+                f"{type(entity).__name__} {entity.unique_id!r} uri={entity.uri!r} missing from sensor_coordinator.data"
             )
         elif entity.coordinator is writable_coordinator:
             assert entity.uri in writable_coordinator.data, (
@@ -172,8 +172,9 @@ async def _run_test(
 async def test_coordinator_assignment_all_sensors(hass: HomeAssistant, load_fixture):
     """All four chosen lists fully populated: every entity uses the correct coordinator.
 
-    The sensor_coordinator serves float, text, timeslot, and switch entities.
-    The writable_coordinator serves writable number, time, and float-writable entities.
+    The sensor_coordinator serves float, text, timeslot, and switch entities (unless the
+    float sensor is also writable, in which case it uses the writable_coordinator).
+    The writable_coordinator serves writable number, time, and writable float entities.
     Error entities always use the error_coordinator.
     """
     fixture = load_fixture("api_assignment_reference_values_v12.json")
@@ -215,8 +216,8 @@ async def test_coordinator_assignment_all_sensors(hass: HomeAssistant, load_fixt
 async def test_coordinator_assignment_no_writable_sensors(hass: HomeAssistant, load_fixture):
     """chosen_writable_sensors is empty: all regular entities use sensor_coordinator only.
 
-    No EtaWritableNumberSensor, EtaTime, EtaFloatWritableSensor, or EtaTimeWritableSensor
-    should be created. Every non-error entity must be in sensor_coordinator.data.
+    No EtaWritableNumberSensor, EtaTime, or EtaTimeWritableSensor should be created.
+    Every non-error entity must be in sensor_coordinator.data.
     """
     fixture = load_fixture("api_assignment_reference_values_v12.json")
     float_dict = fixture["float_dict"]
