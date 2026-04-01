@@ -31,7 +31,7 @@ from .const import (
     WRITABLE_UPDATE_COORDINATOR,
 )
 from .coordinator import ETAWritableUpdateCoordinator
-from .entity import EtaWritableSensorEntity
+from .entity import EtaCoordinatedSensorEntity
 from .utils import get_native_unit
 
 _LOGGER = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ async def async_setup_entry(
     )
 
 
-class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
+class EtaWritableNumberSensor(NumberEntity, EtaCoordinatedSensorEntity[float]):
     """Representation of a Number Entity."""
 
     def __init__(  # noqa: D107

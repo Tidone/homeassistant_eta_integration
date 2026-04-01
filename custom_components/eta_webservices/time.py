@@ -20,7 +20,7 @@ from .const import (
     WRITABLE_UPDATE_COORDINATOR,
 )
 from .coordinator import ETAWritableUpdateCoordinator
-from .entity import EtaWritableSensorEntity
+from .entity import EtaCoordinatedSensorEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ async def async_setup_entry(
     async_add_entities(time_sensors, update_before_add=True)
 
 
-class EtaTime(TimeEntity, EtaWritableSensorEntity):
+class EtaTime(TimeEntity, EtaCoordinatedSensorEntity[str]):
     """Representation of a Time Sensor."""
 
     def __init__(  # noqa: D107
@@ -66,7 +66,7 @@ class EtaTime(TimeEntity, EtaWritableSensorEntity):
         # set an initial value to avoid errors. This will be overwritten by the coordinator immediately after initialization.
         self._attr_native_value = time(hour=19)
 
-    def handle_data_updates(self, data: float | None) -> None:
+    def handle_data_updates(self, data: str | None) -> None:
         """Calculate the actual time from the minutes since midnight and set the entity's value."""
         if data is None:
             _LOGGER.info(
@@ -75,12 +75,8 @@ class EtaTime(TimeEntity, EtaWritableSensorEntity):
             )
             self._attr_native_value = None
             return
-
-        total_minutes = int(data)
-        hours = total_minutes // 60
-        minutes = total_minutes % 60
-
-        self._attr_native_value = time(hour=hours, minute=minutes)
+        parsed_time = time.fromisoformat(data)
+        self._attr_native_value = parsed_time
 
     async def async_set_value(self, value: time):
         """Calculate the minutes since midnight and write the value to the endpoint."""

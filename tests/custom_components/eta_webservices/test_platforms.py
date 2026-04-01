@@ -26,6 +26,7 @@ from custom_components.eta_webservices.const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
+    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
@@ -76,12 +77,16 @@ async def test_all_writable_sensors_handled(hass: HomeAssistant, load_fixture):
     chosen_writable_sensors = list(writable_dict.keys())
 
     # Mock coordinators — CoordinatorEntity.__init__ only sets self.coordinator,
-    # so MagicMock is safe. .data must be a real dict so that
-    # EtaWritableSensorEntity.__init__ can do float(coordinator.data[self.uri]).
-    # Use 0 as a safe numeric default: some fixture entries have string values
-    # (e.g. 'xxx', '21:00') that can't be float()-ed.
+    # so MagicMock is safe. .data must be a real dict so that entity constructors
+    # can call coordinator.data.get(self.uri). Time sensors expect an ISO time string;
+    # all other writable sensors can safely use 0.
     writable_coordinator = MagicMock()
-    writable_coordinator.data = {info["url"]: 0 for info in writable_dict.values()}
+    writable_coordinator.data = {
+        info["url"]: "00:00"
+        if info["unit"] == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+        else 0
+        for info in writable_dict.values()
+    }
     sensor_coordinator = MagicMock()
     sensor_coordinator.data = {}
     error_coordinator = MagicMock()
@@ -212,10 +217,10 @@ async def test_all_writable_and_non_writable_sensors_handled(
 
     With every sensor chosen simultaneously the platforms partition the work as:
     - sensor.py: every float sensor → EtaFloatSensor or EtaFloatWritableSensor (1 each);
-                 non-timeslot text sensors without a writable counterpart → EtaTextSensor;
-                 minutes_since_midnight text sensors with a writable counterpart → EtaTimeWritableSensor;
-                 all timeslot text sensors → EtaTimeslotSensor (read-only);
-                 writable timeslot sensors → EtaTimeslotSensor (writable, separate entity);
+                 non-timeslot text sensors → EtaTextSensor (uses writable_coordinator if also writable);
+                 timeslot text sensors WITHOUT a writable counterpart → EtaTimeslotSensor;
+                 writable timeslot sensors → EtaTimeslotSensor (1 each, subsumes the
+                   text-side timeslot sensor when both are selected);
                  2 always-present error sensors.
     - number.py: writable sensors with regular / unitless units → EtaWritableNumberSensor.
     - time.py:   writable sensors with minutes_since_midnight   → EtaTime.
@@ -235,11 +240,16 @@ async def test_all_writable_and_non_writable_sensors_handled(
     chosen_text_sensors = list(text_dict.keys())
     chosen_writable_sensors = list(writable_dict.keys())
 
-    # EtaFloatWritableSensor and EtaTimeWritableSensor look up their URL in
-    # coordinator.data. The float/text sensor URLs always match the writable
-    # counterpart URLs (same physical endpoint), so writable_dict URLs suffice.
+    # Entity constructors look up their URL in coordinator.data. The float/text sensor
+    # URLs always match the writable counterpart URLs (same physical endpoint), so
+    # writable_dict URLs suffice. Time sensors expect an ISO time string; others use 0.
     writable_coordinator = MagicMock()
-    writable_coordinator.data = {info["url"]: 0 for info in writable_dict.values()}
+    writable_coordinator.data = {
+        info["url"]: "00:00"
+        if info["unit"] == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+        else 0
+        for info in writable_dict.values()
+    }
     sensor_coordinator = MagicMock()
     sensor_coordinator.data = {}
     error_coordinator = MagicMock()
@@ -282,11 +292,7 @@ async def test_all_writable_and_non_writable_sensors_handled(
         await switch_async_setup_entry(hass, config_entry, add_entities)
 
     assert len(all_entities) == (
-        len(float_dict)
-        + len(text_dict)
-        + len(writable_dict)
-        + len(switch_dict)
-        + 2
+        len(float_dict) + len(text_dict) + len(writable_dict) + len(switch_dict) + 2
     )
 
 

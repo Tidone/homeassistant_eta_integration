@@ -25,7 +25,6 @@ from custom_components.eta_webservices.sensor import (
     EtaFloatSensor,
     EtaTextSensor,
     EtaTimeslotSensor,
-    EtaTimeWritableSensor,
 )
 from custom_components.eta_webservices.time import EtaTime
 
@@ -35,7 +34,6 @@ from custom_components.eta_webservices.time import EtaTime
 
 _UNIQUE_ID = "test_entity"
 _URL = "/test/url/123"
-_OTHER_UNIQUE_ID = "other_entity"
 _OTHER_URL = "/other/url/456"
 
 
@@ -181,28 +179,6 @@ def test_eta_timeslot_sensor_clears_value_when_key_missing(hass: HomeAssistant):
 
 
 # ---------------------------------------------------------------------------
-# sensor.py — EtaTimeWritableSensor
-# ---------------------------------------------------------------------------
-
-
-def test_eta_time_writable_sensor_clears_value_when_key_missing(hass: HomeAssistant):
-    """EtaTimeWritableSensor._attr_native_value is None when its URI is absent from data."""
-    coordinator = _make_writable_coordinator(42.0)
-    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
-        entity = EtaTimeWritableSensor(
-            _make_config(),
-            hass,
-            _UNIQUE_ID,
-            _make_float_endpoint(unit=CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT),
-            coordinator,
-        )
-
-    assert entity._attr_native_value is not None
-
-    _assert_clears_native_value(entity, coordinator, {_OTHER_URL: 42.0})
-
-
-# ---------------------------------------------------------------------------
 # number.py — EtaWritableNumberSensor
 # ---------------------------------------------------------------------------
 
@@ -231,7 +207,7 @@ def test_eta_time_clears_value_when_key_missing(hass: HomeAssistant):
     EtaTime always sets _attr_native_value = time(hour=19) after its parent __init__,
     so the entity starts with a non-None value regardless of coordinator data.
     """
-    coordinator = _make_writable_coordinator(42.0)
+    coordinator = _make_writable_coordinator("19:00")
     with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
         entity = EtaTime(
             _make_config(),
@@ -243,7 +219,7 @@ def test_eta_time_clears_value_when_key_missing(hass: HomeAssistant):
 
     assert entity._attr_native_value is not None  # time(hour=19) after construction
 
-    _assert_clears_native_value(entity, coordinator, {_OTHER_URL: 0.0})
+    _assert_clears_native_value(entity, coordinator, {_OTHER_URL: "00:00"})
 
 
 # ---------------------------------------------------------------------------

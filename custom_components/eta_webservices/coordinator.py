@@ -271,7 +271,7 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
         return data
 
 
-class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
+class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str]]):
     """Class to manage fetching data from the ETA terminal."""
 
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
@@ -306,7 +306,7 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
     def _should_force_number_handling(self, unit):
         return unit == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
 
-    async def _async_update_data(self) -> dict:
+    async def _async_update_data(self) -> dict[str, float | str]:
         """Update data via library."""
         if (
             (
@@ -325,11 +325,7 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
 
         eta_client = self._create_eta_client()
         sensor_list = {
-            self.all_writable_sensors[sensor]["url"]: {
-                "force_number_handling": self._should_force_number_handling(
-                    self.all_writable_sensors[sensor]["unit"]
-                )
-            }
+            self.all_writable_sensors[sensor]["url"]: {}
             for sensor in self.chosen_writable_sensors
         }
 
