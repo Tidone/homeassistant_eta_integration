@@ -334,7 +334,7 @@ def _is_invalid_host_input(host: str) -> bool:
 class EtaFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for Eta."""
 
-    VERSION = 7
+    VERSION = 8
     CONNECTION_CLASS = CONN_CLASS_CLOUD_POLL
 
     def __init__(self) -> None:

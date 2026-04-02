@@ -6,6 +6,7 @@ import logging
 
 from homeassistant import config_entries
 from homeassistant.components.switch import ENTITY_ID_FORMAT, SwitchEntity
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -45,7 +46,7 @@ class EtaSwitch(EtaEntity, SwitchEntity, CoordinatorEntity[ETASensorUpdateCoordi
         endpoint_info: ETAEndpoint,
         coordinator: ETASensorUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init switch")
+        _LOGGER.debug("ETA Integration - init switch")
 
         EtaEntity.__init__(
             self, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
@@ -53,6 +54,7 @@ class EtaSwitch(EtaEntity, SwitchEntity, CoordinatorEntity[ETASensorUpdateCoordi
         CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
 
         self._attr_icon = "mdi:power"
+        self._attr_entity_category = EntityCategory.CONFIG
 
         self.on_value = endpoint_info["valid_values"].get("on_value", 1803)  # pyright: ignore[reportOptionalMemberAccess]
         self.off_value = endpoint_info["valid_values"].get("off_value", 1802)  # pyright: ignore[reportOptionalMemberAccess]

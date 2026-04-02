@@ -137,9 +137,7 @@ def test_eta_float_sensor_clears_value_when_key_missing(hass: HomeAssistant):
 
     assert entity._attr_native_value is not None  # sanity: starts with a real value
 
-    _assert_clears_native_value(
-        entity, coordinator, {_OTHER_UNIQUE_ID: 0.0}
-    )
+    _assert_clears_native_value(entity, coordinator, {_OTHER_UNIQUE_ID: 0.0})
 
 
 # ---------------------------------------------------------------------------
@@ -157,9 +155,7 @@ def test_eta_float_writable_sensor_clears_value_when_key_missing(hass: HomeAssis
 
     assert entity._attr_native_value is not None
 
-    _assert_clears_native_value(
-        entity, coordinator, {_OTHER_URL: 0.0}
-    )
+    _assert_clears_native_value(entity, coordinator, {_OTHER_URL: 0.0})
 
 
 # ---------------------------------------------------------------------------
@@ -177,9 +173,7 @@ def test_eta_text_sensor_clears_value_when_key_missing(hass: HomeAssistant):
 
     assert entity._attr_native_value is not None
 
-    _assert_clears_native_value(
-        entity, coordinator, {_OTHER_UNIQUE_ID: "Aus"}
-    )
+    _assert_clears_native_value(entity, coordinator, {_OTHER_UNIQUE_ID: "Aus"})
 
 
 # ---------------------------------------------------------------------------
@@ -226,9 +220,7 @@ def test_eta_time_writable_sensor_clears_value_when_key_missing(hass: HomeAssist
 
     assert entity._attr_native_value is not None
 
-    _assert_clears_native_value(
-        entity, coordinator, {_OTHER_URL: 42.0}
-    )
+    _assert_clears_native_value(entity, coordinator, {_OTHER_URL: 42.0})
 
 
 # ---------------------------------------------------------------------------
@@ -246,9 +238,7 @@ def test_eta_writable_number_sensor_clears_value_when_key_missing(hass: HomeAssi
 
     assert entity._attr_native_value is not None
 
-    _assert_clears_native_value(
-        entity, coordinator, {_OTHER_URL: 0.0}
-    )
+    _assert_clears_native_value(entity, coordinator, {_OTHER_URL: 0.0})
 
 
 # ---------------------------------------------------------------------------
@@ -274,9 +264,7 @@ def test_eta_time_clears_value_when_key_missing(hass: HomeAssistant):
 
     assert entity._attr_native_value is not None  # time(hour=19) after construction
 
-    _assert_clears_native_value(
-        entity, coordinator, {_OTHER_URL: 0.0}
-    )
+    _assert_clears_native_value(entity, coordinator, {_OTHER_URL: 0.0})
 
 
 # ---------------------------------------------------------------------------

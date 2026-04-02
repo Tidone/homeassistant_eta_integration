@@ -31,8 +31,6 @@ from custom_components.eta_webservices.const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
-    CUSTOM_UNIT_TIMESLOT,
-    CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
@@ -200,19 +198,12 @@ async def test_coordinator_assignment_all_sensors(hass: HomeAssistant, load_fixt
     )
 
     # Sanity-check entity count (mirrors test_all_writable_and_non_writable_sensors_handled)
-    timeslot_text_with_writable = sum(
-        1
-        for k in text_dict
-        if text_dict[k]["unit"] in (CUSTOM_UNIT_TIMESLOT, CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE)
-        and k + "_writable" in writable_dict
-    )
     assert len(all_entities) == (
         len(float_dict)
         + len(text_dict)
         + len(writable_dict)
         + len(switch_dict)
         + 2
-        - timeslot_text_with_writable
     )
 
     _assert_coordinator_assignments(

@@ -82,7 +82,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         endpoint_info: ETAEndpoint,
         coordinator: ETAWritableUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init writable number sensor")
+        _LOGGER.debug("ETA Integration - init writable number sensor")
 
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT

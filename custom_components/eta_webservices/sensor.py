@@ -17,6 +17,7 @@ import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.components.sensor import (
+    DOMAIN as SENSOR_DOMAIN,
     ENTITY_ID_FORMAT,
     SensorDeviceClass,
     SensorEntity,
@@ -25,7 +26,7 @@ from homeassistant.components.sensor import (
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import config_validation as cv, entity_registry as er
 from homeassistant.helpers.entity_platform import async_get_current_platform
 from homeassistant.helpers.typing import VolDictType
 
@@ -190,11 +191,11 @@ async def async_setup_entry(
                 config[TEXT_DICT][entity],
                 sensor_coordinator,
                 should_activate_service=False,
+                should_be_disabled=entity + "_writable" in chosen_writable_sensors,
             )
             for entity in chosen_text_sensors
             if config[TEXT_DICT][entity]["unit"]
             in [CUSTOM_UNIT_TIMESLOT, CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE]
-            and entity + "_writable" not in chosen_writable_sensors
         ]  # pyright: ignore[reportArgumentType]
     )
     # then add the writable timeslot sensors
@@ -315,7 +316,7 @@ class EtaFloatSensor(SensorEntity, EtaCoordinatedSensorEntity[float]):
         endpoint_info: ETAEndpoint,
         coordinator: ETASensorUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init float sensor")
+        _LOGGER.debug("ETA Integration - init float sensor")
 
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
@@ -354,7 +355,7 @@ class EtaFloatWritableSensor(SensorEntity, EtaWritableSensorEntity):
         endpoint_info: ETAEndpoint,
         coordinator: ETAWritableUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init float sensor with coordinator")
+        _LOGGER.debug("ETA Integration - init float sensor with coordinator")
 
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
@@ -393,7 +394,7 @@ class EtaTextSensor(SensorEntity, EtaCoordinatedSensorEntity[str]):
         endpoint_info: ETAEndpoint,
         coordinator: ETASensorUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init text sensor")
+        _LOGGER.debug("ETA Integration - init text sensor")
 
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
@@ -419,14 +420,23 @@ class EtaTimeslotSensor(SensorEntity, EtaCoordinatedSensorEntity[str]):
         endpoint_info: ETAEndpoint,
         coordinator: ETASensorUpdateCoordinator,
         should_activate_service: bool,
+        should_be_disabled: bool = False,
     ) -> None:
-        _LOGGER.info("ETA Integration - init timeslot sensor")
+        _LOGGER.debug("ETA Integration - init timeslot sensor")
 
         self.temperature_unit = "°C"
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
         )
         self.valid_values: ETAValidWritableValues = endpoint_info["valid_values"]  # pyright: ignore[reportAttributeAccessIssue]
+
+        if should_be_disabled:
+            entity_registry = er.async_get(hass)
+            # Remove the entity from the list of deleted entities to allow re-adding it as disabled
+            entity_registry.deleted_entities.pop(
+                (SENSOR_DOMAIN, DOMAIN, unique_id), None
+            )
+            self._attr_entity_registry_enabled_default = False
 
         # Set supported features based on unit type and writability
         if should_activate_service:
@@ -560,7 +570,7 @@ class EtaTimeWritableSensor(SensorEntity, EtaWritableSensorEntity):
         endpoint_info: ETAEndpoint,
         coordinator: ETAWritableUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init text sensor with coordinator")
+        _LOGGER.debug("ETA Integration - init text sensor with coordinator")
 
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT

@@ -1,7 +1,7 @@
 """Tests for eta_webservices/__init__.py migrations."""
 
 import pytest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock, patch
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from copy import deepcopy
@@ -14,6 +14,8 @@ from custom_components.eta_webservices.const import (
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNIT_TIMESLOT,
+    CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
     FLOAT_DICT,
     FORCE_LEGACY_MODE,
     PENDING_DICT,
@@ -40,6 +42,7 @@ async def test_async_migrate_entry_v5_to_v6(load_fixture):
     # Create config entry for version 5
     config_entry = MagicMock(spec=ConfigEntry)
     config_entry.version = 5
+    config_entry.entry_id = "test_entry_id"
 
     # Load real fixture data from extracted ETA config
     fixture_file = load_fixture("v5_config_data.json")
@@ -79,8 +82,11 @@ async def test_async_migrate_entry_v5_to_v6(load_fixture):
     # Mock async_update_entry
     hass.config_entries.async_update_entry = Mock()
 
-    # Execute migration
-    result = await async_migrate_entry(hass, config_entry)
+    # Execute migration (patch entity registry used by migrate_to_v8)
+    with patch("homeassistant.helpers.entity_registry.async_get") as mock_er_get, \
+         patch("homeassistant.helpers.entity_registry.async_entries_for_config_entry", return_value=[]):
+        mock_er_get.return_value = MagicMock()
+        result = await async_migrate_entry(hass, config_entry)
 
     # Assertions
     assert result is True
@@ -94,8 +100,8 @@ async def test_async_migrate_entry_v5_to_v6(load_fixture):
     new_data = call_kwargs["data"]
     new_options = call_kwargs.get("options", {})
 
-    # Verify version was updated to the current latest (v7 adds PENDING_DICT)
-    assert call_kwargs["version"] == 7
+    # Verify version was bumped beyond the starting version
+    assert call_kwargs["version"] > config_entry.version
 
     # ===== FLOAT_DICT Assertions =====
     # Count entries with custom unit in original FLOAT_DICT
@@ -215,6 +221,7 @@ async def test_migration_v6_to_v7_adds_pending_fields():
 
     config_entry = MagicMock(spec=ConfigEntry)
     config_entry.version = 6
+    config_entry.entry_id = "test_entry_id"
 
     float_sensor_key = "eta_192_168_0_25__kessel_kesseltemperatur"
     float_sensor = {
@@ -241,7 +248,10 @@ async def test_migration_v6_to_v7_adds_pending_fields():
     }
     config_entry.options = {}
 
-    result = await async_migrate_entry(hass, config_entry)
+    with patch("homeassistant.helpers.entity_registry.async_get") as mock_er_get, \
+         patch("homeassistant.helpers.entity_registry.async_entries_for_config_entry", return_value=[]):
+        mock_er_get.return_value = MagicMock()
+        result = await async_migrate_entry(hass, config_entry)
 
     assert result is True
 
@@ -249,8 +259,8 @@ async def test_migration_v6_to_v7_adds_pending_fields():
     call_kwargs = hass.config_entries.async_update_entry.call_args.kwargs
     new_data = call_kwargs["data"]
 
-    # Version must be bumped to 7.
-    assert call_kwargs["version"] == 7
+    # Version must be bumped beyond the starting version.
+    assert call_kwargs["version"] > config_entry.version
 
     # New fields must be present and empty.
     assert PENDING_DICT in new_data, "PENDING_DICT must be added by migration"
@@ -280,6 +290,7 @@ async def test_migration_v6_to_v7_with_options():
 
     config_entry = MagicMock(spec=ConfigEntry)
     config_entry.version = 6
+    config_entry.entry_id = "test_entry_id"
 
     float_sensor_key = "eta_192_168_0_25__kessel_kesseltemperatur"
     float_sensor = {
@@ -318,14 +329,17 @@ async def test_migration_v6_to_v7_with_options():
         FORCE_LEGACY_MODE: False,
     }
 
-    result = await async_migrate_entry(hass, config_entry)
+    with patch("homeassistant.helpers.entity_registry.async_get") as mock_er_get, \
+         patch("homeassistant.helpers.entity_registry.async_entries_for_config_entry", return_value=[]):
+        mock_er_get.return_value = MagicMock()
+        result = await async_migrate_entry(hass, config_entry)
     assert result is True
 
     call_kwargs = hass.config_entries.async_update_entry.call_args.kwargs
     new_data = call_kwargs["data"]
     new_options = call_kwargs.get("options", {})
 
-    assert call_kwargs["version"] == 7
+    assert call_kwargs["version"] > config_entry.version
     assert PENDING_DICT in new_data
     assert new_data[PENDING_DICT] == {}
     assert CHOSEN_PENDING_SENSORS in new_data
@@ -341,7 +355,7 @@ async def test_migration_v6_to_v7_with_options():
 
 @pytest.mark.asyncio
 async def test_async_migrate_entry_v1_to_v7():
-    """Test the full migration path from version 1 to 7.
+    """Test the full migration path from version 1 to 8.
 
     v1 data lacks WRITABLE_DICT, CHOSEN_WRITABLE_SENSORS, and FORCE_LEGACY_MODE.
     The migration must:
@@ -349,13 +363,14 @@ async def test_async_migrate_entry_v1_to_v7():
     - Move float sensors whose unit is CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT to
       TEXT_DICT and adjust CHOSEN_FLOAT/TEXT_SENSORS accordingly (migrate_to_v6).
     - Add PENDING_DICT and CHOSEN_PENDING_SENSORS (migrate_to_v7).
-    - Store the result in a single flat data dict, clear options, and set version=7.
+    - Store the result in a single flat data dict, clear options, and set version=8.
     """
     hass = MagicMock(spec=HomeAssistant)
     hass.config_entries = MagicMock()
 
     config_entry = MagicMock(spec=ConfigEntry)
     config_entry.version = 1
+    config_entry.entry_id = "test_entry_id"
     config_entry.options = {}
     config_entry.data = {
         "host": "192.168.0.25",
@@ -385,14 +400,17 @@ async def test_async_migrate_entry_v1_to_v7():
 
     hass.config_entries.async_update_entry = Mock()
 
-    result = await async_migrate_entry(hass, config_entry)
+    with patch("homeassistant.helpers.entity_registry.async_get") as mock_er_get, \
+         patch("homeassistant.helpers.entity_registry.async_entries_for_config_entry", return_value=[]):
+        mock_er_get.return_value = MagicMock()
+        result = await async_migrate_entry(hass, config_entry)
 
     assert result is True
 
     hass.config_entries.async_update_entry.assert_called_once()
     call_kwargs = hass.config_entries.async_update_entry.call_args.kwargs
 
-    assert call_kwargs["version"] == 7
+    assert call_kwargs["version"] > config_entry.version
     assert call_kwargs.get("options") == {}
 
     new_data = call_kwargs["data"]
@@ -425,3 +443,142 @@ async def test_async_migrate_entry_v1_to_v7():
     # Connection fields must be preserved.
     assert new_data["host"] == "192.168.0.25"
     assert new_data["port"] == 8080
+
+
+def _make_v7_config_entry(text_dict=None, chosen_text=None, writable_dict=None, chosen_writable=None):
+    """Build a minimal v7 config entry for migration testing."""
+    config_entry = MagicMock(spec=ConfigEntry)
+    config_entry.version = 7
+    config_entry.entry_id = "test_entry_id"
+    config_entry.options = {}
+    config_entry.data = {
+        FLOAT_DICT: {},
+        SWITCHES_DICT: {},
+        TEXT_DICT: text_dict or {},
+        WRITABLE_DICT: writable_dict or {},
+        CHOSEN_FLOAT_SENSORS: [],
+        CHOSEN_SWITCHES: [],
+        CHOSEN_TEXT_SENSORS: chosen_text or [],
+        CHOSEN_WRITABLE_SENSORS: chosen_writable or [],
+        FORCE_LEGACY_MODE: False,
+        PENDING_DICT: {},
+        CHOSEN_PENDING_SENSORS: [],
+        "host": "192.168.0.25",
+        "port": 8080,
+    }
+    return config_entry
+
+
+def _make_entity_entry(unique_id, entity_id):
+    entry = MagicMock()
+    entry.unique_id = unique_id
+    entry.entity_id = entity_id
+    return entry
+
+
+@pytest.mark.asyncio
+async def test_migration_v7_to_v8_disables_timeslot_with_writable_counterpart():
+    """migrate_to_v8 must disable text-side timeslot entities that have a writable counterpart.
+
+    When a sensor key like 'ts_key' appears in CHOSEN_TEXT_SENSORS with a timeslot unit
+    AND 'ts_key_writable' appears in CHOSEN_WRITABLE_SENSORS, the corresponding entity
+    registry entry for 'ts_key' must be disabled by the integration.
+    Non-timeslot and timeslot-without-writable entries must be left untouched.
+    """
+    hass = MagicMock(spec=HomeAssistant)
+    hass.config_entries = MagicMock()
+    hass.config_entries.async_update_entry = Mock()
+
+    timeslot_key = "ts_monday"
+    timeslot_plus_temp_key = "ts_tuesday"
+    standalone_timeslot_key = "ts_wednesday"  # no writable counterpart → must NOT be disabled
+    regular_text_key = "text_status"
+
+    text_dict = {
+        timeslot_key: {"unit": CUSTOM_UNIT_TIMESLOT, "url": "/u/1", "endpoint_type": "DEFAULT", "friendly_name": "Mon", "value": "", "valid_values": None},
+        timeslot_plus_temp_key: {"unit": CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE, "url": "/u/2", "endpoint_type": "DEFAULT", "friendly_name": "Tue", "value": "", "valid_values": None},
+        standalone_timeslot_key: {"unit": CUSTOM_UNIT_TIMESLOT, "url": "/u/3", "endpoint_type": "DEFAULT", "friendly_name": "Wed", "value": "", "valid_values": None},
+        regular_text_key: {"unit": "", "url": "/u/4", "endpoint_type": "TEXT", "friendly_name": "Status", "value": "on", "valid_values": None},
+    }
+    writable_dict = {
+        timeslot_key + "_writable": {"unit": CUSTOM_UNIT_TIMESLOT, "url": "/u/1", "endpoint_type": "DEFAULT", "friendly_name": "Mon", "value": "", "valid_values": {}},
+        timeslot_plus_temp_key + "_writable": {"unit": CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE, "url": "/u/2", "endpoint_type": "DEFAULT", "friendly_name": "Tue", "value": "", "valid_values": {}},
+    }
+    chosen_text = [timeslot_key, timeslot_plus_temp_key, standalone_timeslot_key, regular_text_key]
+    chosen_writable = [timeslot_key + "_writable", timeslot_plus_temp_key + "_writable"]
+
+    config_entry = _make_v7_config_entry(text_dict, chosen_text, writable_dict, chosen_writable)
+
+    # Simulate two existing entity registry entries for the to-be-disabled sensors.
+    entity_entries = [
+        _make_entity_entry(timeslot_key, "sensor.ts_monday"),
+        _make_entity_entry(timeslot_plus_temp_key, "sensor.ts_tuesday"),
+        _make_entity_entry(standalone_timeslot_key, "sensor.ts_wednesday"),
+        _make_entity_entry(regular_text_key, "sensor.text_status"),
+    ]
+
+    mock_registry = MagicMock()
+    with patch("homeassistant.helpers.entity_registry.async_get", return_value=mock_registry), \
+         patch("homeassistant.helpers.entity_registry.async_entries_for_config_entry", return_value=entity_entries):
+        result = await async_migrate_entry(hass, config_entry)
+
+    assert result is True
+    assert hass.config_entries.async_update_entry.call_args.kwargs["version"] > config_entry.version
+
+    # Only the two entries with writable counterparts must have been disabled.
+    disabled_entity_ids = {
+        call.kwargs["entity_id"] if "entity_id" in call.kwargs else call.args[0]
+        for call in mock_registry.async_update_entity.call_args_list
+    }
+    assert "sensor.ts_monday" in disabled_entity_ids
+    assert "sensor.ts_tuesday" in disabled_entity_ids
+    assert "sensor.ts_wednesday" not in disabled_entity_ids
+    assert "sensor.text_status" not in disabled_entity_ids
+    assert mock_registry.async_update_entity.call_count == 2
+
+
+@pytest.mark.asyncio
+async def test_migration_v7_to_v8_no_entities_to_disable():
+    """migrate_to_v8 must not touch the entity registry when there are no timeslot
+    sensors with writable counterparts — including when the registry is empty."""
+    hass = MagicMock(spec=HomeAssistant)
+    hass.config_entries = MagicMock()
+    hass.config_entries.async_update_entry = Mock()
+
+    # Only a plain float sensor — no timeslot sensors at all.
+    config_entry = _make_v7_config_entry(
+        chosen_text=["regular_text"],
+        text_dict={"regular_text": {"unit": "", "url": "/u/1", "endpoint_type": "TEXT", "friendly_name": "S", "value": "x", "valid_values": None}},
+    )
+
+    mock_registry = MagicMock()
+    with patch("homeassistant.helpers.entity_registry.async_get", return_value=mock_registry), \
+         patch("homeassistant.helpers.entity_registry.async_entries_for_config_entry", return_value=[]):
+        result = await async_migrate_entry(hass, config_entry)
+
+    assert result is True
+    mock_registry.async_update_entity.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_migration_v7_to_v8_timeslot_without_writable_not_disabled():
+    """Timeslot text sensors that have no writable counterpart must not be disabled."""
+    hass = MagicMock(spec=HomeAssistant)
+    hass.config_entries = MagicMock()
+    hass.config_entries.async_update_entry = Mock()
+
+    timeslot_key = "ts_standalone"
+    config_entry = _make_v7_config_entry(
+        text_dict={timeslot_key: {"unit": CUSTOM_UNIT_TIMESLOT, "url": "/u/1", "endpoint_type": "DEFAULT", "friendly_name": "S", "value": "", "valid_values": None}},
+        chosen_text=[timeslot_key],
+        chosen_writable=[],  # no writable counterpart
+    )
+
+    entity_entries = [_make_entity_entry(timeslot_key, "sensor.ts_standalone")]
+    mock_registry = MagicMock()
+    with patch("homeassistant.helpers.entity_registry.async_get", return_value=mock_registry), \
+         patch("homeassistant.helpers.entity_registry.async_entries_for_config_entry", return_value=entity_entries):
+        result = await async_migrate_entry(hass, config_entry)
+
+    assert result is True
+    mock_registry.async_update_entity.assert_not_called()

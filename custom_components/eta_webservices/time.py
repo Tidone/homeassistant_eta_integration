@@ -54,7 +54,7 @@ class EtaTime(TimeEntity, EtaWritableSensorEntity):
         endpoint_info: ETAEndpoint,
         coordinator: ETAWritableUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init time sensor")
+        _LOGGER.debug("ETA Integration - init time sensor")
 
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
