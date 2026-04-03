@@ -7,6 +7,7 @@ import logging
 
 from homeassistant import config_entries
 from homeassistant.components.time import ENTITY_ID_FORMAT, TimeEntity
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 
@@ -59,6 +60,8 @@ class EtaTime(TimeEntity, EtaWritableSensorEntity):
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
         )
+
+        self._attr_entity_category = EntityCategory.CONFIG
 
         # set an initial value to avoid errors. This will be overwritten by the coordinator immediately after initialization.
         self._attr_native_value = time(hour=19)
