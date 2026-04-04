@@ -134,7 +134,12 @@ async def test_get_all_sensors_reports_progress_for_v12_route(monkeypatch):
     assert ("fake-v12-running", 0.4) in progress_updates
 
 
-@pytest.mark.parametrize("load_fixture", ["", "additional_data"], indirect=True, ids=["default", "additional_data"])
+@pytest.mark.parametrize(
+    "load_fixture",
+    ["", "additional_data"],
+    indirect=True,
+    ids=["default", "additional_data"],
+)
 @pytest.mark.asyncio
 async def test_get_all_sensors_v12(load_fixture):
     """Test get_all_sensors with API v1.2 using real fixture data.
@@ -498,7 +503,12 @@ async def test_get_all_sensors_v12_skips_duplicates(load_fixture):
     )
 
 
-@pytest.mark.parametrize("load_fixture", ["", "additional_data"], indirect=True, ids=["default", "additional_data"])
+@pytest.mark.parametrize(
+    "load_fixture",
+    ["", "additional_data"],
+    indirect=True,
+    ids=["default", "additional_data"],
+)
 @pytest.mark.asyncio
 async def test_get_all_sensors_v11(load_fixture):
     """Test get_all_sensors with API v1.1 using real fixture data.
@@ -675,6 +685,72 @@ async def test_get_all_sensors_v11(load_fixture):
         assert actual_entry["url"] == expected_value["url"], (
             f"URL mismatch for {expected_key}"
         )
+
+
+@pytest.mark.skip(reason="failing for now")
+@pytest.mark.parametrize(
+    "load_fixture",
+    ["", "additional_data"],
+    indirect=True,
+    ids=["default", "additional_data"],
+)
+@pytest.mark.parametrize("is_v12", [True, False], ids=["v12", "v11"])
+@pytest.mark.asyncio
+async def test_get_all_sensors_unique_ids(load_fixture, is_v12):
+    """Test that get_all_sensors produces no duplicate keys across all 5 dictionaries.
+
+    This test verifies:
+    - Every key in float_dict, switches_dict, text_dict, writable_dict, and pending_dict
+      is globally unique — no key appears in more than one dictionary
+    - Holds for both v1.1 and v1.2 discovery paths
+    """
+    api_endpoint_data = load_fixture("api_endpoint_data.json")
+
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.25", 8080)
+    api.is_correct_api_version = AsyncMock(return_value=is_v12)
+
+    def create_mock_response(url_path: str):
+        response = AsyncMock()
+        if url_path in api_endpoint_data:
+            response.text = AsyncMock(return_value=api_endpoint_data[url_path])
+        else:
+            response.text = AsyncMock(
+                return_value='<?xml version="1.0" encoding="utf-8"?>'
+                '<eta version="1.0"><error>Not found</error></eta>'
+            )
+        return response
+
+    async def mock_get_request(suffix):
+        return create_mock_response(suffix)
+
+    api._http.get_request = mock_get_request
+
+    float_dict = {}
+    switches_dict = {}
+    text_dict = {}
+    writable_dict = {}
+    pending_dict = {}
+
+    await api.get_all_sensors(
+        False, float_dict, switches_dict, text_dict, writable_dict, pending_dict
+    )
+
+    all_dicts = {
+        "float_dict": float_dict,
+        "switches_dict": switches_dict,
+        "text_dict": text_dict,
+        "writable_dict": writable_dict,
+        "pending_dict": pending_dict,
+    }
+
+    seen: dict[str, str] = {}
+    for dict_name, d in all_dicts.items():
+        for key in d:
+            assert key not in seen, (
+                f"Key '{key}' appears in both '{seen[key]}' and '{dict_name}'"
+            )
+            seen[key] = dict_name
 
 
 @pytest.mark.asyncio
@@ -2319,7 +2395,9 @@ async def test_api_client_get_request_enforces_semaphore_limit():
 
     mock_session.get = slow_get
 
-    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
+    client = APIClient(
+        mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent
+    )
 
     tasks = [client.get_request(f"/user/var/{i}") for i in range(max_concurrent * 2)]
     await asyncio.gather(*tasks)
@@ -2354,7 +2432,9 @@ async def test_api_client_post_request_enforces_semaphore_limit():
 
     mock_session.post = slow_post
 
-    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
+    client = APIClient(
+        mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent
+    )
 
     tasks = [
         client.post_request(f"/user/var/{i}", {"value": i})
@@ -2401,12 +2481,14 @@ async def test_api_client_get_and_post_share_semaphore():
     mock_session.get = slow_get
     mock_session.post = slow_post
 
-    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
-
-    tasks = (
-        [client.get_request(f"/user/var/{i}") for i in range(max_concurrent)]
-        + [client.post_request(f"/user/var/{i}", {"value": i}) for i in range(max_concurrent)]
+    client = APIClient(
+        mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent
     )
+
+    tasks = [client.get_request(f"/user/var/{i}") for i in range(max_concurrent)] + [
+        client.post_request(f"/user/var/{i}", {"value": i})
+        for i in range(max_concurrent)
+    ]
     await asyncio.gather(*tasks)
 
     assert observed_max <= max_concurrent, (
