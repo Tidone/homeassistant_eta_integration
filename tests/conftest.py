@@ -12,11 +12,17 @@ def fixture_data_dir():
 
 
 @pytest.fixture
-def load_fixture(fixture_data_dir):
-    """Load fixture data from JSON files."""
+def load_fixture(request, fixture_data_dir):
+    """Load fixture data from JSON files, optionally from a subdirectory.
+
+    When used with indirect parametrization, ``request.param`` is treated as a
+    subdirectory relative to the base fixtures directory (e.g. "additional_data").
+    When used directly (no indirect param), files are loaded from the base directory.
+    """
+    subdir = getattr(request, "param", "")
     def _load(filename: str) -> dict:
         """Load and parse JSON fixture file."""
-        fixture_path = fixture_data_dir / filename
+        fixture_path = fixture_data_dir / subdir / filename
         with open(fixture_path, "r") as f:
             return json.load(f)
     return _load

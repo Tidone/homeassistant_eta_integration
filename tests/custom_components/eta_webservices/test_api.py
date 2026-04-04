@@ -134,6 +134,7 @@ async def test_get_all_sensors_reports_progress_for_v12_route(monkeypatch):
     assert ("fake-v12-running", 0.4) in progress_updates
 
 
+@pytest.mark.parametrize("load_fixture", ["", "additional_data"], indirect=True, ids=["default", "additional_data"])
 @pytest.mark.asyncio
 async def test_get_all_sensors_v12(load_fixture):
     """Test get_all_sensors with API v1.2 using real fixture data.
@@ -497,6 +498,7 @@ async def test_get_all_sensors_v12_skips_duplicates(load_fixture):
     )
 
 
+@pytest.mark.parametrize("load_fixture", ["", "additional_data"], indirect=True, ids=["default", "additional_data"])
 @pytest.mark.asyncio
 async def test_get_all_sensors_v11(load_fixture):
     """Test get_all_sensors with API v1.1 using real fixture data.
