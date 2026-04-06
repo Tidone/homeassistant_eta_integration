@@ -158,7 +158,11 @@ async def test_get_all_sensors(load_fixture, is_v12):
     - Switches carry the correct on_value and off_value from the fixture
     """
     api_endpoint_data = load_fixture("api_endpoint_data.json")
-    ref_file = "api_assignment_reference_values_v12.json" if is_v12 else "api_assignment_reference_values_v11.json"
+    ref_file = (
+        "api_assignment_reference_values_v12.json"
+        if is_v12
+        else "api_assignment_reference_values_v11.json"
+    )
     reference_values = load_fixture(ref_file)
 
     mock_session = AsyncMock(spec=ClientSession)
@@ -271,12 +275,12 @@ async def test_get_all_sensors(load_fixture, is_v12):
             assert actual_vv.get("scaled_max_value") == expected_vv.get(
                 "scaled_max_value"
             ), f"Scaled max value mismatch for {expected_key}"
-            assert actual_vv.get("scale_factor") == expected_vv.get(
-                "scale_factor"
-            ), f"Scale factor mismatch for {expected_key}"
-            assert actual_vv.get("dec_places") == expected_vv.get(
-                "dec_places"
-            ), f"Dec places mismatch for {expected_key}"
+            assert actual_vv.get("scale_factor") == expected_vv.get("scale_factor"), (
+                f"Scale factor mismatch for {expected_key}"
+            )
+            assert actual_vv.get("dec_places") == expected_vv.get("dec_places"), (
+                f"Dec places mismatch for {expected_key}"
+            )
 
     # Check switches_dict entries
     for expected_key, expected_value in expected_switches_entries.items():
@@ -298,12 +302,16 @@ async def test_get_all_sensors(load_fixture, is_v12):
         assert actual_entry.get("valid_values") is not None, (
             f"Valid values missing for switch {expected_key}"
         )
-        assert actual_entry["valid_values"].get("on_value") == expected_value["valid_values"].get("on_value"), (
+        assert actual_entry["valid_values"].get("on_value") == expected_value[
+            "valid_values"
+        ].get("on_value"), (
             f"on_value mismatch for switch {expected_key}: "
             f"expected {expected_value['valid_values'].get('on_value')}, "
             f"got {actual_entry['valid_values'].get('on_value')}"
         )
-        assert actual_entry["valid_values"].get("off_value") == expected_value["valid_values"].get("off_value"), (
+        assert actual_entry["valid_values"].get("off_value") == expected_value[
+            "valid_values"
+        ].get("off_value"), (
             f"off_value mismatch for switch {expected_key}: "
             f"expected {expected_value['valid_values'].get('off_value')}, "
             f"got {actual_entry['valid_values'].get('off_value')}"
@@ -509,8 +517,6 @@ async def test_get_all_sensors_skips_duplicates(is_v12):
     )
 
 
-
-@pytest.mark.skip(reason="failing for now")
 @pytest.mark.parametrize(
     "load_fixture",
     ["", "additional_data"],
@@ -680,7 +686,6 @@ async def test_get_all_sensors_v11_distinguishes_sensor_types():
     assert len(writable_dict) > 0, "Writable sensor should be added"
     # Text sensor with empty value should not be added
     assert len(text_dict) == 0, "Empty text sensor should not be added"
-
 
 
 @pytest.mark.asyncio

@@ -67,7 +67,8 @@ class APIClient:
             else:
                 self._num_duplicates += 1
             # add parent to uri_dict and then evaluate the children
-            uri_dict[new_prefix].append(xml_dict["@uri"])
+            if (uri := xml_dict["@uri"]) not in uri_dict[new_prefix]:
+                uri_dict[new_prefix].append(uri)
             self._evaluate_xml_dict(child, uri_dict, new_prefix)
         else:
             key = f"{prefix}_{xml_dict['@name']}"
@@ -75,7 +76,8 @@ class APIClient:
                 uri_dict[key] = []
             else:
                 self._num_duplicates += 1
-            uri_dict[key].append(xml_dict["@uri"])
+            if (uri := xml_dict["@uri"]) not in uri_dict[key]:
+                uri_dict[key].append(uri)
 
     async def get_menu(self):
         """Request the menu from the ETA API."""

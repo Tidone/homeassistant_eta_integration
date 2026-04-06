@@ -201,6 +201,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         self,
         all_endpoints: dict[str, list[str]],
         endpoint_infos: dict[str, ETAEndpoint],
+        deduplicated_uris: dict[str, str],
     ) -> int:
         """Sanitize duplicate nodes by removing URIs that return invalid data.
 
@@ -303,6 +304,10 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                     key,
                     len(valid_uris),
                 )
+                # rename the keys of the valid URIs to make sure they are unique
+                # by adding a suffix like the URI to the key in deduplicated_uris
+                for uri in valid_uris:
+                    deduplicated_uris[uri] = f"{key}__dedup_{uri.replace('/', '_')}"
 
         # Remove invalid URIs from endpoint_infos.
         # A URI can appear in multiple duplicate-node groups, so deduplicate before deletion.
@@ -400,7 +405,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         # Sanitize duplicate nodes by testing which URIs return valid data
         self._emit_progress("Resolving duplicate endpoints", 0.7)
         removed_count = await self._sanitize_duplicate_nodes(
-            all_endpoints, endpoint_infos
+            all_endpoints, endpoint_infos, deduplicated_uris
         )
         if removed_count > 0:
             _LOGGER.info("Removed %d invalid URIs from duplicate nodes", removed_count)

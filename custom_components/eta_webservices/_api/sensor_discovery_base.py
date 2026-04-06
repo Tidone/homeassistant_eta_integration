@@ -45,6 +45,9 @@ class SensorDiscoveryBase(ABC):
 
     def _get_friendly_name(self, key: str) -> str:
         """Generate friendly name from key."""
+        # remove the part that starts with "__dedup_" from the end of the key if it exists
+        if "__dedup_" in key:
+            key = key.rsplit("__dedup_", maxsplit=1)[0]
         components = key.split("_")[1:]  # The first part is always empty
         return " > ".join(components)
 

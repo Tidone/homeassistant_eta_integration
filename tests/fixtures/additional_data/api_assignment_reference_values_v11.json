@@ -615,13 +615,21 @@
       "endpoint_type": "TEXT",
       "value": 0.0
     },
-    "eta_192_168_0_25__fwm_warmwasser_sekundär_durchfluss_lag_tf": {
+    "eta_192_168_0_25__fwm_warmwasser_sekundär_durchfluss_lag_tf__dedup__79_10531_12785_0_1072": {
       "url": "/79/10531/12785/0/1072",
       "valid_values": null,
       "friendly_name": "FWM > Warmwasser > Sekundär Durchfluss > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
       "value": 0.3
+    },
+    "eta_192_168_0_25__fwm_warmwasser_sekundär_durchfluss_lag_tf__dedup__79_10531_12785_0_1074": {
+      "url": "/79/10531/12785/0/1074",
+      "valid_values": null,
+      "friendly_name": "FWM > Warmwasser > Sekundär Durchfluss > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "TEXT",
+      "value": 0.0
     },
     "eta_192_168_0_25__fwm_warmwasser_sekundär_durchfluss_lag_y": {
       "url": "/79/10531/12785/0/1073",
@@ -2114,13 +2122,21 @@
       "endpoint_type": "TEXT",
       "value": 0.521
     },
-    "eta_192_168_0_25__kessel_eingänge_durchfluss_lag_tf": {
+    "eta_192_168_0_25__kessel_eingänge_durchfluss_lag_tf__dedup__264_10891_13439_0_1072": {
       "url": "/264/10891/13439/0/1072",
       "valid_values": null,
       "friendly_name": "Kessel > Eingänge > Durchfluss > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
       "value": 5.0
+    },
+    "eta_192_168_0_25__kessel_eingänge_durchfluss_lag_tf__dedup__264_10891_13439_0_1074": {
+      "url": "/264/10891/13439/0/1074",
+      "valid_values": null,
+      "friendly_name": "Kessel > Eingänge > Durchfluss > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "TEXT",
+      "value": 0.0
     },
     "eta_192_168_0_25__kessel_eingänge_durchfluss_lag_y": {
       "url": "/264/10891/13439/0/1073",
@@ -2609,13 +2625,21 @@
       "endpoint_type": "TEXT",
       "value": 3.3
     },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_tf": {
+    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_tf__dedup__264_10891_12095_0_1072": {
       "url": "/264/10891/12095/0/1072",
       "valid_values": null,
       "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
       "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_tf__dedup__264_10891_12095_0_1074": {
+      "url": "/264/10891/12095/0/1074",
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "TEXT",
+      "value": 86400.0
     },
     "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_y": {
       "url": "/264/10891/12095/0/1073",
@@ -3399,7 +3423,7 @@
       "endpoint_type": "TEXT",
       "value": 30.4399
     },
-    "eta_192_168_0_25__diagnose_eingänge_s513": {
+    "eta_192_168_0_25__diagnose_eingänge_s513__dedup__264_10911_0_0_5143": {
       "url": "/264/10911/0/0/5143",
       "valid_values": null,
       "friendly_name": "Diagnose > Eingänge > S513",
@@ -3407,7 +3431,7 @@
       "endpoint_type": "TEXT",
       "value": 0.000506792
     },
-    "eta_192_168_0_25__diagnose_eingänge_s514": {
+    "eta_192_168_0_25__diagnose_eingänge_s514__dedup__264_10911_0_0_5144": {
       "url": "/264/10911/0/0/5144",
       "valid_values": null,
       "friendly_name": "Diagnose > Eingänge > S514",
@@ -3415,7 +3439,7 @@
       "endpoint_type": "TEXT",
       "value": 0.000680905
     },
-    "eta_192_168_0_25__diagnose_eingänge_s515": {
+    "eta_192_168_0_25__diagnose_eingänge_s515__dedup__264_10911_0_0_6674": {
       "url": "/264/10911/0/0/6674",
       "valid_values": null,
       "friendly_name": "Diagnose > Eingänge > S515",
@@ -3423,7 +3447,7 @@
       "endpoint_type": "TEXT",
       "value": 0.0004757
     },
-    "eta_192_168_0_25__diagnose_eingänge_s516": {
+    "eta_192_168_0_25__diagnose_eingänge_s516__dedup__264_10911_0_0_6675": {
       "url": "/264/10911/0/0/6675",
       "valid_values": null,
       "friendly_name": "Diagnose > Eingänge > S516",
@@ -3508,7 +3532,7 @@
       "endpoint_type": "TEXT",
       "value": 0.122372
     },
-    "eta_192_168_0_25__diagnose_ausgänge_s152": {
+    "eta_192_168_0_25__diagnose_ausgänge_s152__dedup__264_10911_0_0_6539": {
       "url": "/264/10911/0/0/6539",
       "valid_values": null,
       "friendly_name": "Diagnose > Ausgänge > S152",
@@ -3982,13 +4006,21 @@
       "endpoint_type": "TEXT",
       "value": 3.1
     },
-    "eta_192_168_0_25__heizkreis_heizkreis_außentemperatur_verzögert_lag_tf": {
+    "eta_192_168_0_25__heizkreis_heizkreis_außentemperatur_verzögert_lag_tf__dedup__264_10101_12095_0_1072": {
       "url": "/264/10101/12095/0/1072",
       "valid_values": null,
       "friendly_name": "Heizkreis > Heizkreis > Außentemperatur verzögert > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
       "value": 1800.0
+    },
+    "eta_192_168_0_25__heizkreis_heizkreis_außentemperatur_verzögert_lag_tf__dedup__264_10101_12095_0_1074": {
+      "url": "/264/10101/12095/0/1074",
+      "valid_values": null,
+      "friendly_name": "Heizkreis > Heizkreis > Außentemperatur verzögert > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "TEXT",
+      "value": 0.0
     },
     "eta_192_168_0_25__heizkreis_heizkreis_außentemperatur_verzögert_lag_y": {
       "url": "/264/10101/12095/0/1073",
@@ -6506,7 +6538,7 @@
       "endpoint_type": "TEXT",
       "value": "Ein"
     },
-    "eta_192_168_0_25__diagnose_eingänge_s513": {
+    "eta_192_168_0_25__diagnose_eingänge_s513__dedup__264_10911_0_0_5141": {
       "url": "/264/10911/0/0/5141",
       "valid_values": null,
       "friendly_name": "Diagnose > Eingänge > S513",
@@ -6514,7 +6546,15 @@
       "endpoint_type": "TEXT",
       "value": "Aus"
     },
-    "eta_192_168_0_25__diagnose_eingänge_s514": {
+    "eta_192_168_0_25__diagnose_eingänge_s513__dedup__264_10911_0_0_5145": {
+      "url": "/264/10911/0/0/5145",
+      "valid_values": null,
+      "friendly_name": "Diagnose > Eingänge > S513",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "value": "---"
+    },
+    "eta_192_168_0_25__diagnose_eingänge_s514__dedup__264_10911_0_0_5142": {
       "url": "/264/10911/0/0/5142",
       "valid_values": null,
       "friendly_name": "Diagnose > Eingänge > S514",
@@ -6522,7 +6562,15 @@
       "endpoint_type": "TEXT",
       "value": "Aus"
     },
-    "eta_192_168_0_25__diagnose_eingänge_s515": {
+    "eta_192_168_0_25__diagnose_eingänge_s514__dedup__264_10911_0_0_5146": {
+      "url": "/264/10911/0/0/5146",
+      "valid_values": null,
+      "friendly_name": "Diagnose > Eingänge > S514",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "value": "---"
+    },
+    "eta_192_168_0_25__diagnose_eingänge_s515__dedup__264_10911_0_0_6672": {
       "url": "/264/10911/0/0/6672",
       "valid_values": null,
       "friendly_name": "Diagnose > Eingänge > S515",
@@ -6530,13 +6578,29 @@
       "endpoint_type": "TEXT",
       "value": "Aus"
     },
-    "eta_192_168_0_25__diagnose_eingänge_s516": {
+    "eta_192_168_0_25__diagnose_eingänge_s515__dedup__264_10911_0_0_6676": {
+      "url": "/264/10911/0/0/6676",
+      "valid_values": null,
+      "friendly_name": "Diagnose > Eingänge > S515",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "value": "---"
+    },
+    "eta_192_168_0_25__diagnose_eingänge_s516__dedup__264_10911_0_0_6673": {
       "url": "/264/10911/0/0/6673",
       "valid_values": null,
       "friendly_name": "Diagnose > Eingänge > S516",
       "unit": "",
       "endpoint_type": "TEXT",
       "value": "Aus"
+    },
+    "eta_192_168_0_25__diagnose_eingänge_s516__dedup__264_10911_0_0_6677": {
+      "url": "/264/10911/0/0/6677",
+      "valid_values": null,
+      "friendly_name": "Diagnose > Eingänge > S516",
+      "unit": "",
+      "endpoint_type": "TEXT",
+      "value": "---"
     },
     "eta_192_168_0_25__diagnose_eingänge_s701-4_/_s701-di": {
       "url": "/264/10911/0/0/6684",
@@ -6834,7 +6898,7 @@
       "endpoint_type": "TEXT",
       "value": "Aus"
     },
-    "eta_192_168_0_25__diagnose_ausgänge_s152": {
+    "eta_192_168_0_25__diagnose_ausgänge_s152__dedup__264_10911_0_0_6538": {
       "url": "/264/10911/0/0/6538",
       "valid_values": null,
       "friendly_name": "Diagnose > Ausgänge > S152",

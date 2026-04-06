@@ -262,13 +262,21 @@
       "endpoint_type": "TEXT",
       "value": 4.7
     },
-    "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_tf": {
+    "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_tf__dedup__120_10101_12095_0_1072": {
       "url": "/120/10101/12095/0/1072",
       "valid_values": null,
       "friendly_name": "HK > Heizkreis > Außentemperatur verzögert > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
       "value": 1800.0
+    },
+    "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_tf__dedup__120_10101_12095_0_1074": {
+      "url": "/120/10101/12095/0/1074",
+      "valid_values": null,
+      "friendly_name": "HK > Heizkreis > Außentemperatur verzögert > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "TEXT",
+      "value": 0.0
     },
     "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_y": {
       "url": "/120/10101/12095/0/1073",
@@ -743,13 +751,21 @@
       "endpoint_type": "TEXT",
       "value": 4.7
     },
-    "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_tf": {
+    "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_tf__dedup__120_10102_12095_0_1072": {
       "url": "/120/10102/12095/0/1072",
       "valid_values": null,
       "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
       "value": 1800.0
+    },
+    "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_tf__dedup__120_10102_12095_0_1074": {
+      "url": "/120/10102/12095/0/1074",
+      "valid_values": null,
+      "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "TEXT",
+      "value": 0.0
     },
     "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_y": {
       "url": "/120/10102/12095/0/1073",
@@ -1791,13 +1807,21 @@
       "endpoint_type": "TEXT",
       "value": 4.7
     },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_tf": {
+    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_tf__dedup__40_10021_12095_0_1072": {
       "url": "/40/10021/12095/0/1072",
       "valid_values": null,
       "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert > Lag Tf",
       "unit": "s",
       "endpoint_type": "TEXT",
       "value": 0.0
+    },
+    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_tf__dedup__40_10021_12095_0_1074": {
+      "url": "/40/10021/12095/0/1074",
+      "valid_values": null,
+      "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert > Lag Tf",
+      "unit": "s",
+      "endpoint_type": "TEXT",
+      "value": 86400.0
     },
     "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_y": {
       "url": "/40/10021/12095/0/1073",
