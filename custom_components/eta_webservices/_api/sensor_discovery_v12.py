@@ -63,41 +63,54 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             and "scaled_min_value" in endpoint_info["valid_values"]
         )
 
-    def _parse_unit(self, data):
+    def _parse_unit(
+        self, varinfo_data, var_data_entry: tuple[float | str, str, dict]
+    ) -> str:
         """Parse and detect custom units (v1.2 specific)."""
-        unit = data["@unit"]
+        var_value, var_unit, _ = var_data_entry
+        unit = var_unit
+
+        if (
+            varinfo_data["type"] == "DEFAULT"
+            and unit == ""
+            and str(var_value).isnumeric()
+        ):
+            # some sensors have an empty unit and a type of DEFAULT in the varinfo endpoint, but show a numeric value in the var endpoint
+            # those sensors are most likely unitless float sensors, so we set the unit to unitless and let the normal float sensor detection handle the rest
+            unit = CUSTOM_UNIT_UNITLESS
+
         if (
             unit == ""
-            and "validValues" in data
-            and data["validValues"] is not None
-            and "min" in data["validValues"]
-            and "max" in data["validValues"]
-            and "#text" in data["validValues"]["min"]
-            and int(data["@scaleFactor"]) == 1
-            and int(data["@decPlaces"]) == 0
+            and "validValues" in varinfo_data
+            and varinfo_data["validValues"] is not None
+            and "min" in varinfo_data["validValues"]
+            and "max" in varinfo_data["validValues"]
+            and "#text" in varinfo_data["validValues"]["min"]
+            and int(varinfo_data["@scaleFactor"]) == 1
+            and int(varinfo_data["@decPlaces"]) == 0
         ):
             _LOGGER.debug("Found time endpoint")
-            min_value = int(data["validValues"]["min"]["#text"])
-            max_value = int(data["validValues"]["max"]["#text"])
+            min_value = int(varinfo_data["validValues"]["min"]["#text"])
+            max_value = int(varinfo_data["validValues"]["max"]["#text"])
             if min_value == 0 and max_value == 24 * 60 - 1:
                 # time endpoints have a min value of 0 and max value of 1439
                 # it may be better to parse the strValue and check if it is in the format "00:00"
                 unit = CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
         elif (
             unit in ["", "°C"]
-            and "validValues" in data
-            and data["validValues"] is not None
-            and "min" in data["validValues"]
-            and "max" in data["validValues"]
-            and "begin" in data["validValues"]["min"]
-            and "end" in data["validValues"]["min"]
+            and "validValues" in varinfo_data
+            and varinfo_data["validValues"] is not None
+            and "min" in varinfo_data["validValues"]
+            and "max" in varinfo_data["validValues"]
+            and "begin" in varinfo_data["validValues"]["min"]
+            and "end" in varinfo_data["validValues"]["min"]
         ):
-            min_value = int(data["validValues"]["min"]["begin"])
-            max_value = int(data["validValues"]["max"]["end"])
+            min_value = int(varinfo_data["validValues"]["min"]["begin"])
+            max_value = int(varinfo_data["validValues"]["max"]["end"])
             if min_value == 0 and max_value == 24 * 60 / 15:
                 # time endpoints have a min value of 0 and max value of 96
                 # it may be better to parse the strValue and check if it is in the format "00:00 - 00:00"
-                if "value" in data["validValues"]["min"]:
+                if "value" in varinfo_data["validValues"]["min"]:
                     _LOGGER.debug("Found timeslot endpoint with temperature")
                     unit = CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE
                 else:
@@ -122,11 +135,17 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             dec_places=dec_places,
         )
 
-    def _parse_varinfo(self, data, fub: str, uri: str):
+    def _parse_varinfo(
+        self,
+        data,
+        fub: str,
+        uri: str,
+        var_data_entry: tuple[float | str, str, dict],
+    ):
         """Parse varinfo XML response."""
         _LOGGER.debug("Parsing varinfo %s", data)
         valid_values = None
-        unit = self._parse_unit(data)
+        unit = self._parse_unit(data, var_data_entry)
         if (
             "validValues" in data
             and data["validValues"] is not None
@@ -181,37 +200,51 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                 dec_places=int(data["@decPlaces"]),
             )
 
+        var_value, _, raw_var_data = var_data_entry
+        if unit in CUSTOM_UNITS:
+            value = raw_var_data["@strValue"]
+        else:
+            value = var_value
+        if unit == CUSTOM_UNIT_UNITLESS:
+            value = float(value)
+
         return ETAEndpoint(
             valid_values=valid_values,
             friendly_name=f"{fub} > {data['@fullName']}",
             unit=unit,
             endpoint_type=data["type"],
             url=uri,
-            value=0,
+            value=value,
         )
 
-    async def _get_varinfo(self, fub, uri):
-        """Fetch varinfo from API."""
+    async def _fetch_varinfo_raw(self, fub: str, uri: str) -> dict:
+        """Fetch raw varinfo variable dict from API. Raises on network error or error node."""
         data = await self._http.get_request("/user/varinfo/" + str(uri))
         text = await data.text()
-        data = xmltodict.parse(text)["eta"]["varInfo"]["variable"]
-        return self._parse_varinfo(data, fub, uri)
+        parsed = xmltodict.parse(text)["eta"]
+        if "error" in parsed:
+            raise ValueError(f"varinfo returned error for {uri}: {parsed['error']}")
+        return parsed["varInfo"]["variable"]
 
     async def _sanitize_duplicate_nodes(
         self,
         all_endpoints: dict[str, list[str]],
         endpoint_infos: dict[str, ETAEndpoint],
         deduplicated_uris: dict[str, str],
+        var_data: dict[str, tuple[str | float, str, dict]],
     ) -> int:
         """Sanitize duplicate nodes by removing URIs that return invalid data.
 
-        For nodes with multiple URIs, this function tests each URI by fetching
-        its data. If exactly one URI returns valid data and all others return
-        'xxx' or raise exceptions, the invalid URIs are removed from endpoint_infos.
+        For nodes with multiple URIs, this function tests each URI using the
+        pre-fetched var data. If exactly one URI returns valid data and all others
+        returned 'xxx', were missing from var_data, or raised exceptions, the
+        invalid URIs are removed from endpoint_infos.
 
         Args:
             all_endpoints: Maps sensor keys to lists of URIs
             endpoint_infos: Maps URIs to their endpoint metadata (modified in-place)
+            deduplicated_uris: Maps URIs to their sensor keys (modified in-place)
+            var_data: Pre-fetched var endpoint results, maps URI to (value, unit)
 
         Returns:
             Number of URIs removed
@@ -241,20 +274,15 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             len(nodes_to_check),
         )
 
-        # Phase 2: Gather data from all duplicate URIs
+        # Phase 2: Map pre-fetched var data to duplicate URIs
         all_uris_to_test = [uri for _, uris in nodes_to_check for uri in uris]
         _LOGGER.debug(
-            "Gathering data from %d URIs for validation", len(all_uris_to_test)
+            "Evaluating %d URIs for validation using pre-fetched var data",
+            len(all_uris_to_test),
         )
 
-        data_tasks = [
-            self._http.get_data(uri, force_string_handling=True)
-            for uri in all_uris_to_test
-        ]
-        data_results_list = await asyncio.gather(*data_tasks, return_exceptions=True)
-
-        # Map results back to URIs
-        uri_to_result = dict(zip(all_uris_to_test, data_results_list, strict=False))
+        # URIs missing from var_data had a failed fetch — treat them like exceptions
+        uri_to_result = {uri: var_data.get(uri) for uri in all_uris_to_test}
 
         # Phase 3: Evaluate each node and remove invalid URIs
         uris_to_remove = []
@@ -265,18 +293,16 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             for uri in uris:
                 result = uri_to_result[uri]
 
-                # Check if result is an exception
-                if isinstance(result, BaseException):
+                # None means the URI was absent from var_data (fetch failed)
+                if result is None or isinstance(result, BaseException):
                     _LOGGER.debug(
-                        "URI %s raised exception during data fetch: %s",
-                        uri,
-                        str(result),
+                        "URI %s has no valid var data (fetch failed or missing)", uri
                     )
                     invalid_uris.append(uri)
-                elif not isinstance(result, Exception):
-                    # Result is a tuple (value, unit)
-                    value, _ = result
-                    if value == "xxx":
+                else:
+                    # Result is a tuple (value, unit, raw_dict)
+                    _, _, raw_dict = result
+                    if raw_dict["@strValue"] in ("xxx", "---"):
                         invalid_uris.append(uri)
                     else:
                         valid_uris.append(uri)
@@ -363,20 +389,20 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
 
         async def fetch_varinfo_limited(uri, key):
             try:
-                return uri, await self._get_varinfo(key.split("_")[1], uri)
+                return uri, await self._fetch_varinfo_raw(key.split("_")[1], uri)
             except Exception as err:  # noqa: BLE001
                 return uri, err
 
-        # Fetch all varinfo with concurrency limit
+        # Phase 2: Fetch raw varinfo for all URIs
+        # This takes WAY longer than the calls to get_data() below
+        # Runtime for this section: 170s
+        # Runtime for the get_data() section below: 7s
         varinfo_tasks = [
             asyncio.create_task(fetch_varinfo_limited(uri, key))
             for uri, key in deduplicated_uris.items()
         ]
 
-        # This takes WAY longer than the calls to get_data() below
-        # Runtime for this section: 170s
-        # Runtime for the get_data() section below: 7s
-        endpoint_infos: dict[str, ETAEndpoint] = {}
+        raw_varinfo: dict[str, dict] = {}
         total_varinfo_tasks = len(varinfo_tasks)
         varinfo_progress_step = (
             max(1, total_varinfo_tasks // 20) if total_varinfo_tasks else 1
@@ -389,92 +415,81 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             if isinstance(result, Exception):
                 _LOGGER.debug("Failed to get varinfo for %s: %s", uri, str(result))
             else:
-                endpoint_infos[uri] = result
+                raw_varinfo[uri] = result
             if (
                 completed_varinfo_tasks == total_varinfo_tasks
                 or completed_varinfo_tasks % varinfo_progress_step == 0
             ):
                 progress = 0.1 + (
-                    0.55 * completed_varinfo_tasks / max(total_varinfo_tasks, 1)
+                    0.45 * completed_varinfo_tasks / max(total_varinfo_tasks, 1)
                 )
                 self._emit_progress(
                     f"Reading endpoint metadata {completed_varinfo_tasks}/{total_varinfo_tasks}",
                     progress,
                 )
 
-        # Sanitize duplicate nodes by testing which URIs return valid data
-        self._emit_progress("Resolving duplicate endpoints", 0.7)
-        removed_count = await self._sanitize_duplicate_nodes(
-            all_endpoints, endpoint_infos, deduplicated_uris
-        )
-        if removed_count > 0:
-            _LOGGER.info("Removed %d invalid URIs from duplicate nodes", removed_count)
-
-        # Determine which endpoints need secondary data fetch
-        needs_data = []
-        for uri, endpoint_info in endpoint_infos.items():
-            if (
-                self._is_float_sensor(endpoint_info)
-                or self._is_switch(endpoint_info)
-                or self._is_text_sensor(endpoint_info)
-                or (
-                    # the ETA API is not very consistent and some sensors show different units in their `varinfo` and `var` endpoints
-                    # all of those sensors have an empty unit in `varinfo` and have `DEFAULT` as their type
-                    # i.e. the Volllaststunden sensor shows up with an empty unit in `varinfo`, but with seconds in `var`
-                    endpoint_info["unit"] == ""
-                    and endpoint_info["endpoint_type"] == "DEFAULT"
-                )
-            ):
-                needs_data.append(uri)
-
-        async def fetch_data_limited(uri, force_string_handling):
+        async def fetch_data_limited(uri):
             try:
-                return uri, await self._http.get_data(
-                    uri, force_string_handling=force_string_handling
-                )
+                return uri, await self._http.get_data_plus_raw(uri)
             except Exception as err:  # noqa: BLE001
                 return uri, err
 
-        # Fetch all needed data concurrently
-        data_results: dict[str, tuple[float | str, str]] = {}
-        if needs_data:
-            data_tasks = [
-                asyncio.create_task(
-                    fetch_data_limited(
-                        uri,
-                        # all custom units should be treated as text sensors
-                        force_string_handling=endpoint_infos[uri]["unit"]
-                        in CUSTOM_UNITS,
-                    )
-                )
-                for uri in needs_data
-            ]
+        # Phase 3: Fetch var data for all valid varinfo nodes
+        data_tasks = [
+            asyncio.create_task(fetch_data_limited(uri)) for uri in raw_varinfo
+        ]
 
-            total_data_tasks = len(data_tasks)
-            data_progress_step = (
-                max(1, total_data_tasks // 20) if total_data_tasks else 1
-            )
-            self._emit_progress("Reading endpoint values", 0.75)
+        var_data: dict[str, tuple[float | str, str, dict]] = {}
+        total_data_tasks = len(data_tasks)
+        data_progress_step = max(1, total_data_tasks // 20) if total_data_tasks else 1
+        self._emit_progress("Reading endpoint values", 0.55)
 
-            for completed_data_tasks, task in enumerate(
-                asyncio.as_completed(data_tasks), start=1
+        for completed_data_tasks, task in enumerate(
+            asyncio.as_completed(data_tasks), start=1
+        ):
+            uri, result = await task
+            if isinstance(result, Exception):
+                _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
+            else:
+                var_data[uri] = result
+            if (
+                completed_data_tasks == total_data_tasks
+                or completed_data_tasks % data_progress_step == 0
             ):
-                uri, result = await task
-                if isinstance(result, Exception):
-                    _LOGGER.debug("Failed to get data for %s: %s", uri, str(result))
-                else:
-                    data_results[uri] = result
-                if (
-                    completed_data_tasks == total_data_tasks
-                    or completed_data_tasks % data_progress_step == 0
-                ):
-                    progress = 0.75 + (
-                        0.2 * completed_data_tasks / max(total_data_tasks, 1)
-                    )
-                    self._emit_progress(
-                        f"Reading endpoint values {completed_data_tasks}/{total_data_tasks}",
-                        progress,
-                    )
+                progress = 0.55 + (
+                    0.3 * completed_data_tasks / max(total_data_tasks, 1)
+                )
+                self._emit_progress(
+                    f"Reading endpoint values {completed_data_tasks}/{total_data_tasks}",
+                    progress,
+                )
+
+        # For nodes where data fetch failed (e.g. permission error), inject a fallback
+        # so they still reach Phase 4 and can be classified as pending.
+        for uri, raw in raw_varinfo.items():
+            if uri not in var_data:
+                var_data[uri] = ("---", raw.get("@unit", ""), {"@strValue": "---"})
+
+        # Phase 4: Parse raw varinfo into ETAEndpoint objects and apply var data
+        self._emit_progress("Parsing endpoint metadata", 0.85)
+        endpoint_infos: dict[str, ETAEndpoint] = {}
+        for uri, raw in raw_varinfo.items():
+            key = deduplicated_uris[uri]
+            fub = key.split("_")[1]
+            try:
+                endpoint_infos[uri] = self._parse_varinfo(
+                    raw, fub, uri, var_data_entry=var_data[uri]
+                )
+            except Exception:  # noqa: BLE001
+                _LOGGER.debug("Failed to parse varinfo for %s", uri, exc_info=True)
+
+        # Phase 5: Sanitize duplicate nodes using the pre-fetched var data
+        self._emit_progress("Resolving duplicate endpoints", 0.88)
+        removed_count = await self._sanitize_duplicate_nodes(
+            all_endpoints, endpoint_infos, deduplicated_uris, var_data
+        )
+        if removed_count > 0:
+            _LOGGER.info("Removed %d invalid URIs from duplicate nodes", removed_count)
 
         self._emit_progress("Classifying discovered entities", 0.95)
         for uri, key in deduplicated_uris.items():
@@ -490,37 +505,6 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                     + "_"
                     + key.lower().replace(" ", "_")
                 )
-
-                if uri in data_results:
-                    data_result = data_results[uri]
-
-                    value, unit = data_result
-                    endpoint_info["value"] = value
-                    if (
-                        unit != endpoint_info["unit"]
-                        and endpoint_info["unit"] not in CUSTOM_UNITS
-                        # update the unit of the sensor if they are different, but only if we didn't assign a custom unit to the sensor
-                    ):
-                        _LOGGER.debug(
-                            "Correcting unit for sensor %s from '%s' to '%s'",
-                            unique_key,
-                            endpoint_info["unit"],
-                            unit,
-                        )
-                        endpoint_info["unit"] = unit
-                    if (
-                        endpoint_info["endpoint_type"] == "DEFAULT"
-                        and endpoint_info["unit"] == ""
-                        and str(value).isnumeric()
-                    ):
-                        # some sensors have an empty unit and a type of DEFAULT in the varinfo endpoint, but show a numeric value in the var endpoint
-                        # those sensors are most likely unitless float sensors, so we set the unit to unitless and let the normal float sensor detection handle the rest
-                        _LOGGER.debug(
-                            "Updating unit for sensor %s to UNITLESS based on its value and type",
-                            unique_key,
-                        )
-                        endpoint_info["unit"] = CUSTOM_UNIT_UNITLESS
-                        endpoint_info["value"] = float(value)
 
                 if self._is_writable(endpoint_info):
                     _LOGGER.debug("Adding %s as writable sensor", uri)
@@ -577,10 +561,9 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                         endpoint_info["endpoint_type"] == "DEFAULT"
                         or endpoint_info["endpoint_type"] == "IEEE-754"
                     )
-                    # ignore sensors with an empty value
-                    and data_results.get(uri, (None,))[0] != ""
-                    # and ignore sensors with a value of "xxx". Both of these are indicators of invalid sensors.
-                    and data_results.get(uri, (None,))[0] != "xxx"
+                    # ignore sensors with an empty value or "xxx" — both indicate invalid sensors
+                    and endpoint_info["value"] != ""
+                    and endpoint_info["value"] != "xxx"
                 ):
                     _LOGGER.debug(
                         "Found pending endpoint %s, adding to pending_dict", uri

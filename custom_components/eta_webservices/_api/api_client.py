@@ -126,7 +126,7 @@ class APIClient:
             value = data["@strValue"]
         return value, unit
 
-    async def get_data_plus_raw(self, uri: str) -> tuple[Any, str, dict]:
+    async def get_data_plus_raw(self, uri: str) -> tuple[float | str, str, dict]:
         """Get data with raw XML dict.
 
         :param uri: URI suffix
