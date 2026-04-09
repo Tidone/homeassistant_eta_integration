@@ -246,13 +246,10 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             "Gathering data from %d URIs for validation", len(all_uris_to_test)
         )
 
-        semaphore = asyncio.Semaphore(self._http.max_concurrent_requests)
-
-        async def fetch_data_limited(uri):
-            async with semaphore:
-                return await self._http.get_data(uri, force_string_handling=True)
-
-        data_tasks = [fetch_data_limited(uri) for uri in all_uris_to_test]
+        data_tasks = [
+            self._http.get_data(uri, force_string_handling=True)
+            for uri in all_uris_to_test
+        ]
         data_results_list = await asyncio.gather(*data_tasks, return_exceptions=True)
 
         # Map results back to URIs
@@ -359,15 +356,11 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         )
         self._emit_progress(f"Loaded {len(deduplicated_uris)} unique endpoints", 0.1)
 
-        # Create a semaphore to limit concurrent requests
-        semaphore = asyncio.Semaphore(self._http.max_concurrent_requests)
-
         async def fetch_varinfo_limited(uri, key):
-            async with semaphore:
-                try:
-                    return uri, await self._get_varinfo(key.split("_")[1], uri)
-                except Exception as err:  # noqa: BLE001
-                    return uri, err
+            try:
+                return uri, await self._get_varinfo(key.split("_")[1], uri)
+            except Exception as err:  # noqa: BLE001
+                return uri, err
 
         # Fetch all varinfo with concurrency limit
         varinfo_tasks = [
@@ -430,13 +423,12 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                 needs_data.append(uri)
 
         async def fetch_data_limited(uri, force_string_handling):
-            async with semaphore:
-                try:
-                    return uri, await self._http.get_data(
-                        uri, force_string_handling=force_string_handling
-                    )
-                except Exception as err:  # noqa: BLE001
-                    return uri, err
+            try:
+                return uri, await self._http.get_data(
+                    uri, force_string_handling=force_string_handling
+                )
+            except Exception as err:  # noqa: BLE001
+                return uri, err
 
         # Fetch all needed data concurrently
         data_results: dict[str, tuple[float | str, str]] = {}

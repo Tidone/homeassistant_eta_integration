@@ -212,15 +212,18 @@ async def test_all_writable_and_non_writable_sensors_handled(
 
     With every sensor chosen simultaneously the platforms partition the work as:
     - sensor.py: every float sensor → EtaFloatSensor or EtaFloatWritableSensor (1 each);
-                 every text sensor  → EtaTextSensor, EtaTimeslotSensor, or
-                                      EtaTimeWritableSensor (1 each);
-                 writable timeslot sensors → EtaTimeslotSensor (1 each);
+                 non-timeslot text sensors without a writable counterpart → EtaTextSensor;
+                 minutes_since_midnight text sensors with a writable counterpart → EtaTimeWritableSensor;
+                 all timeslot text sensors → EtaTimeslotSensor (read-only);
+                 writable timeslot sensors → EtaTimeslotSensor (writable, separate entity);
                  2 always-present error sensors.
     - number.py: writable sensors with regular / unitless units → EtaWritableNumberSensor.
     - time.py:   writable sensors with minutes_since_midnight   → EtaTime.
     - switch.py: every switch → EtaSwitch.
 
-    Total = len(float_dict) + len(text_dict) + len(writable_dict) + len(switches_dict) + 2.
+    Total = len(float_dict) + len(text_dict) + len(writable_dict) + len(switches_dict) + 2
+    (both the read-only and writable timeslot entities are created; the read-only one is
+    disabled via the entity registry migration when a writable counterpart exists).
     """
     fixture = load_fixture("api_assignment_reference_values_v12.json")
     float_dict = fixture["float_dict"]
@@ -278,10 +281,12 @@ async def test_all_writable_and_non_writable_sensors_handled(
         await time_async_setup_entry(hass, config_entry, add_entities)
         await switch_async_setup_entry(hass, config_entry, add_entities)
 
-    # Every sensor produces exactly one entity across all platforms,
-    # plus the 2 always-present error sensors from sensor.py.
     assert len(all_entities) == (
-        len(float_dict) + len(text_dict) + len(writable_dict) + len(switch_dict) + 2
+        len(float_dict)
+        + len(text_dict)
+        + len(writable_dict)
+        + len(switch_dict)
+        + 2
     )
 
 

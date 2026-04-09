@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock
 from aiohttp import ClientSession, ClientError, ClientResponseError
 
 from custom_components.eta_webservices.api import EtaAPI
+from custom_components.eta_webservices._api.api_client import APIClient
 
 
 @pytest.mark.asyncio
@@ -55,7 +56,7 @@ async def test_get_all_sensors_falls_back_to_v11_on_version_check_timeout(
         FakeDiscoveryV12,
     )
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False,
         {},
         {},
@@ -65,6 +66,7 @@ async def test_get_all_sensors_falls_back_to_v11_on_version_check_timeout(
         progress_callback=lambda msg, prog: progress_updates.append((msg, prog)),
     )
 
+    assert result is False
     assert route_calls["v11"] == 1
     assert route_calls["v12"] == 0
     assert any("timed out" in msg for msg, _ in progress_updates)
@@ -114,7 +116,7 @@ async def test_get_all_sensors_reports_progress_for_v12_route(monkeypatch):
         FakeDiscoveryV12,
     )
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False,
         {},
         {},
@@ -124,6 +126,7 @@ async def test_get_all_sensors_reports_progress_for_v12_route(monkeypatch):
         progress_callback=lambda msg, prog: progress_updates.append((msg, prog)),
     )
 
+    assert result is True
     assert route_calls["v12"] == 1
     assert route_calls["v11"] == 0
     assert ("Checking ETA API version", 0.01) in progress_updates
@@ -186,10 +189,11 @@ async def test_get_all_sensors_v12(load_fixture):
     writable_dict = {}
 
     # Execute the public method with force_legacy_mode=False
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is True
     # Assertions
     # Verify expected entries from target values
     expected_float_entries = assignment_target_values.get("float_dict", {})
@@ -408,10 +412,11 @@ async def test_get_all_sensors_v12_handles_exceptions():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is True
     # Valid sensor should be in float_dict
     assert len(float_dict) > 0, "Valid float sensor should be added to float_dict"
     # Invalid endpoint should be skipped, not cause the method to fail
@@ -476,10 +481,11 @@ async def test_get_all_sensors_v12_skips_duplicates(load_fixture):
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is True
     # Verify that the duplicate endpoint was only queried once
     varinfo_key = "/user/varinfo//120/10111/0/0/12271"
     var_key = "/user/var//120/10111/0/0/12271"
@@ -546,10 +552,11 @@ async def test_get_all_sensors_v11(load_fixture):
     writable_dict = {}
 
     # Execute the public method with force_legacy_mode=False
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Assertions
     # Verify expected entries from reference values
     expected_float_entries = reference_values_v11.get("float_dict", {})
@@ -761,10 +768,11 @@ async def test_get_all_sensors_v11_distinguishes_sensor_types():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Verify sensor type identification
     assert len(float_dict) > 0, "Float sensor should be added"
     assert len(switches_dict) > 0, "Switch should be added"
@@ -829,10 +837,11 @@ async def test_get_all_sensors_v11_skips_duplicates():
     text_dict = {}
     writable_dict = {}
 
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Verify duplicate was only queried once
     var_key = "/user/var//120/10101/0/0/12197"
     assert call_count.get(var_key, 0) <= 1, (
@@ -899,10 +908,11 @@ async def test_get_all_sensors_force_legacy_mode(load_fixture):
     writable_dict = {}
 
     # Execute with force_legacy_mode=True
-    await api.get_all_sensors(
+    result = await api.get_all_sensors(
         True, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
+    assert result is False
     # Verify version check was NOT called (short-circuit evaluation)
     assert len(version_check_called) == 0, (
         "is_correct_api_version should not be called when force_legacy_mode=True"
@@ -925,193 +935,6 @@ async def test_get_all_sensors_force_legacy_mode(load_fixture):
                     "Should use v1.1 switch values (1802=off)"
                 )
                 break  # Just check one to verify v1.1 behavior
-
-
-@pytest.mark.asyncio
-async def test_get_all_sensors_v12_respects_concurrent_request_limit():
-    """Test that get_all_sensors (v1.2) respects the max concurrent requests limit.
-
-    This test verifies:
-    - Maximum of api._http.max_concurrent_requests concurrent requests are active at any time during sensor discovery
-    - All sensors are eventually processed
-    - Concurrency limit is properly enforced throughout the entire flow
-    """
-    mock_session = AsyncMock(spec=ClientSession)
-    api = EtaAPI(mock_session, "192.168.0.25", 8080)
-
-    # Mock is_correct_api_version to return True (v1.2+)
-    api.is_correct_api_version = AsyncMock(return_value=True)
-
-    current_concurrent = 0
-    max_concurrent = 0
-    completed_count = 0
-
-    # Create a menu with multiple sensors
-    menu_xml = (
-        '<?xml version="1.0" encoding="utf-8"?>'
-        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
-        "<menu>"
-        '<fub uri="/120/10111" name="Test">'
-    )
-    # Add api._http.max_concurrent_requests*2 sensor endpoints
-    for i in range(api._http.max_concurrent_requests * 2):
-        menu_xml += f'<object uri="/120/10111/0/0/1000{i}" name="Sensor{i}"/>'
-    menu_xml += "</fub></menu></eta>"
-
-    async def mock_get_request(suffix):
-        nonlocal current_concurrent, max_concurrent, completed_count
-
-        # Track concurrency for all requests
-        current_concurrent += 1
-        max_concurrent = max(max_concurrent, current_concurrent)
-
-        # Simulate work
-        # This sleep is necessary to give control back to the event loop and allow other requests to start, which is essential for testing concurrency limits
-        await asyncio.sleep(0.02)
-
-        current_concurrent -= 1
-        completed_count += 1
-
-        response = AsyncMock()
-
-        if suffix == "/user/menu":
-            response.text = AsyncMock(return_value=menu_xml)
-        elif "/user/varinfo" in suffix:
-            # Return varinfo for each sensor
-            response.text = AsyncMock(
-                return_value='<?xml version="1.0" encoding="utf-8"?>'
-                '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
-                '<varInfo><variable uri="test" name="Test" fullName="Test" '
-                'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0" isWritable="0">'
-                "<type>DEFAULT</type></variable></varInfo></eta>"
-            )
-        elif "/user/var" in suffix:
-            # Return value for each sensor
-            response.text = AsyncMock(
-                return_value='<?xml version="1.0" encoding="utf-8"?>'
-                '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
-                '<value uri="test" strValue="20" '
-                'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0">200</value>'
-                "</eta>"
-            )
-        else:
-            response.text = AsyncMock(
-                return_value='<?xml version="1.0" encoding="utf-8"?>'
-                '<eta version="1.0"><error>Not found</error></eta>'
-            )
-
-        return response
-
-    api._http.get_request = mock_get_request
-
-    float_dict = {}
-    switches_dict = {}
-    text_dict = {}
-    writable_dict = {}
-
-    await api.get_all_sensors(
-        False, float_dict, switches_dict, text_dict, writable_dict, {}
-    )
-
-    # Verify concurrent limit was respected
-    assert max_concurrent <= api._http.max_concurrent_requests, (
-        f"Maximum concurrent requests should be <= {api._http.max_concurrent_requests}, but was {max_concurrent}"
-    )
-    assert max_concurrent > 1, "Should have some concurrency"
-    # Menu + api._http.max_concurrent_requests*2 varinfo + api._http.max_concurrent_requests*2 var requests = 21 total
-    assert completed_count >= api._http.max_concurrent_requests * 2 * 2, (
-        "Should have completed at least api._http.max_concurrent_requests*2*2 requests"
-    )
-    assert len(float_dict) > 0, "Should have discovered and fetched sensors"
-
-
-@pytest.mark.asyncio
-async def test_get_all_sensors_v11_respects_concurrent_request_limit():
-    """Test that get_all_sensors (v1.1) respects the max concurrent requests limit.
-
-    This test verifies:
-    - Maximum of api._http.max_concurrent_requests concurrent requests are active at any time during sensor discovery
-    - All sensors are eventually processed
-    - Concurrency limit is properly enforced throughout the entire flow
-    """
-    mock_session = AsyncMock(spec=ClientSession)
-    api = EtaAPI(mock_session, "192.168.0.25", 8080)
-
-    # Mock is_correct_api_version to return False (v1.1)
-    api.is_correct_api_version = AsyncMock(return_value=False)
-
-    current_concurrent = 0
-    max_concurrent = 0
-    completed_count = 0
-
-    # Create a menu with multiple sensors
-    menu_xml = (
-        '<?xml version="1.0" encoding="utf-8"?>'
-        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
-        "<menu>"
-        '<fub uri="/120/10101" name="Test">'
-    )
-    # Add api._http.max_concurrent_requests*2 sensor endpoints
-    for i in range(api._http.max_concurrent_requests * 2):
-        menu_xml += f'<object uri="/120/10101/0/0/1000{i}" name="Sensor{i}"/>'
-    menu_xml += "</fub></menu></eta>"
-
-    async def mock_get_request(suffix):
-        nonlocal current_concurrent, max_concurrent, completed_count
-
-        # Track concurrency for all requests
-        current_concurrent += 1
-        max_concurrent = max(max_concurrent, current_concurrent)
-
-        # Simulate work
-        # This sleep is necessary to give control back to the event loop and allow other requests to start, which is essential for testing concurrency limits
-        await asyncio.sleep(0.02)
-
-        current_concurrent -= 1
-        completed_count += 1
-
-        response = AsyncMock()
-
-        if suffix == "/user/menu":
-            response.text = AsyncMock(return_value=menu_xml)
-        elif "/user/var" in suffix:
-            # Return value for each sensor (v1.1 doesn't use varinfo)
-            response.text = AsyncMock(
-                return_value='<?xml version="1.0" encoding="utf-8"?>'
-                '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
-                '<value uri="test" strValue="20" '
-                'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0">200</value>'
-                "</eta>"
-            )
-        else:
-            response.text = AsyncMock(
-                return_value='<?xml version="1.0" encoding="utf-8"?>'
-                '<eta version="1.0"><error>Not found</error></eta>'
-            )
-
-        return response
-
-    api._http.get_request = mock_get_request
-
-    float_dict = {}
-    switches_dict = {}
-    text_dict = {}
-    writable_dict = {}
-
-    await api.get_all_sensors(
-        False, float_dict, switches_dict, text_dict, writable_dict, {}
-    )
-
-    # Verify concurrent limit was respected
-    assert max_concurrent <= api._http.max_concurrent_requests, (
-        f"Maximum concurrent requests should be <= {api._http.max_concurrent_requests}, but was {max_concurrent}"
-    )
-    assert max_concurrent > 1, "Should have some concurrency"
-    # Menu + api._http.max_concurrent_requests*2 var requests = api._http.max_concurrent_requests*2+1 total
-    assert completed_count >= api._http.max_concurrent_requests * 2, (
-        "Should have completed at least api._http.max_concurrent_requests*2 requests"
-    )
-    assert len(float_dict) > 0, "Should have discovered and fetched all sensors"
 
 
 @pytest.mark.asyncio
@@ -1816,67 +1639,6 @@ async def test_get_all_data_when_all_sensors_fail():
 
 
 @pytest.mark.asyncio
-async def test_get_all_data_respects_concurrent_request_limit():
-    """Test that get_all_data respects the max concurrent requests limit.
-
-    This test verifies:
-    - Maximum of api._http.max_concurrent_requests concurrent requests are active at any time
-    - All api._http.max_concurrent_requests*2 sensors are eventually processed
-    - Concurrency limit is properly enforced
-    """
-    mock_session = AsyncMock(spec=ClientSession)
-    api = EtaAPI(mock_session, "192.168.0.1", 8080)
-
-    current_concurrent = 0
-    max_concurrent = 0
-    completed_count = 0
-
-    async def mock_get_request(suffix):
-        nonlocal current_concurrent, max_concurrent, completed_count
-
-        # Increment concurrent counter
-        current_concurrent += 1
-        max_concurrent = max(max_concurrent, current_concurrent)
-
-        # Simulate some work with a small delay
-        # This sleep is necessary to give control back to the event loop and allow other requests to start, which is essential for testing concurrency limits
-        await asyncio.sleep(0.02)
-
-        # Decrement concurrent counter
-        current_concurrent -= 1
-        completed_count += 1
-
-        # Return mock response
-        response = AsyncMock()
-        response.text = AsyncMock(
-            return_value='<?xml version="1.0" encoding="utf-8"?>'
-            '<eta version="1.0">'
-            '<value uri="/user/var/120/10101/0/0/12197" strValue="20" '
-            'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0">200</value>'
-            "</eta>"
-        )
-        return response
-
-    api._http.get_request = mock_get_request
-
-    # Create api._http.max_concurrent_requests*2 sensors to ensure we exceed the limit of api._http.max_concurrent_requests
-    sensor_list = {
-        f"/120/10101/0/0/1219{i}": {}
-        for i in range(api._http.max_concurrent_requests * 2)
-    }
-
-    result = await api.get_all_data(sensor_list)
-
-    # Verify concurrent limit was respected
-    assert max_concurrent <= api._http.max_concurrent_requests, (
-        f"Maximum concurrent requests should be <= {api._http.max_concurrent_requests}, but was {max_concurrent}"
-    )
-    assert max_concurrent > 1, "Should have some concurrency"
-    assert completed_count == len(sensor_list), "Should have completed all requests"
-    assert len(result) == len(sensor_list), "Should have results for all sensors"
-
-
-@pytest.mark.asyncio
 async def test_get_all_data_passes_force_number_handling():
     """Test that get_all_data passes force_number_handling per sensor.
 
@@ -2488,3 +2250,163 @@ async def test_get_all_switch_states_handles_exceptions():
 
     assert results["/120/1/ok"] == 1803
     assert isinstance(results["/120/1/fail"], RuntimeError)
+
+
+@pytest.mark.asyncio
+async def test_api_client_get_request_calls_correct_url():
+    """Test that get_request builds the correct URL and calls session.get.
+
+    This test verifies:
+    - The host and port are combined with the suffix into a full URL
+    - session.get is called with that URL
+    """
+    mock_session = AsyncMock(spec=ClientSession)
+    mock_response = AsyncMock()
+    mock_session.get = AsyncMock(return_value=mock_response)
+
+    client = APIClient(mock_session, "192.168.0.1", 8080)
+    result = await client.get_request("/user/menu")
+
+    mock_session.get.assert_called_once_with("http://192.168.0.1:8080/user/menu")
+    assert result is mock_response
+
+
+@pytest.mark.asyncio
+async def test_api_client_post_request_calls_correct_url_and_data():
+    """Test that post_request builds the correct URL and calls session.post with data.
+
+    This test verifies:
+    - The host and port are combined with the suffix into a full URL
+    - session.post is called with that URL and the provided data dict
+    """
+    mock_session = AsyncMock(spec=ClientSession)
+    mock_response = AsyncMock()
+    mock_session.post = AsyncMock(return_value=mock_response)
+
+    client = APIClient(mock_session, "192.168.0.1", 8080)
+    payload = {"value": 1803}
+    result = await client.post_request("/user/var//120/10101/0/0/12080", payload)
+
+    mock_session.post.assert_called_once_with(
+        "http://192.168.0.1:8080/user/var//120/10101/0/0/12080", data=payload
+    )
+    assert result is mock_response
+
+
+@pytest.mark.asyncio
+async def test_api_client_get_request_enforces_semaphore_limit():
+    """Test that get_request enforces the semaphore concurrency limit.
+
+    This test verifies:
+    - No more than max_concurrent_requests session.get calls run simultaneously
+    - All requests are eventually completed
+    """
+    max_concurrent = 3
+    current_concurrent = 0
+    observed_max = 0
+
+    mock_session = AsyncMock(spec=ClientSession)
+
+    async def slow_get(url, **kwargs):
+        nonlocal current_concurrent, observed_max
+        current_concurrent += 1
+        observed_max = max(observed_max, current_concurrent)
+        await asyncio.sleep(0.02)
+        current_concurrent -= 1
+        return AsyncMock()
+
+    mock_session.get = slow_get
+
+    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
+
+    tasks = [client.get_request(f"/user/var/{i}") for i in range(max_concurrent * 2)]
+    await asyncio.gather(*tasks)
+
+    assert observed_max <= max_concurrent, (
+        f"Expected at most {max_concurrent} concurrent GET requests, got {observed_max}"
+    )
+    assert observed_max > 1, "Should have some concurrency"
+
+
+@pytest.mark.asyncio
+async def test_api_client_post_request_enforces_semaphore_limit():
+    """Test that post_request enforces the semaphore concurrency limit.
+
+    This test verifies:
+    - No more than max_concurrent_requests session.post calls run simultaneously
+    - All requests are eventually completed
+    """
+    max_concurrent = 3
+    current_concurrent = 0
+    observed_max = 0
+
+    mock_session = AsyncMock(spec=ClientSession)
+
+    async def slow_post(url, **kwargs):
+        nonlocal current_concurrent, observed_max
+        current_concurrent += 1
+        observed_max = max(observed_max, current_concurrent)
+        await asyncio.sleep(0.02)
+        current_concurrent -= 1
+        return AsyncMock()
+
+    mock_session.post = slow_post
+
+    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
+
+    tasks = [
+        client.post_request(f"/user/var/{i}", {"value": i})
+        for i in range(max_concurrent * 2)
+    ]
+    await asyncio.gather(*tasks)
+
+    assert observed_max <= max_concurrent, (
+        f"Expected at most {max_concurrent} concurrent POST requests, got {observed_max}"
+    )
+    assert observed_max > 1, "Should have some concurrency"
+
+
+@pytest.mark.asyncio
+async def test_api_client_get_and_post_share_semaphore():
+    """Test that get_request and post_request share the same semaphore.
+
+    This test verifies:
+    - Mixed GET and POST requests are counted together against the limit
+    - The combined concurrency never exceeds max_concurrent_requests
+    """
+    max_concurrent = 3
+    current_concurrent = 0
+    observed_max = 0
+
+    mock_session = AsyncMock(spec=ClientSession)
+
+    async def slow_get(url, **kwargs):
+        nonlocal current_concurrent, observed_max
+        current_concurrent += 1
+        observed_max = max(observed_max, current_concurrent)
+        await asyncio.sleep(0.02)
+        current_concurrent -= 1
+        return AsyncMock()
+
+    async def slow_post(url, **kwargs):
+        nonlocal current_concurrent, observed_max
+        current_concurrent += 1
+        observed_max = max(observed_max, current_concurrent)
+        await asyncio.sleep(0.02)
+        current_concurrent -= 1
+        return AsyncMock()
+
+    mock_session.get = slow_get
+    mock_session.post = slow_post
+
+    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
+
+    tasks = (
+        [client.get_request(f"/user/var/{i}") for i in range(max_concurrent)]
+        + [client.post_request(f"/user/var/{i}", {"value": i}) for i in range(max_concurrent)]
+    )
+    await asyncio.gather(*tasks)
+
+    assert observed_max <= max_concurrent, (
+        f"Mixed GET/POST should share the semaphore: expected <= {max_concurrent}, got {observed_max}"
+    )

@@ -1988,6 +1988,19 @@
       "endpoint_type": "TEXT",
       "value": 77.6
     },
+    "eta_192_168_0_25__kessel_ausgänge_kesselpumpe_mindestdurchfluss": {
+      "url": "/264/10891/0/0/14005",
+      "valid_values": {
+        "scaled_min_value": -100,
+        "scaled_max_value": 200,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Ausgänge > Kesselpumpe > Mindestdurchfluss",
+      "unit": "°C",
+      "endpoint_type": "TEXT",
+      "value": 0.51
+    },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1": {
       "url": "/40/10021/0/11121/0",
       "valid_values": {
@@ -6508,6 +6521,19 @@
       "unit": "%",
       "endpoint_type": "TEXT",
       "value": 77.6
+    },
+    "eta_192_168_0_25__kessel_ausgänge_kesselpumpe_mindestdurchfluss_writable": {
+      "url": "/264/10891/0/0/14005",
+      "valid_values": {
+        "scaled_min_value": -100,
+        "scaled_max_value": 200,
+        "scale_factor": 10,
+        "dec_places": 0
+      },
+      "friendly_name": "Kessel > Ausgänge > Kesselpumpe > Mindestdurchfluss",
+      "unit": "°C",
+      "endpoint_type": "TEXT",
+      "value": 0.51
     },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1_writable": {
       "url": "/40/10021/0/11121/0",

@@ -41,7 +41,7 @@ class EtaErrorSensor(BinarySensorEntity, EtaErrorEntity):
     def __init__(  # noqa: D107
         self, config: dict, hass: HomeAssistant, coordinator: ETAErrorUpdateCoordinator
     ) -> None:
-        _LOGGER.info("ETA Integration - init error sensor")
+        _LOGGER.debug("ETA Integration - init error sensor")
 
         super().__init__(coordinator, config, hass, ENTITY_ID_FORMAT, "_errors")
 

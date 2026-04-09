@@ -96,23 +96,18 @@ class EtaCoordinatedSensorEntity(
         CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
 
         self._attr_should_poll = False
-        self.handle_data_updates(
-            cast(
-                _EntityT,
-                coordinator.data.get(self.unique_id, endpoint_info["value"]),  # pyright: ignore[reportCallIssue, reportArgumentType]
-            )
-        )
+        data = self.coordinator.data.get(self.unique_id)  # pyright: ignore[reportArgumentType]
+        self.handle_data_updates(cast(_EntityT, data) if data is not None else None)
 
     @abstractmethod
-    def handle_data_updates(self, data: _EntityT) -> None:  # noqa: D102
+    def handle_data_updates(self, data: _EntityT | None) -> None:  # noqa: D102
         raise NotImplementedError
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Update attributes when the coordinator updates."""
-        if self.unique_id in self.coordinator.data:
-            data = self.coordinator.data[self.unique_id]
-            self.handle_data_updates(cast(_EntityT, data))
+        data = self.coordinator.data.get(self.unique_id)  # pyright: ignore[reportArgumentType]
+        self.handle_data_updates(cast(_EntityT, data) if data is not None else None)
         super()._handle_coordinator_update()
 
 
@@ -135,20 +130,18 @@ class EtaWritableSensorEntity(
         )
         CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
 
-        self.handle_data_updates(
-            float(coordinator.data.get(self.uri, endpoint_info["value"]))
-        )
+        data = self.coordinator.data.get(self.uri)
+        self.handle_data_updates(float(data) if data is not None else None)
 
     @abstractmethod
-    def handle_data_updates(self, data: float) -> None:  # noqa: D102
+    def handle_data_updates(self, data: float | None) -> None:  # noqa: D102
         raise NotImplementedError
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Update attributes when the coordinator updates."""
-        data = self.coordinator.data.get(self.uri, None)
-        if data is not None:
-            self.handle_data_updates(float(data))
+        data = self.coordinator.data.get(self.uri)
+        self.handle_data_updates(float(data) if data is not None else None)
         super()._handle_coordinator_update()
 
 

@@ -7,6 +7,7 @@ import logging
 
 from homeassistant import config_entries
 from homeassistant.components.time import ENTITY_ID_FORMAT, TimeEntity
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 
@@ -54,17 +55,27 @@ class EtaTime(TimeEntity, EtaWritableSensorEntity):
         endpoint_info: ETAEndpoint,
         coordinator: ETAWritableUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init time sensor")
+        _LOGGER.debug("ETA Integration - init time sensor")
 
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
         )
 
+        self._attr_entity_category = EntityCategory.CONFIG
+
         # set an initial value to avoid errors. This will be overwritten by the coordinator immediately after initialization.
         self._attr_native_value = time(hour=19)
 
-    def handle_data_updates(self, data: float) -> None:
+    def handle_data_updates(self, data: float | None) -> None:
         """Calculate the actual time from the minutes since midnight and set the entity's value."""
+        if data is None:
+            _LOGGER.info(
+                "Sensor %s received None value; setting state to unavailable",
+                self.entity_id,
+            )
+            self._attr_native_value = None
+            return
+
         total_minutes = int(data)
         hours = total_minutes // 60
         minutes = total_minutes % 60

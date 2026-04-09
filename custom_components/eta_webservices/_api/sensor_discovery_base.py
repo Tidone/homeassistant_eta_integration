@@ -19,7 +19,7 @@ class SensorDiscoveryBase(ABC):
         """Initialize sensor discovery.
 
         :param http_client: HTTPClient instance for API calls
-        :param api_instance: Reference to parent EtaAPI instance
+        :param progress_callback: Optional callback for progress updates
         """
         self._http = http_client
         self._progress_callback = progress_callback

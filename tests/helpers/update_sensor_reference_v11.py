@@ -246,6 +246,7 @@ async def run_update(args) -> int:
                 "switches_dict": {},
                 "text_dict": {},
                 "writable_dict": {},
+                "pending_dict": {},
             }
             print(f"  Reference file not found, will create: {args.reference_values}")
         print(
@@ -261,22 +262,28 @@ async def run_update(args) -> int:
         switches_dict = {}
         text_dict = {}
         writable_dict = {}
+        pending_dict = {}
 
         # Call get_all_sensors
         print("Running SensorDiscoveryV11.get_all_sensors to discover sensors...")
         await mocked.discovery.get_all_sensors(
-            float_dict, switches_dict, text_dict, writable_dict
+            float_dict, switches_dict, text_dict, writable_dict, pending_dict
         )
 
         # Print discovered sensor counts
         total_discovered = (
-            len(float_dict) + len(switches_dict) + len(text_dict) + len(writable_dict)
+            len(float_dict)
+            + len(switches_dict)
+            + len(text_dict)
+            + len(writable_dict)
+            + len(pending_dict)
         )
         print("\nDiscovered sensors:")
         print(f"  Float:    {len(float_dict)}")
         print(f"  Switches: {len(switches_dict)}")
         print(f"  Text:     {len(text_dict)}")
         print(f"  Writable: {len(writable_dict)}")
+        print(f"  Pending:  {len(pending_dict)}")
         print(f"  TOTAL:    {total_discovered}")
 
         _LOGGER.debug("Made %d mock requests", len(mocked.request_log))
@@ -290,6 +297,7 @@ async def run_update(args) -> int:
             "switches_dict": switches_dict,
             "text_dict": text_dict,
             "writable_dict": writable_dict,
+            "pending_dict": pending_dict,
         }
 
         updated_reference = updater.update_reference(discovered, reference_values)

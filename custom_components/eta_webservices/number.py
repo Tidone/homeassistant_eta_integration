@@ -82,7 +82,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         endpoint_info: ETAEndpoint,
         coordinator: ETAWritableUpdateCoordinator,
     ) -> None:
-        _LOGGER.info("ETA Integration - init writable number sensor")
+        _LOGGER.debug("ETA Integration - init writable number sensor")
 
         super().__init__(
             coordinator, config, hass, unique_id, endpoint_info, ENTITY_ID_FORMAT
@@ -93,6 +93,7 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         )
         self._attr_device_class = self.determine_device_class(endpoint_info["unit"])
         self.valid_values: ETAValidWritableValues = endpoint_info["valid_values"]  # pyright: ignore[reportAttributeAccessIssue]
+        self.is_float = endpoint_info["endpoint_type"] == "IEEE-754"
 
         self._attr_native_unit_of_measurement = get_native_unit(endpoint_info["unit"])
 
@@ -101,7 +102,8 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         self._attr_mode = NumberMode.BOX
         self._attr_native_min_value = self.valid_values["scaled_min_value"]
         self._attr_native_max_value = self.valid_values["scaled_max_value"]
-        if self.ignore_decimal_places_restriction:
+
+        if self.ignore_decimal_places_restriction and not self.is_float:
             # set the step size based on the scale factor, i.e. use as many decimal places as the scale factor allows
             self._attr_native_step = pow(
                 10, (len(str(self.valid_values["scale_factor"])) - 1) * -1
@@ -110,13 +112,27 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
             # calculate the step size based on the number of decimal places
             self._attr_native_step = pow(10, self.valid_values["dec_places"] * -1)
 
-    def handle_data_updates(self, data: float) -> None:  # noqa: D102
+    def handle_data_updates(self, data: float | None) -> None:  # noqa: D102
+        if data is None:
+            _LOGGER.info(
+                "Sensor %s received None value; setting state to unavailable",
+                self.entity_id,
+            )
+
         self._attr_native_value = data
 
     async def async_set_native_value(
         self, value: float, force_decimals: bool = False
     ) -> None:
         """Update the current value."""
+        if (
+            value < self.valid_values["scaled_min_value"]
+            or value > self.valid_values["scaled_max_value"]
+        ):
+            raise HomeAssistantError(
+                f"Temperature value out of bounds for entity {self.entity_id}"
+            )
+
         if self.ignore_decimal_places_restriction or force_decimals:
             _LOGGER.debug(
                 "ETA Integration - HACK: Ignoring decimal places restriction for writable sensor %s",
@@ -127,14 +143,8 @@ class EtaWritableNumberSensor(NumberEntity, EtaWritableSensorEntity):
         else:
             raw_value = round(value, self.valid_values["dec_places"])
             raw_value *= self.valid_values["scale_factor"]
-            raw_value = round(raw_value, 0)
-            if (
-                value < self.valid_values["scaled_min_value"]
-                or value > self.valid_values["scaled_max_value"]
-            ):
-                raise HomeAssistantError(
-                    f"Temperature value out of bounds for entity {self.entity_id}"
-                )
+            if not self.is_float:
+                raw_value = round(raw_value, 0)
 
         eta_client = self._create_eta_client()
         success = await eta_client.write_endpoint(self.uri, raw_value)
