@@ -1,12 +1,14 @@
 """API v1.2 specific sensor discovery implementation."""
 
 import asyncio
+from datetime import datetime
 import logging
 import re
 
 import xmltodict
 
 from ..const import (  # noqa: TID252
+    CUSTOM_UNIT_DATETIME,
     CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     CUSTOM_UNIT_TIMESLOT,
     CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
@@ -75,6 +77,15 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         m = re.search(p, time)
 
         return m is not None
+
+    def _is_valid_datetime(self, input: str) -> bool:
+        """Check if a string is a valid datetime in the format "DD.MM.YYYY HH:MM:SS"."""
+        try:
+            datetime.strptime(input, "%d.%m.%Y %H:%M:%S")
+        except ValueError:
+            return False
+        else:
+            return True
 
     def _is_valid_timeslot_time(self, time: str) -> bool:
         """Check if a string is a valid time in the format "HH:MM"."""
@@ -164,6 +175,13 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             else:
                 _LOGGER.debug("Found timeslot endpoint")
             unit = parsed_unit
+        elif (
+            unit == ""
+            and varinfo_data["type"] == "DEFAULT"
+            and self._is_valid_datetime(var_raw.get("@strValue", ""))
+        ):
+            _LOGGER.debug("Found datetime endpoint based on value format")
+            unit = CUSTOM_UNIT_DATETIME
 
         return unit
 

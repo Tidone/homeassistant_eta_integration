@@ -5400,6 +5400,15 @@
       "value": "Pt1000",
       "is_writable": true
     },
+    "eta_192_168_0_25__puffer_zählerstände_zähler_pufferladungen_startdatum_zähler_pufferladungen": {
+      "valid_values": null,
+      "friendly_name": "Puffer > Zählerstände > Zähler Pufferladungen > Startdatum Zähler Pufferladungen",
+      "unit": "datetime",
+      "endpoint_type": "DEFAULT",
+      "url": "/264/10601/0/0/15045",
+      "value": "16.10.2024 15:58:42",
+      "is_writable": false
+    },
     "eta_192_168_0_25__puffer_einstellungen_laden_mit_erzeuger": {
       "valid_values": {
         "Nein": 6530,
@@ -6897,6 +6906,15 @@
       "url": "/264/10891/14877/0/2011",
       "value": "xxx",
       "is_writable": true
+    },
+    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_beginn_der_messung": {
+      "valid_values": null,
+      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Beginn der Messung",
+      "unit": "datetime",
+      "endpoint_type": "DEFAULT",
+      "url": "/264/10891/14877/0/13267",
+      "value": "29.08.2023 14:18:48",
+      "is_writable": false
     },
     "eta_192_168_0_25__kessel_kessel": {
       "valid_values": {
