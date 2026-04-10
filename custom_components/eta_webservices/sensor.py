@@ -112,7 +112,7 @@ async def async_setup_entry(
     chosen_float_sensors = config[CHOSEN_FLOAT_SENSORS]
     chosen_writable_sensors = config[CHOSEN_WRITABLE_SENSORS]
     # first add all normal float sensors
-    sensors = [
+    sensors: list[SensorEntity] = [
         EtaFloatSensor(
             config,
             hass,
@@ -141,7 +141,7 @@ async def async_setup_entry(
             for entity in chosen_text_sensors
             if config[TEXT_DICT][entity]["unit"]
             not in [CUSTOM_UNIT_TIMESLOT, CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE]
-        ]  # pyright: ignore[reportArgumentType]
+        ]
     )
     # add the non-writable timeslot sensors first
     # breaking change: all timeslot sensors which are also selected as writable sensors will now be ignored
@@ -161,7 +161,7 @@ async def async_setup_entry(
             for entity in chosen_text_sensors
             if config[TEXT_DICT][entity]["unit"]
             in [CUSTOM_UNIT_TIMESLOT, CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE]
-        ]  # pyright: ignore[reportArgumentType]
+        ]
     )
     # then add the writable timeslot sensors
     # These share the same implementation as the text timeslot sensors above,
@@ -179,18 +179,18 @@ async def async_setup_entry(
             for entity in chosen_writable_sensors
             if config[WRITABLE_DICT][entity]["unit"]
             in [CUSTOM_UNIT_TIMESLOT, CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE]
-        ]  # pyright: ignore[reportArgumentType]
+        ]
     )
     error_coordinator = config[ERROR_UPDATE_COORDINATOR]
     sensors.extend(
         [
             EtaNbrErrorsSensor(config, hass, error_coordinator),
             EtaLatestErrorSensor(config, hass, error_coordinator),
-        ]  # pyright: ignore[reportArgumentType]
+        ]
     )
     # Final safety net: avoid HA startup failures if config data still contains
     # the same unique_id in multiple sensor categories.
-    sensors = _deduplicate_entities_by_unique_id(sensors)  # pyright: ignore[reportArgumentType]
+    sensors = _deduplicate_entities_by_unique_id(sensors)
     async_add_entities(sensors, update_before_add=False)
 
     # activate the service for all selected writable sensors with the unit CUSTOM_UNIT_TIMESLOT

@@ -28,9 +28,12 @@ async def async_setup_entry(
     coordinator = config[SENSOR_UPDATE_COORDINATOR]
 
     chosen_entities = config[CHOSEN_SWITCHES]
+    # Create switch entities for all writable chosen entities
+    # We set the default for is_writable to True to keep the old behaviour of showing all entities as switches
     switches = [
         EtaSwitch(config, hass, entity, config[SWITCHES_DICT][entity], coordinator)
         for entity in chosen_entities
+        if config[SWITCHES_DICT][entity].get("is_writable", True)
     ]
     async_add_entities(switches, update_before_add=False)
 
