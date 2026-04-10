@@ -30,6 +30,7 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
         endpoint_info["valid_values"] = ETAValidSwitchValues(
             on_value=1803, off_value=1802
         )
+        endpoint_info["is_writable"] = True
 
     def _is_writable(self, endpoint_info: ETAEndpoint) -> bool:
         """Check if endpoint is writable (v1.1 method)."""
@@ -46,6 +47,7 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
         ]
         endpoint_info["valid_values"]["dec_places"] = int(raw_dict["@decPlaces"])
         endpoint_info["valid_values"]["scale_factor"] = int(raw_dict["@scaleFactor"])
+        endpoint_info["is_writable"] = True
 
     def _sanitize_duplicate_nodes(
         self,
@@ -215,6 +217,7 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
                     # If the unit is in the list of known units, the sensor will be detected as a float sensor anyway.
                     endpoint_type="TEXT",
                     value=value,
+                    is_writable=False,
                 )
 
                 unique_key = (

@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import re
 
 import xmltodict
 
@@ -61,13 +62,82 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             endpoint_info["unit"] in WRITABLE_SENSOR_UNITS
             and endpoint_info["valid_values"] is not None
             and "scaled_min_value" in endpoint_info["valid_values"]
+            and endpoint_info["is_writable"]
+        )
+
+    def _is_valid_time(self, time: str) -> bool:
+        """Check if a string is a valid time in the format "HH:MM"."""
+        if time == "":
+            return False
+
+        regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+        p = re.compile(regex)
+        m = re.search(p, time)
+
+        return m is not None
+
+    def _is_valid_timeslot_time(self, time: str) -> bool:
+        """Check if a string is a valid time in the format "HH:MM"."""
+        if time == "":
+            return False
+
+        regex = "^(([01]?[0-9]|2[0-3]):[0-5][0-9])|24:00$"
+        p = re.compile(regex)
+        m = re.search(p, time)
+
+        return m is not None
+
+    def _parse_timeslot_value(self, value: str) -> tuple[str, str, str | None]:
+        """Parse a timeslot value string.
+
+        Args:
+            value: String in format "HH:MM - HH:MM" or "HH:MM - HH:MM <number>"
+
+        Returns:
+            Tuple of (start_time, end_time, optional_value)
+            where optional_value is None if not present
+        """
+        # Split by " - " to separate start time from the rest
+        parts = value.split("-")
+        if len(parts) != 2:
+            return "", "", None  # Invalid format
+
+        start_time = parts[0].strip()
+
+        # Split the second part by space to get end time and optional value
+        end_parts = parts[1].strip().split()
+        end_time = end_parts[0]
+
+        # Check if there's a third value
+        optional_value = end_parts[1] if len(end_parts) > 1 else None
+
+        return start_time, end_time, optional_value
+
+    def _try_parse_timeslot(self, value: str) -> str | None:
+        """Check if a string is a valid timeslot in the format "HH:MM - HH:MM" or "HH:MM - HH:MM <number>"."""
+        start_time, end_time, optional_value = self._parse_timeslot_value(value)
+
+        # Validate start and end times
+        if not self._is_valid_timeslot_time(
+            start_time
+        ) or not self._is_valid_timeslot_time(end_time):
+            return None
+
+        # If there's an optional value, check if it's numeric
+        if optional_value is not None and not str(optional_value).isnumeric():
+            return None
+
+        return (
+            CUSTOM_UNIT_TIMESLOT
+            if optional_value is None
+            else CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE
         )
 
     def _parse_unit(
         self, varinfo_data, var_data_entry: tuple[float | str, str, dict]
     ) -> str:
         """Parse and detect custom units (v1.2 specific)."""
-        var_value, var_unit, _ = var_data_entry
+        var_value, var_unit, var_raw = var_data_entry
         unit = var_unit
 
         if (
@@ -79,43 +149,22 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             # those sensors are most likely unitless float sensors, so we set the unit to unitless and let the normal float sensor detection handle the rest
             unit = CUSTOM_UNIT_UNITLESS
 
-        if (
-            unit == ""
-            and "validValues" in varinfo_data
-            and varinfo_data["validValues"] is not None
-            and "min" in varinfo_data["validValues"]
-            and "max" in varinfo_data["validValues"]
-            and "#text" in varinfo_data["validValues"]["min"]
-            and int(varinfo_data["@scaleFactor"]) == 1
-            and int(varinfo_data["@decPlaces"]) == 0
-        ):
-            _LOGGER.debug("Found time endpoint")
-            min_value = int(varinfo_data["validValues"]["min"]["#text"])
-            max_value = int(varinfo_data["validValues"]["max"]["#text"])
-            if min_value == 0 and max_value == 24 * 60 - 1:
-                # time endpoints have a min value of 0 and max value of 1439
-                # it may be better to parse the strValue and check if it is in the format "00:00"
-                unit = CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+        elif unit == "" and self._is_valid_time(var_raw.get("@strValue", "")):
+            _LOGGER.debug("Found time endpoint based on value format")
+            unit = CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+
         elif (
-            unit in ["", "°C"]
-            and "validValues" in varinfo_data
-            and varinfo_data["validValues"] is not None
-            and "min" in varinfo_data["validValues"]
-            and "max" in varinfo_data["validValues"]
-            and "begin" in varinfo_data["validValues"]["min"]
-            and "end" in varinfo_data["validValues"]["min"]
+            varinfo_data["type"] == "TIMESLOT"
+            and unit in ["", "°C"]
+            and (parsed_unit := self._try_parse_timeslot(var_raw.get("@strValue", "")))
+            is not None
         ):
-            min_value = int(varinfo_data["validValues"]["min"]["begin"])
-            max_value = int(varinfo_data["validValues"]["max"]["end"])
-            if min_value == 0 and max_value == 24 * 60 / 15:
-                # time endpoints have a min value of 0 and max value of 96
-                # it may be better to parse the strValue and check if it is in the format "00:00 - 00:00"
-                if "value" in varinfo_data["validValues"]["min"]:
-                    _LOGGER.debug("Found timeslot endpoint with temperature")
-                    unit = CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE
-                else:
-                    _LOGGER.debug("Found timeslot endpoint")
-                    unit = CUSTOM_UNIT_TIMESLOT
+            if parsed_unit == CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE:
+                _LOGGER.debug("Found timeslot endpoint with temperature")
+            else:
+                _LOGGER.debug("Found timeslot endpoint")
+            unit = parsed_unit
+
         return unit
 
     def _createETAValidWritableValues(
@@ -146,11 +195,54 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         _LOGGER.debug("Parsing varinfo %s", data)
         valid_values = None
         unit = self._parse_unit(data, var_data_entry)
-        if (
-            "validValues" in data
-            and data["validValues"] is not None
-            and "value" in data["validValues"]
-        ):
+
+        # The validValues node can be in multiple formats:
+        # 1) A list of discrete valid values, e.g. for a switch:
+        # <validValues>
+        #   <value strValue="Ein">1</value>
+        #   <value strValue="Aus">0</value>
+        # </validValues>
+        # 2) A min, def, and max value, e.g. for a writable number:
+        # <validValues>
+        #   <min strValue="0" unit="°C">0</min>
+        #   <def strValue="0" unit="°C">0</def>
+        #   <max strValue="100" unit="°C">100</max>
+        # </validValues>
+        # 3) A min , def, and max value, but further divided into begin and end timeslots with an optional value, e.g. for a writable timeslot sensors:
+        # <validValues>
+        #   <min strValue="00:00 - 00:00 0" unit="°C">
+        #     <begin>0</begin>
+        #     <end>0</end>
+        #     <value>0</value>
+        #   </min>
+        #   <def strValue="00:00 - 24:00 55" unit="°C">
+        #     <begin>0</begin>
+        #     <end>96</end>
+        #     <value>550</value>
+        #   </def>
+        #   <max strValue="24:00 - 24:00 90" unit="°C">
+        #     <begin>96</begin>
+        #     <end>96</end>
+        #     <value>900</value>
+        #   </max>
+        # </validValues>
+        # or
+        # <validValues>
+        #   <min strValue="00:00 - 00:00" unit="">
+        #     <begin>0</begin>
+        #     <end>0</end>
+        #   </min>
+        #   <def strValue="00:00 - 24:00" unit="">
+        #     <begin>0</begin>
+        #     <end>96</end>
+        #   </def>
+        #   <max strValue="24:00 - 24:00" unit="">
+        #     <begin>96</begin>
+        #     <end>96</end>
+        #   </max>
+        # </validValues>
+        if data.get("validValues") is not None and "value" in data["validValues"]:
+            # Parse discrete valid values into a dict, e.g. {"Ein": 1, "Aus": 0}
             values = data["validValues"]["value"]
             valid_values = dict(
                 zip(
@@ -160,17 +252,19 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                 )
             )
         elif (
-            "validValues" in data
-            and data["validValues"] is not None
+            data.get("validValues") is not None
             and "min" in data["validValues"]
             and "#text" in data["validValues"]["min"]
             # check if the unit is in the list of writable sensor units or if the type is DEFAULT with an empty unit, which is an indicator of a unitless writable sensor
-            # this check may be inaccurate, but we can reject invalid writable sensors later when we have determined the final unit (thi is done in _is_writable)
+            # this check may be inaccurate, but we can reject invalid writable sensors later when we have determined the final unit (which is done in _is_writable)
             and (
                 unit in WRITABLE_SENSOR_UNITS
                 or ("type" in data and data["type"] == "DEFAULT" and unit == "")
             )
+            # we handle this unit separately below
+            and unit != CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
         ):
+            # Parse the min and max values for writable sensors
             min_value = data["validValues"]["min"]["#text"]
             max_value = data["validValues"]["max"]["#text"]
             valid_values = self._createETAValidWritableValues(
@@ -179,26 +273,84 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                 scale_factor=int(data["@scaleFactor"]),
                 dec_places=int(data["@decPlaces"]),
             )
-        if unit == CUSTOM_UNIT_TIMESLOT:
-            # store the min and max value of the timeslots for this unit
-            valid_values = ETAValidWritableValues(
-                scaled_min_value=0,
-                scaled_max_value=96,
-                scale_factor=1,
-                dec_places=0,
-            )
-        elif unit == CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE:
-            # store the min and max value of the temperature for this unit
-            # the min and max values for the timeslots can be assumed to be 0 and 96 respectively,
-            # otherwise we wouldn't have assigned this unit in the first place
-            min_value = data["validValues"]["min"]["value"]
-            max_value = data["validValues"]["max"]["value"]
-            valid_values = self._createETAValidWritableValues(
-                raw_min_value=min_value,
-                raw_max_value=max_value,
-                scale_factor=int(data["@scaleFactor"]),
-                dec_places=int(data["@decPlaces"]),
-            )
+        if (
+            unit == CUSTOM_UNIT_TIMESLOT
+            and data.get("validValues") is not None
+            and "min" in data["validValues"]
+            and "max" in data["validValues"]
+            and "begin" in data["validValues"]["min"]
+            and "end" in data["validValues"]["max"]
+        ):
+            if (min_value := int(data["validValues"]["min"]["begin"])) == 0 and (
+                max_value := int(data["validValues"]["max"]["end"])
+            ) == 24 * 60 / 15:
+                # store the min and max value of the timeslots for this unit
+                valid_values = ETAValidWritableValues(
+                    scaled_min_value=0,
+                    scaled_max_value=96,
+                    scale_factor=1,
+                    dec_places=0,
+                )
+
+            else:
+                _LOGGER.warning(
+                    "Invalid timeslot validValues for %s: expected begin=0 and end=96, got begin=%s and end=%s",
+                    uri,
+                    data["validValues"]["min"]["begin"],
+                    data["validValues"]["max"]["end"],
+                )
+        elif (
+            unit == CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE
+            and data.get("validValues") is not None
+            and "min" in data["validValues"]
+            and "max" in data["validValues"]
+            and "value" in data["validValues"]["min"]
+            and "begin" in data["validValues"]["min"]
+            and "end" in data["validValues"]["max"]
+        ):
+            if (
+                int(data["validValues"]["min"]["begin"]) == 0
+                and int(data["validValues"]["max"]["end"]) == 24 * 60 / 15
+            ):
+                # store the min and max value of the temperature for this unit
+                # the min and max timeslot values for the timeslots don't have to be stored because they are always the same for this unit (0 and 96 respectively)
+                min_value = data["validValues"]["min"]["value"]
+                max_value = data["validValues"]["max"]["value"]
+                valid_values = self._createETAValidWritableValues(
+                    raw_min_value=min_value,
+                    raw_max_value=max_value,
+                    scale_factor=int(data["@scaleFactor"]),
+                    dec_places=int(data["@decPlaces"]),
+                )
+            else:
+                _LOGGER.warning(
+                    "Invalid timeslot validValues for %s: expected begin=0 and end=96, got begin=%s and end=%s",
+                    uri,
+                    data["validValues"]["min"]["begin"],
+                    data["validValues"]["max"]["end"],
+                )
+        elif (
+            unit == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+            and data.get("validValues") is not None
+            and "min" in data["validValues"]
+            and "#text" in data["validValues"]["min"]
+        ):
+            if (min_value := int(data["validValues"]["min"]["#text"])) == 0 and (
+                max_value := int(data["validValues"]["max"]["#text"])
+            ) == 24 * 60 - 1:
+                valid_values = self._createETAValidWritableValues(
+                    raw_min_value=min_value,
+                    raw_max_value=max_value,
+                    scale_factor=int(data["@scaleFactor"]),
+                    dec_places=int(data["@decPlaces"]),
+                )
+            else:
+                _LOGGER.warning(
+                    "Invalid validValues for %s: expected min=0 and max=1439, got min=%s and max=%s",
+                    uri,
+                    data["validValues"]["min"]["#text"],
+                    data["validValues"]["max"]["#text"],
+                )
 
         var_value, _, raw_var_data = var_data_entry
         if unit in CUSTOM_UNITS:
@@ -215,6 +367,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             endpoint_type=data["type"],
             url=uri,
             value=value,
+            is_writable=data.get("@isWritable") == "1",
         )
 
     async def _fetch_varinfo_raw(self, fub: str, uri: str) -> dict:

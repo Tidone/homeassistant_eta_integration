@@ -36,6 +36,7 @@ class ETAEndpoint(TypedDict):
     friendly_name: str
     unit: str
     endpoint_type: str
+    is_writable: bool
 
 
 class ETAError(TypedDict):

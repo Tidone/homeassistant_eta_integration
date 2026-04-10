@@ -5,8 +5,13 @@ import pytest
 from unittest.mock import AsyncMock
 from aiohttp import ClientSession, ClientError, ClientResponseError
 
-from custom_components.eta_webservices.api import EtaAPI
 from custom_components.eta_webservices._api.api_client import APIClient
+from custom_components.eta_webservices.api import EtaAPI
+from custom_components.eta_webservices.const import (
+    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNIT_TIMESLOT,
+    CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
+)
 
 
 @pytest.mark.asyncio
@@ -244,6 +249,9 @@ async def test_get_all_sensors(load_fixture, is_v12):
                 f"Value mismatch for {expected_key}: "
                 f"expected {expected_value.get('value')}, got {actual_entry.get('value')}"
             )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
 
     # Check writable_dict entries
     for expected_key, expected_value in expected_writable_entries.items():
@@ -260,6 +268,9 @@ async def test_get_all_sensors(load_fixture, is_v12):
         )
         assert actual_entry["value"] == expected_value["value"], (
             f"Data mismatch for {expected_key}"
+        )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
         )
 
         if expected_value.get("valid_values") is not None:
@@ -298,6 +309,9 @@ async def test_get_all_sensors(load_fixture, is_v12):
         assert actual_entry["value"] == expected_value["value"], (
             f"Data mismatch for {expected_key}"
         )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
 
         assert actual_entry.get("valid_values") is not None, (
             f"Valid values missing for switch {expected_key}"
@@ -332,6 +346,9 @@ async def test_get_all_sensors(load_fixture, is_v12):
         )
         assert actual_entry["value"] == expected_value["value"], (
             f"Data mismatch for {expected_key}"
+        )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
         )
 
 
@@ -2253,4 +2270,179 @@ async def test_api_client_get_and_post_share_semaphore():
 
     assert observed_max <= max_concurrent, (
         f"Mixed GET/POST should share the semaphore: expected <= {max_concurrent}, got {observed_max}"
+    )
+
+
+@pytest.mark.asyncio
+async def test_get_all_sensors_v12_non_writable_custom_unit_nodes():
+    """Test that v1.2 nodes with isWritable=0 and custom time-related units are detected correctly.
+
+    This test verifies:
+    - Nodes with unit resolving to CUSTOM_UNIT_TIMESLOT are placed in text_dict
+    - Nodes with unit resolving to CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE are placed in text_dict
+    - Nodes with unit resolving to CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT are placed in text_dict
+    - None of these non-writable nodes appear in writable_dict
+    """
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.1", 8080)
+    api.is_correct_api_version = AsyncMock(return_value=True)
+
+    menu_xml = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        "<menu>"
+        '<fub uri="/120/10101" name="HK">'
+        '<object uri="/120/10101/0/0/12001" name="TimeslotSensor"/>'
+        '<object uri="/120/10101/0/0/12002" name="TimeslotTempSensor"/>'
+        '<object uri="/120/10101/0/0/12003" name="MinutesMidnight"/>'
+        "</fub>"
+        "</menu>"
+        "</eta>"
+    )
+
+    # TIMESLOT sensor: type=TIMESLOT, unit="", isWritable=0
+    # validValues min/max encode the 15-minute quarter-hour slots (0..96)
+    varinfo_timeslot = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<varInfo uri="/user/varinfo//120/10101/0/0/12001">'
+        '<variable uri="120/10101/0/0/12001" name="Zeitfenster 1" '
+        'fullName="Heizzeiten &gt; Montag &gt; Zeitfenster 1" '
+        'unit="" decPlaces="0" scaleFactor="1" advTextOffset="0" isWritable="0">'
+        "<type>TIMESLOT</type>"
+        "<validValues>"
+        '<min unit="" strValue="00:00 - 00:00"><begin>0</begin><end>0</end></min>'
+        '<def unit="" strValue="00:00 - 24:00"><begin>0</begin><end>96</end></def>'
+        '<max unit="" strValue="24:00 - 24:00"><begin>96</begin><end>96</end></max>'
+        "</validValues>"
+        "</variable>"
+        "</varInfo>"
+        "</eta>"
+    )
+
+    # var: unit="" means parse_data returns strValue as-is
+    var_timeslot = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<value uri="/user/var/120/10101/0/0/12001" strValue="15:00 - 22:00" '
+        'unit="" decPlaces="0" scaleFactor="1" advTextOffset="0">0</value>'
+        "</eta>"
+    )
+
+    # TIMESLOT_PLUS_TEMPERATURE sensor: type=TIMESLOT, unit="°C", isWritable=0
+    # validValues additionally carry a temperature <value> per slot boundary
+    varinfo_timeslot_temp = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<varInfo uri="/user/varinfo//120/10101/0/0/12002">'
+        '<variable uri="120/10101/0/0/12002" name="Zeitfenster 1" '
+        'fullName="Ladezeiten &gt; Montag &gt; Zeitfenster 1" '
+        'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0" isWritable="0">'
+        "<type>TIMESLOT</type>"
+        "<validValues>"
+        '<min unit="°C" strValue="00:00 - 00:00 0"><begin>0</begin><end>0</end><value>0</value></min>'
+        '<def unit="°C" strValue="00:00 - 24:00 55"><begin>0</begin><end>96</end><value>550</value></def>'
+        '<max unit="°C" strValue="24:00 - 24:00 90"><begin>96</begin><end>96</end><value>900</value></max>'
+        "</validValues>"
+        "</variable>"
+        "</varInfo>"
+        "</eta>"
+    )
+
+    # var: unit="°C" is in FLOAT_SENSOR_UNITS so parse_data returns a float,
+    # but _parse_unit uses var_raw["@strValue"] for TIMESLOT detection
+    var_timeslot_temp = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<value uri="/user/var/120/10101/0/0/12002" strValue="15:30 - 18:00 55" '
+        'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0">155</value>'
+        "</eta>"
+    )
+
+    # MINUTES_SINCE_MIDNIGHT sensor: type=DEFAULT, unit="", isWritable=0
+    # validValues are plain numeric min/max (0..1439 minutes)
+    varinfo_minutes = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<varInfo uri="/user/varinfo//120/10101/0/0/12003">'
+        '<variable uri="120/10101/0/0/12003" name="Ruhezeit" '
+        'fullName="Einstellungen &gt; Ruhezeit" '
+        'unit="" decPlaces="0" scaleFactor="1" advTextOffset="0" isWritable="0">'
+        "<type>DEFAULT</type>"
+        "<validValues>"
+        '<min unit="" strValue="0">0</min>'
+        '<def unit="" strValue="0">0</def>'
+        '<max unit="" strValue="1439">1439</max>'
+        "</validValues>"
+        "</variable>"
+        "</varInfo>"
+        "</eta>"
+    )
+
+    # var: unit="" means parse_data returns strValue="21:00";
+    # str("21:00").isnumeric() is False so _parse_unit falls through to the
+    # _is_valid_time check, which matches HH:MM → CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+    var_minutes = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<value uri="/user/var/120/10101/0/0/12003" strValue="21:00" '
+        'unit="" decPlaces="0" scaleFactor="1" advTextOffset="0">1260</value>'
+        "</eta>"
+    )
+
+    async def mock_get_request(suffix):
+        response = AsyncMock()
+        if "/user/menu" in suffix:
+            response.text = AsyncMock(return_value=menu_xml)
+        elif "12001" in suffix and "/user/varinfo" in suffix:
+            response.text = AsyncMock(return_value=varinfo_timeslot)
+        elif "12001" in suffix:
+            response.text = AsyncMock(return_value=var_timeslot)
+        elif "12002" in suffix and "/user/varinfo" in suffix:
+            response.text = AsyncMock(return_value=varinfo_timeslot_temp)
+        elif "12002" in suffix:
+            response.text = AsyncMock(return_value=var_timeslot_temp)
+        elif "12003" in suffix and "/user/varinfo" in suffix:
+            response.text = AsyncMock(return_value=varinfo_minutes)
+        elif "12003" in suffix:
+            response.text = AsyncMock(return_value=var_minutes)
+        else:
+            response.text = AsyncMock(
+                return_value='<?xml version="1.0" encoding="utf-8"?>'
+                '<eta version="1.0"><error>Not found</error></eta>'
+            )
+        return response
+
+    api._http.get_request = mock_get_request
+
+    float_dict = {}
+    switches_dict = {}
+    text_dict = {}
+    writable_dict = {}
+
+    result = await api.get_all_sensors(
+        False, float_dict, switches_dict, text_dict, writable_dict, {}
+    )
+
+    assert result is True  # v12 path was used
+
+    # isWritable=0 means none of the three sensors should be registered as writable
+    assert len(writable_dict) == 0, (
+        f"Non-writable sensors must not appear in writable_dict, got: {list(writable_dict)}"
+    )
+
+    # All three should be detected and placed in text_dict
+    assert len(text_dict) == 3, (
+        f"Expected 3 custom-unit text sensors, got {len(text_dict)}: {list(text_dict)}"
+    )
+
+    units_in_text_dict = {entry["unit"] for entry in text_dict.values()}
+    assert CUSTOM_UNIT_TIMESLOT in units_in_text_dict, (
+        "TIMESLOT sensor should be detected and placed in text_dict"
+    )
+    assert CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE in units_in_text_dict, (
+        "TIMESLOT_PLUS_TEMPERATURE sensor should be detected and placed in text_dict"
+    )
+    assert CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT in units_in_text_dict, (
+        "MINUTES_SINCE_MIDNIGHT sensor should be detected and placed in text_dict"
     )
