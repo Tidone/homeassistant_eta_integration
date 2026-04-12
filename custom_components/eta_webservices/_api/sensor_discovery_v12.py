@@ -98,6 +98,15 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
 
         return m is not None
 
+    def _is_number(self, input: str) -> bool:
+        """Check if a string can be parsed as a number."""
+        try:
+            float(input.replace(",", "."))
+        except ValueError:
+            return False
+        else:
+            return True
+
     def _parse_timeslot_value(self, value: str) -> tuple[str, str, str | None]:
         """Parse a timeslot value string.
 
@@ -152,11 +161,11 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         unit = var_unit
 
         if (
-            varinfo_data["type"] == "DEFAULT"
+            varinfo_data["type"] in ["DEFAULT", "IEEE-754"]
             and unit == ""
-            and str(var_value).isnumeric()
+            and self._is_number(str(var_value))
         ):
-            # some sensors have an empty unit and a type of DEFAULT in the varinfo endpoint, but show a numeric value in the var endpoint
+            # some sensors have an empty unit and a type of DEFAULT (or IEEE-754) in the varinfo endpoint, but show a numeric value in the var endpoint
             # those sensors are most likely unitless float sensors, so we set the unit to unitless and let the normal float sensor detection handle the rest
             unit = CUSTOM_UNIT_UNITLESS
 
@@ -376,7 +385,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         else:
             value = var_value
         if unit == CUSTOM_UNIT_UNITLESS:
-            value = float(value)
+            value = float(str(value).replace(",", "."))
 
         return ETAEndpoint(
             valid_values=valid_values,

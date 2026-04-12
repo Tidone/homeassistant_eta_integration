@@ -2925,6 +2925,15 @@
       "value": 0.122372,
       "is_writable": false
     },
+    "eta_192_168_0_25__diagnose_ausgänge_s144_cos_phi": {
+      "valid_values": null,
+      "friendly_name": "Diagnose > Ausgänge > S144 cos phi",
+      "unit": "unitless",
+      "endpoint_type": "IEEE-754",
+      "url": "/264/10911/0/0/6630",
+      "value": 1.0,
+      "is_writable": false
+    },
     "eta_192_168_0_25__diagnose_ausgänge_s152__dedup__264_10911_0_0_6539": {
       "valid_values": null,
       "friendly_name": "Diagnose > Ausgänge > S152",

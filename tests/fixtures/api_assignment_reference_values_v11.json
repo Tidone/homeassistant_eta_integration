@@ -33,7 +33,7 @@
       "friendly_name": "LagerUm. > Zählerstände > Dauer des letzten Saugvorganges",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 41.0,
+      "value": 30.0,
       "is_writable": false
     },
     "eta_192_168_0_25__lagerum._austragung_spüldauer": {
@@ -56,7 +56,7 @@
       "friendly_name": "LagerUm. > Vorrat",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 1678.8,
+      "value": 1657.4,
       "is_writable": true
     },
     "eta_192_168_0_25__lagerum._vorrat_vorrat_warngrenze": {
@@ -98,7 +98,7 @@
       "friendly_name": "HK > Eingänge > Außentemperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_rückstellzeit_für_[kommen]-taste": {
@@ -135,7 +135,7 @@
       "friendly_name": "HK > Heizkreis > Heizkurve",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 24.1,
+      "value": 22.5,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizkurve_schieber_position": {
@@ -269,7 +269,7 @@
       "friendly_name": "HK > Heizkreis > Außentemperatur verzögert",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.6,
+      "value": 8.6,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_x": {
@@ -283,7 +283,7 @@
       "friendly_name": "HK > Heizkreis > Außentemperatur verzögert > Lag x",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_tf__dedup__120_10101_12095_0_1072": {
@@ -315,7 +315,7 @@
       "friendly_name": "HK > Heizkreis > Außentemperatur verzögert > Lag y",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.6,
+      "value": 8.6,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizgrenze_für_[heizen]": {
@@ -366,7 +366,7 @@
       "friendly_name": "HK > Heizkreis > Estrich > Letzte Änderung",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 148270000.0,
+      "value": 148388000.0,
       "is_writable": false
     },
     "eta_192_168_0_25__hk_heizkreis_estrich_anstieg_um": {
@@ -481,7 +481,7 @@
       "friendly_name": "Fbh > Eingänge > Vorlauf",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.3,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_eingänge_vorlauf_kalibrierwert": {
@@ -523,7 +523,7 @@
       "friendly_name": "Fbh > Eingänge > Außentemperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer": {
@@ -537,7 +537,7 @@
       "friendly_name": "Fbh > Ausgänge > Mischer",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.3,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer_soll_temperatur": {
@@ -551,7 +551,7 @@
       "friendly_name": "Fbh > Ausgänge > Mischer > Soll Temperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.6,
+      "value": 29.0,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer_ist_temperatur": {
@@ -565,7 +565,7 @@
       "friendly_name": "Fbh > Ausgänge > Mischer > Ist Temperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.3,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer_position": {
@@ -579,7 +579,7 @@
       "friendly_name": "Fbh > Ausgänge > Mischer > Position",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 16.8,
+      "value": 19.0,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer_laufzeit_mischer": {
@@ -639,7 +639,7 @@
       "friendly_name": "Fbh > Heizkreis > Vorlauf",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.3,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_vorlauf_vorlauf_max": {
@@ -667,7 +667,7 @@
       "friendly_name": "Fbh > Heizkreis > Heizkurve",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.6,
+      "value": 29.0,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_heizkurve_schieber_position": {
@@ -746,7 +746,7 @@
       "friendly_name": "Fbh > Heizkreis > Heizlast",
       "unit": "W",
       "endpoint_type": "TEXT",
-      "value": 7732.0,
+      "value": 6332.0,
       "is_writable": false
     },
     "eta_192_168_0_25__fbh_heizkreis_heizlast_spezifische_heizlast": {
@@ -801,7 +801,7 @@
       "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.6,
+      "value": 8.6,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_x": {
@@ -815,7 +815,7 @@
       "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert > Lag x",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_tf__dedup__120_10102_12095_0_1072": {
@@ -847,7 +847,7 @@
       "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert > Lag y",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.6,
+      "value": 8.6,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_heizgrenze_für_[heizen]": {
@@ -931,7 +931,7 @@
       "friendly_name": "Fbh > Heizkreis > Heizkreismischer",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.2,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_estrich_vorlauf_soll": {
@@ -954,7 +954,7 @@
       "friendly_name": "Fbh > Heizkreis > Estrich > Letzte Änderung",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 148241000.0,
+      "value": 148359000.0,
       "is_writable": false
     },
     "eta_192_168_0_25__fbh_heizkreis_estrich_anstieg_um": {
@@ -1069,7 +1069,7 @@
       "friendly_name": "Sys > Außentemperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__sys_außentemperatur_außentemperaturfühler": {
@@ -1083,7 +1083,7 @@
       "friendly_name": "Sys > Außentemperatur > Außentemperaturfühler",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__sys_außentemperatur_außentemperaturfühler_kalibrierwert": {
@@ -1233,7 +1233,7 @@
       "friendly_name": "Kessel > Eingänge > Restsauerstoff",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 14.94,
+      "value": 11.53,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_restsauerstoff": {
@@ -1247,7 +1247,7 @@
       "friendly_name": "Kessel > Eingänge > Restsauerstoff > Restsauerstoff",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 14.94,
+      "value": 11.64,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_signal": {
@@ -1256,7 +1256,7 @@
       "friendly_name": "Kessel > Eingänge > Restsauerstoff > Signal",
       "unit": "mV",
       "endpoint_type": "TEXT",
-      "value": -5.2,
+      "value": -0.7,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_verzögerung_(tf)": {
@@ -1274,7 +1274,7 @@
       "friendly_name": "Kessel > Eingänge > Restsauerstoff > Innenwiderstand",
       "unit": "Ohm",
       "endpoint_type": "TEXT",
-      "value": 201.0,
+      "value": 199.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_kalibrierwert": {
@@ -1292,7 +1292,7 @@
       "friendly_name": "Kessel > Eingänge > Restsauerstoff > korrigiertes Signal",
       "unit": "mV",
       "endpoint_type": "TEXT",
-      "value": -6.1,
+      "value": 1.1,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_heizspannung_ist": {
@@ -1301,7 +1301,7 @@
       "friendly_name": "Kessel > Eingänge > Restsauerstoff > Heizspannung Ist",
       "unit": "V",
       "endpoint_type": "TEXT",
-      "value": 14.08,
+      "value": 14.074,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_kalibrierung_kalibrier_intervall": {
@@ -1333,7 +1333,7 @@
       "friendly_name": "Kessel > Eingänge > Kessel",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 72.6,
+      "value": 79.1,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_kessel_kalibrierwert": {
@@ -1375,7 +1375,7 @@
       "friendly_name": "Kessel > Eingänge > Kessel Vorlauf 1",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.2,
+      "value": 61.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_kessel_vorlauf_1_kalibrierwert": {
@@ -1417,7 +1417,7 @@
       "friendly_name": "Kessel > Eingänge > Kessel unten",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.7,
+      "value": 66.0,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_kessel_unten_kalibrierwert": {
@@ -1459,7 +1459,7 @@
       "friendly_name": "Kessel > Eingänge > Abgas",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 104.2,
+      "value": 97.0,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_abgas_kalibrierwert": {
@@ -1496,7 +1496,7 @@
       "friendly_name": "Kessel > Eingänge > Kesseldruck",
       "unit": "bar",
       "endpoint_type": "TEXT",
-      "value": 1.31,
+      "value": 1.33,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_eingänge_kesseldruck_kesseldruck": {
@@ -1505,7 +1505,7 @@
       "friendly_name": "Kessel > Eingänge > Kesseldruck > Kesseldruck",
       "unit": "V",
       "endpoint_type": "TEXT",
-      "value": 1.488,
+      "value": 1.498,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_eingänge_messblende": {
@@ -1514,7 +1514,7 @@
       "friendly_name": "Kessel > Eingänge > Messblende",
       "unit": "Pa",
       "endpoint_type": "TEXT",
-      "value": 19.5,
+      "value": 2.9,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_eingänge_messblende_messblende": {
@@ -1523,7 +1523,7 @@
       "friendly_name": "Kessel > Eingänge > Messblende > Messblende",
       "unit": "V",
       "endpoint_type": "TEXT",
-      "value": 0.82,
+      "value": 0.599,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_eingänge_messblende_offset": {
@@ -1555,7 +1555,7 @@
       "friendly_name": "Kessel > Ausgänge > Stokerschnecke",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 20.0,
+      "value": 15.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_stokerschnecke_taktrate": {
@@ -1569,7 +1569,7 @@
       "friendly_name": "Kessel > Ausgänge > Stokerschnecke > Taktrate",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 20.0,
+      "value": 15.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_stokerschnecke_motor_strom": {
@@ -1637,7 +1637,7 @@
       "friendly_name": "Kessel > Ausgänge > Abgasgebläse",
       "unit": "U/min",
       "endpoint_type": "TEXT",
-      "value": 1470.0,
+      "value": 700.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_ausgänge_abgasgebläse_abgasgebläse_soll_drehzahl": {
@@ -1646,7 +1646,7 @@
       "friendly_name": "Kessel > Ausgänge > Abgasgebläse > Abgasgebläse > Soll Drehzahl",
       "unit": "U/min",
       "endpoint_type": "TEXT",
-      "value": 1441.0,
+      "value": 700.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_ausgänge_abgasgebläse_abgasgebläse_ist_drehzahl": {
@@ -1655,7 +1655,7 @@
       "friendly_name": "Kessel > Ausgänge > Abgasgebläse > Abgasgebläse > Ist Drehzahl",
       "unit": "U/min",
       "endpoint_type": "TEXT",
-      "value": 1447.0,
+      "value": 699.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_ausgänge_kesselpumpe": {
@@ -1669,7 +1669,7 @@
       "friendly_name": "Kessel > Ausgänge > Kesselpumpe",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 88.9,
+      "value": 100.0,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_kesselpumpe_ausgang": {
@@ -1683,7 +1683,7 @@
       "friendly_name": "Kessel > Ausgänge > Kesselpumpe > Ausgang",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 89.5,
+      "value": 100.0,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1": {
@@ -1697,7 +1697,7 @@
       "friendly_name": "Kessel > Ausgänge > Vorlaufmischer 1",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.4,
+      "value": 61.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1_soll_temperatur": {
@@ -1725,7 +1725,7 @@
       "friendly_name": "Kessel > Ausgänge > Vorlaufmischer 1 > Ist Temperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.4,
+      "value": 61.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1_position": {
@@ -1739,7 +1739,7 @@
       "friendly_name": "Kessel > Ausgänge > Vorlaufmischer 1 > Position",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 21.4,
+      "value": 16.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1_laufzeit_mischer": {
@@ -1808,7 +1808,7 @@
       "friendly_name": "Kessel > Zählerstände > Volllaststunden",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 26859600.0,
+      "value": 26890600.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_laufzeit_abgasgebläse": {
@@ -1817,7 +1817,7 @@
       "friendly_name": "Kessel > Zählerstände > Laufzeit Abgasgebläse",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 56828200.0,
+      "value": 56889700.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_gesamtverbrauch": {
@@ -1831,7 +1831,7 @@
       "friendly_name": "Kessel > Zählerstände > Gesamtverbrauch",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 14408.1,
+      "value": 14423.7,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_zählerstände_volllaststunden_seit_reinigung": {
@@ -1840,7 +1840,7 @@
       "friendly_name": "Kessel > Zählerstände > Volllaststunden seit Reinigung",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 3548770.0,
+      "value": 3579740.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_volllaststunden_seit_wartung": {
@@ -1849,7 +1849,7 @@
       "friendly_name": "Kessel > Zählerstände > Volllaststunden seit Wartung",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 3548780.0,
+      "value": 3579740.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_inhalt_pelletsbehälter": {
@@ -1863,7 +1863,7 @@
       "friendly_name": "Kessel > Zählerstände > Inhalt Pelletsbehälter",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 21.5,
+      "value": 27.9,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_zählerstände_verbrauch_seit_entaschung": {
@@ -1877,7 +1877,7 @@
       "friendly_name": "Kessel > Zählerstände > Verbrauch seit Entaschung",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 20.2,
+      "value": 11.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_zählerstände_verbrauch_seit_aschebox_leeren": {
@@ -1891,7 +1891,7 @@
       "friendly_name": "Kessel > Zählerstände > Verbrauch seit Aschebox leeren",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 879.8,
+      "value": 895.4,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_zählerstände_laufzeit_zündung": {
@@ -1900,7 +1900,7 @@
       "friendly_name": "Kessel > Zählerstände > Laufzeit Zündung",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 2243710.0,
+      "value": 2246750.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_laufzeit_zündung_dauer_der_letzten_zündung": {
@@ -1909,7 +1909,7 @@
       "friendly_name": "Kessel > Zählerstände > Laufzeit Zündung > Dauer der letzten Zündung",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 273.0,
+      "value": 272.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_zähler_sicherheitspumpenlauf_laufzeit_sicherheitspumpenlauf": {
@@ -1918,7 +1918,7 @@
       "friendly_name": "Kessel > Zählerstände > Zähler Sicherheitspumpenlauf > Laufzeit Sicherheitspumpenlauf",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 59465.0,
+      "value": 59741.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_laufzeit_stoker": {
@@ -1927,7 +1927,7 @@
       "friendly_name": "Kessel > Zählerstände > Laufzeit Stoker",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 8356900.0,
+      "value": 8365970.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_laufzeit_entaschung": {
@@ -1936,7 +1936,7 @@
       "friendly_name": "Kessel > Zählerstände > Laufzeit Entaschung",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 384561.0,
+      "value": 385037.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_laufzeit_saugturbine": {
@@ -1945,7 +1945,7 @@
       "friendly_name": "Kessel > Zählerstände > Laufzeit Saugturbine",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 57814.0,
+      "value": 57881.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert": {
@@ -1959,7 +1959,7 @@
       "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 8.2,
+      "value": 10.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_x": {
@@ -1973,7 +1973,7 @@
       "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert > Lag x",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_tf__dedup__40_10021_12095_0_1072": {
@@ -2005,7 +2005,7 @@
       "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert > Lag y",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 8.2,
+      "value": 10.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_kesseldruck_mindestdruck": {
@@ -2046,7 +2046,7 @@
       "friendly_name": "Kessel > Kessel > Kessel",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 72.7,
+      "value": 78.4,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_kessel_kessel_soll": {
@@ -2111,7 +2111,7 @@
       "friendly_name": "Kessel > Kessel > Kessel unten",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.7,
+      "value": 65.6,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_leistung": {
@@ -2125,7 +2125,7 @@
       "friendly_name": "Kessel > Kessel > Vorlaufregler 1 > Angeforderte Leistung",
       "unit": "kW",
       "endpoint_type": "TEXT",
-      "value": 7.7,
+      "value": 6.3,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_temperatur": {
@@ -2195,7 +2195,7 @@
       "friendly_name": "Kessel > Kessel > Abgas",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 104.2,
+      "value": 97.4,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_abgas_abgas_max": {
@@ -2264,7 +2264,7 @@
       "friendly_name": "Kessel > Kessel > Restsauerstoff",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 16.41,
+      "value": 11.64,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll": {
@@ -2278,7 +2278,7 @@
       "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 8.6,
+      "value": 9.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x": {
@@ -2292,7 +2292,7 @@
       "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin x",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 55.2,
+      "value": 30.1,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x1": {
@@ -2362,7 +2362,7 @@
       "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin y",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 8.62,
+      "value": 9.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einschub": {
@@ -2376,7 +2376,7 @@
       "friendly_name": "Kessel > Kessel > Einschub",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 20.6,
+      "value": 15.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einschub_brennstoffverstärkung": {
@@ -2390,7 +2390,7 @@
       "friendly_name": "Kessel > Kessel > Einschub > Brennstoffverstärkung",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 114.3,
+      "value": 130.1,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einschub_stoker_zeit_pro_kg": {
@@ -2495,7 +2495,7 @@
       "friendly_name": "Kessel > Kessel > Pelletsbehälter > berechnete Saugzeit Max",
       "unit": "s",
       "endpoint_type": "TEXT",
-      "value": 231.0,
+      "value": 193.0,
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_kessel_pelletsbehälter_nachlauf_austragschnecke": {
@@ -2527,7 +2527,7 @@
       "friendly_name": "WW > Eingänge > Warmwasserspeicher",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 57.5,
+      "value": 57.6,
       "is_writable": true
     },
     "eta_192_168_0_25__ww_eingänge_warmwasserspeicher_kalibrierwert": {
@@ -2569,7 +2569,7 @@
       "friendly_name": "WW > Warmwasserspeicher > Warmwasserspeicher",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 57.5,
+      "value": 57.6,
       "is_writable": true
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_soll": {
@@ -3194,7 +3194,7 @@
       "friendly_name": "HK > Heizkreis > Heizzeiten",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "Ein",
+      "value": "Aus",
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten_schaltzustand": {
@@ -3206,7 +3206,7 @@
       "friendly_name": "HK > Heizkreis > Heizzeiten > Schaltzustand",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "Ein",
+      "value": "Aus",
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_estrich_start_estrich_ausheizen": {
@@ -3613,7 +3613,7 @@
       "friendly_name": "LagerUm. > Zählerstände > Anzahl Saugvorgänge",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "1135",
+      "value": "1137",
       "is_writable": false
     },
     "eta_192_168_0_25__lagerum._zählerstände_erfolgreiche_saugvorgänge": {
@@ -3622,7 +3622,7 @@
       "friendly_name": "LagerUm. > Zählerstände > Erfolgreiche Saugvorgänge",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "1135",
+      "value": "1137",
       "is_writable": false
     },
     "eta_192_168_0_25__lagerum._zählerstände_anzahl_spülvorgänge": {
@@ -3721,7 +3721,7 @@
       "friendly_name": "LagerUm. > Austragung > Anzahl Saugvorgänge",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "14",
+      "value": "16",
       "is_writable": false
     },
     "eta_192_168_0_25__lagerum._austragung_umschalten_ab": {
@@ -5062,7 +5062,7 @@
       "friendly_name": "Kessel > Ausgänge > Stokerschnecke > Anforderung",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "Vor",
+      "value": "Aus",
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_ausgänge_stokerschnecke_zustand": {
@@ -5071,7 +5071,7 @@
       "friendly_name": "Kessel > Ausgänge > Stokerschnecke > Zustand",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "Vor",
+      "value": "Halt (verriegelt)",
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_ausgänge_stokerschnecke_retourversuche": {
@@ -5314,7 +5314,7 @@
       "friendly_name": "Kessel > Zählerstände > Zähler Heizbetriebe",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "17153",
+      "value": "17172",
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_zähler_zündungen": {
@@ -5323,7 +5323,7 @@
       "friendly_name": "Kessel > Zählerstände > Zähler Zündungen",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "13138",
+      "value": "13155",
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_auslösung_sicherheitstemperaturbegrenzer": {
@@ -5341,7 +5341,7 @@
       "friendly_name": "Kessel > Zählerstände > Zähler Sicherheitspumpenlauf",
       "unit": "",
       "endpoint_type": "TEXT",
-      "value": "658",
+      "value": "660",
       "is_writable": false
     },
     "eta_192_168_0_25__kessel_zählerstände_kessel_unten_zu_kalt": {
@@ -6104,7 +6104,7 @@
       "friendly_name": "LagerUm. > Vorrat",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 1678.8,
+      "value": 1657.4,
       "is_writable": true
     },
     "eta_192_168_0_25__lagerum._vorrat_vorrat_warngrenze_writable": {
@@ -6146,7 +6146,7 @@
       "friendly_name": "HK > Eingänge > Außentemperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_vorlauf_vorlauf_max_writable": {
@@ -6174,7 +6174,7 @@
       "friendly_name": "HK > Heizkreis > Heizkurve",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 24.1,
+      "value": 22.5,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizkurve_schieber_position_writable": {
@@ -6272,7 +6272,7 @@
       "friendly_name": "HK > Heizkreis > Außentemperatur verzögert",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.6,
+      "value": 8.6,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_x_writable": {
@@ -6286,7 +6286,7 @@
       "friendly_name": "HK > Heizkreis > Außentemperatur verzögert > Lag x",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_außentemperatur_verzögert_lag_y_writable": {
@@ -6300,7 +6300,7 @@
       "friendly_name": "HK > Heizkreis > Außentemperatur verzögert > Lag y",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.6,
+      "value": 8.6,
       "is_writable": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizgrenze_für_[heizen]_writable": {
@@ -6412,7 +6412,7 @@
       "friendly_name": "Fbh > Eingänge > Vorlauf",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.3,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_eingänge_vorlauf_kalibrierwert_writable": {
@@ -6454,7 +6454,7 @@
       "friendly_name": "Fbh > Eingänge > Außentemperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer_writable": {
@@ -6468,7 +6468,7 @@
       "friendly_name": "Fbh > Ausgänge > Mischer",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.3,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer_soll_temperatur_writable": {
@@ -6482,7 +6482,7 @@
       "friendly_name": "Fbh > Ausgänge > Mischer > Soll Temperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.6,
+      "value": 29.0,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer_ist_temperatur_writable": {
@@ -6496,7 +6496,7 @@
       "friendly_name": "Fbh > Ausgänge > Mischer > Ist Temperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.3,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_mischer_position_writable": {
@@ -6510,7 +6510,7 @@
       "friendly_name": "Fbh > Ausgänge > Mischer > Position",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 16.8,
+      "value": 19.0,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_ausgänge_pumpe_writable": {
@@ -6552,7 +6552,7 @@
       "friendly_name": "Fbh > Heizkreis > Vorlauf",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.3,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_vorlauf_vorlauf_max_writable": {
@@ -6580,7 +6580,7 @@
       "friendly_name": "Fbh > Heizkreis > Heizkurve",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.6,
+      "value": 29.0,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_heizkurve_schieber_position_writable": {
@@ -6678,7 +6678,7 @@
       "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.6,
+      "value": 8.6,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_x_writable": {
@@ -6692,7 +6692,7 @@
       "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert > Lag x",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_außentemperatur_verzögert_lag_y_writable": {
@@ -6706,7 +6706,7 @@
       "friendly_name": "Fbh > Heizkreis > Außentemperatur verzögert > Lag y",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.6,
+      "value": 8.6,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_heizgrenze_für_[heizen]_writable": {
@@ -6790,7 +6790,7 @@
       "friendly_name": "Fbh > Heizkreis > Heizkreismischer",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 30.1,
+      "value": 29.2,
       "is_writable": true
     },
     "eta_192_168_0_25__fbh_heizkreis_estrich_vorlauf_soll_writable": {
@@ -6874,7 +6874,7 @@
       "friendly_name": "Sys > Außentemperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__sys_außentemperatur_außentemperaturfühler_writable": {
@@ -6888,7 +6888,7 @@
       "friendly_name": "Sys > Außentemperatur > Außentemperaturfühler",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__sys_außentemperatur_außentemperaturfühler_kalibrierwert_writable": {
@@ -6930,7 +6930,7 @@
       "friendly_name": "Kessel > Eingänge > Restsauerstoff",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 14.94,
+      "value": 11.53,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_restsauerstoff_writable": {
@@ -6944,7 +6944,7 @@
       "friendly_name": "Kessel > Eingänge > Restsauerstoff > Restsauerstoff",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 14.94,
+      "value": 11.64,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_kessel_writable": {
@@ -6958,7 +6958,7 @@
       "friendly_name": "Kessel > Eingänge > Kessel",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 72.6,
+      "value": 79.1,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_kessel_kalibrierwert_writable": {
@@ -7000,7 +7000,7 @@
       "friendly_name": "Kessel > Eingänge > Kessel Vorlauf 1",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.2,
+      "value": 61.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_kessel_vorlauf_1_kalibrierwert_writable": {
@@ -7042,7 +7042,7 @@
       "friendly_name": "Kessel > Eingänge > Kessel unten",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.7,
+      "value": 66.0,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_kessel_unten_kalibrierwert_writable": {
@@ -7084,7 +7084,7 @@
       "friendly_name": "Kessel > Eingänge > Abgas",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 104.2,
+      "value": 97.0,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_eingänge_abgas_kalibrierwert_writable": {
@@ -7126,7 +7126,7 @@
       "friendly_name": "Kessel > Ausgänge > Stokerschnecke",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 20.0,
+      "value": 15.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_stokerschnecke_taktrate_writable": {
@@ -7140,7 +7140,7 @@
       "friendly_name": "Kessel > Ausgänge > Stokerschnecke > Taktrate",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 20.0,
+      "value": 15.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_stokerschnecke_erwärmung_writable": {
@@ -7168,7 +7168,7 @@
       "friendly_name": "Kessel > Ausgänge > Kesselpumpe",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 88.9,
+      "value": 100.0,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_kesselpumpe_ausgang_writable": {
@@ -7182,7 +7182,7 @@
       "friendly_name": "Kessel > Ausgänge > Kesselpumpe > Ausgang",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 89.5,
+      "value": 100.0,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1_writable": {
@@ -7196,7 +7196,7 @@
       "friendly_name": "Kessel > Ausgänge > Vorlaufmischer 1",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.4,
+      "value": 61.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1_soll_temperatur_writable": {
@@ -7224,7 +7224,7 @@
       "friendly_name": "Kessel > Ausgänge > Vorlaufmischer 1 > Ist Temperatur",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.4,
+      "value": 61.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_vorlaufmischer_1_position_writable": {
@@ -7238,7 +7238,7 @@
       "friendly_name": "Kessel > Ausgänge > Vorlaufmischer 1 > Position",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 21.4,
+      "value": 16.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_ausgänge_luftschieber_writable": {
@@ -7294,7 +7294,7 @@
       "friendly_name": "Kessel > Zählerstände > Gesamtverbrauch",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 14408.1,
+      "value": 14423.7,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_zählerstände_inhalt_pelletsbehälter_writable": {
@@ -7308,7 +7308,7 @@
       "friendly_name": "Kessel > Zählerstände > Inhalt Pelletsbehälter",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 21.5,
+      "value": 27.9,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_zählerstände_verbrauch_seit_entaschung_writable": {
@@ -7322,7 +7322,7 @@
       "friendly_name": "Kessel > Zählerstände > Verbrauch seit Entaschung",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 20.2,
+      "value": 11.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_zählerstände_verbrauch_seit_aschebox_leeren_writable": {
@@ -7336,7 +7336,7 @@
       "friendly_name": "Kessel > Zählerstände > Verbrauch seit Aschebox leeren",
       "unit": "kg",
       "endpoint_type": "TEXT",
-      "value": 879.8,
+      "value": 895.4,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_writable": {
@@ -7350,7 +7350,7 @@
       "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 8.2,
+      "value": 10.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_x_writable": {
@@ -7364,7 +7364,7 @@
       "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert > Lag x",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 4.7,
+      "value": 8.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_außentemperatur_verzögert_lag_y_writable": {
@@ -7378,7 +7378,7 @@
       "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Außentemperatur verzögert > Lag y",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 8.2,
+      "value": 10.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_kessel_writable": {
@@ -7392,7 +7392,7 @@
       "friendly_name": "Kessel > Kessel > Kessel",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 72.7,
+      "value": 78.4,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_kessel_kessel_soll_writable": {
@@ -7448,7 +7448,7 @@
       "friendly_name": "Kessel > Kessel > Kessel unten",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 61.7,
+      "value": 65.6,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_leistung_writable": {
@@ -7462,7 +7462,7 @@
       "friendly_name": "Kessel > Kessel > Vorlaufregler 1 > Angeforderte Leistung",
       "unit": "kW",
       "endpoint_type": "TEXT",
-      "value": 7.7,
+      "value": 6.3,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_vorlaufregler_1_angeforderte_temperatur_writable": {
@@ -7532,7 +7532,7 @@
       "friendly_name": "Kessel > Kessel > Abgas",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 104.2,
+      "value": 97.4,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_abgas_abgas_max_writable": {
@@ -7574,7 +7574,7 @@
       "friendly_name": "Kessel > Kessel > Restsauerstoff",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 16.41,
+      "value": 11.64,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_writable": {
@@ -7588,7 +7588,7 @@
       "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 8.6,
+      "value": 9.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x_writable": {
@@ -7602,7 +7602,7 @@
       "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin x",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 55.2,
+      "value": 30.1,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_restsauerstoff_o2_soll_lin_x1_writable": {
@@ -7672,7 +7672,7 @@
       "friendly_name": "Kessel > Kessel > Restsauerstoff > O2 Soll > Lin y",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 8.62,
+      "value": 9.5,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einschub_writable": {
@@ -7686,7 +7686,7 @@
       "friendly_name": "Kessel > Kessel > Einschub",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 20.6,
+      "value": 15.2,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_einschub_brennstoffverstärkung_writable": {
@@ -7700,7 +7700,7 @@
       "friendly_name": "Kessel > Kessel > Einschub > Brennstoffverstärkung",
       "unit": "%",
       "endpoint_type": "TEXT",
-      "value": 114.3,
+      "value": 130.1,
       "is_writable": true
     },
     "eta_192_168_0_25__kessel_kessel_entaschung_entaschen_nach_min._writable": {
@@ -7756,7 +7756,7 @@
       "friendly_name": "WW > Eingänge > Warmwasserspeicher",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 57.5,
+      "value": 57.6,
       "is_writable": true
     },
     "eta_192_168_0_25__ww_eingänge_warmwasserspeicher_kalibrierwert_writable": {
@@ -7798,7 +7798,7 @@
       "friendly_name": "WW > Warmwasserspeicher > Warmwasserspeicher",
       "unit": "°C",
       "endpoint_type": "TEXT",
-      "value": 57.5,
+      "value": 57.6,
       "is_writable": true
     },
     "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_soll_writable": {
