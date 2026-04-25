@@ -211,18 +211,9 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             dec_places=dec_places,
         )
 
-    def _parse_varinfo(
-        self,
-        data,
-        fub: str,
-        uri: str,
-        var_data_entry: tuple[float | str, str, dict],
-    ):
-        """Parse varinfo XML response."""
-        _LOGGER.debug("Parsing varinfo %s", data)
-        valid_values = None
-        unit = self._parse_unit(data, var_data_entry)
-
+    def _parse_valid_values(
+        self, unit: str, data: dict, uri: str
+    ) -> dict | ETAValidWritableValues | None:
         # The validValues node can be in multiple formats:
         # 1) A list of discrete valid values, e.g. for a switch:
         # <validValues>
@@ -271,14 +262,14 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         if data.get("validValues") is not None and "value" in data["validValues"]:
             # Parse discrete valid values into a dict, e.g. {"Ein": 1, "Aus": 0}
             values = data["validValues"]["value"]
-            valid_values = dict(
+            return dict(
                 zip(
                     [k["@strValue"] for k in values],
                     [int(v["#text"]) for v in values],
                     strict=False,
                 )
             )
-        elif (
+        if (
             data.get("validValues") is not None
             and "min" in data["validValues"]
             and "#text" in data["validValues"]["min"]
@@ -294,7 +285,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             # Parse the min and max values for writable sensors
             min_value = data["validValues"]["min"]["#text"]
             max_value = data["validValues"]["max"]["#text"]
-            valid_values = self._createETAValidWritableValues(
+            return self._createETAValidWritableValues(
                 raw_min_value=min_value,
                 raw_max_value=max_value,
                 scale_factor=int(data["@scaleFactor"]),
@@ -312,20 +303,19 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                 max_value := int(data["validValues"]["max"]["end"])
             ) == 24 * 60 / 15:
                 # store the min and max value of the timeslots for this unit
-                valid_values = ETAValidWritableValues(
+                return ETAValidWritableValues(
                     scaled_min_value=0,
                     scaled_max_value=96,
                     scale_factor=1,
                     dec_places=0,
                 )
 
-            else:
-                _LOGGER.warning(
-                    "Invalid timeslot validValues for %s: expected begin=0 and end=96, got begin=%s and end=%s",
-                    uri,
-                    data["validValues"]["min"]["begin"],
-                    data["validValues"]["max"]["end"],
-                )
+            _LOGGER.warning(
+                "Invalid timeslot validValues for %s: expected begin=0 and end=96, got begin=%s and end=%s",
+                uri,
+                data["validValues"]["min"]["begin"],
+                data["validValues"]["max"]["end"],
+            )
         elif (
             unit == CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE
             and data.get("validValues") is not None
@@ -343,19 +333,18 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                 # the min and max timeslot values for the timeslots don't have to be stored because they are always the same for this unit (0 and 96 respectively)
                 min_value = data["validValues"]["min"]["value"]
                 max_value = data["validValues"]["max"]["value"]
-                valid_values = self._createETAValidWritableValues(
+                return self._createETAValidWritableValues(
                     raw_min_value=min_value,
                     raw_max_value=max_value,
                     scale_factor=int(data["@scaleFactor"]),
                     dec_places=int(data["@decPlaces"]),
                 )
-            else:
-                _LOGGER.warning(
-                    "Invalid timeslot validValues for %s: expected begin=0 and end=96, got begin=%s and end=%s",
-                    uri,
-                    data["validValues"]["min"]["begin"],
-                    data["validValues"]["max"]["end"],
-                )
+            _LOGGER.warning(
+                "Invalid timeslot validValues for %s: expected begin=0 and end=96, got begin=%s and end=%s",
+                uri,
+                data["validValues"]["min"]["begin"],
+                data["validValues"]["max"]["end"],
+            )
         elif (
             unit == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
             and data.get("validValues") is not None
@@ -365,19 +354,32 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             if (min_value := int(data["validValues"]["min"]["#text"])) == 0 and (
                 max_value := int(data["validValues"]["max"]["#text"])
             ) == 24 * 60 - 1:
-                valid_values = self._createETAValidWritableValues(
+                return self._createETAValidWritableValues(
                     raw_min_value=min_value,
                     raw_max_value=max_value,
                     scale_factor=int(data["@scaleFactor"]),
                     dec_places=int(data["@decPlaces"]),
                 )
-            else:
-                _LOGGER.warning(
-                    "Invalid validValues for %s: expected min=0 and max=1439, got min=%s and max=%s",
-                    uri,
-                    data["validValues"]["min"]["#text"],
-                    data["validValues"]["max"]["#text"],
-                )
+            _LOGGER.warning(
+                "Invalid validValues for %s: expected min=0 and max=1439, got min=%s and max=%s",
+                uri,
+                data["validValues"]["min"]["#text"],
+                data["validValues"]["max"]["#text"],
+            )
+        return None
+
+    def _parse_varinfo(
+        self,
+        data,
+        fub: str,
+        uri: str,
+        var_data_entry: tuple[float | str, str, dict],
+    ):
+        """Parse varinfo XML response."""
+        _LOGGER.debug("Parsing varinfo %s", data)
+
+        unit = self._parse_unit(data, var_data_entry)
+        valid_values = self._parse_valid_values(unit, data, uri)
 
         var_value, _, raw_var_data = var_data_entry
         if unit in CUSTOM_UNITS:
