@@ -395,6 +395,7 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
             url=uri,
             value=value,
             is_writable=data.get("@isWritable") == "1",
+            is_invalid=raw_var_data.get("@strValue") == "xxx",
         )
 
     async def _fetch_varinfo_raw(self, fub: str, uri: str) -> dict:

@@ -98,7 +98,7 @@ class SensorUpdater:
         """Update reference data based on mode.
 
         Args:
-            discovered: The 4 dictionaries from SensorDiscoveryV12.get_all_sensors
+            discovered: The 5 dictionaries from SensorDiscoveryV12.get_all_sensors
             existing: The current reference file content
 
         Returns:
@@ -106,7 +106,7 @@ class SensorUpdater:
         """
         updated = {}
 
-        for category in ["float_dict", "switches_dict", "text_dict", "writable_dict"]:
+        for category in ["float_dict", "switches_dict", "text_dict", "writable_dict", "pending_dict"]:
             updated[category] = self._update_category(
                 category, discovered[category], existing[category]
             )

@@ -218,6 +218,7 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
                     endpoint_type="TEXT",
                     value=value,
                     is_writable=False,
+                    is_invalid=raw_dict.get("@strValue") == "xxx",
                 )
 
                 unique_key = (

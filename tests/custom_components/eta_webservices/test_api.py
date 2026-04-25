@@ -194,9 +194,10 @@ async def test_get_all_sensors(load_fixture, is_v12):
     switches_dict = {}
     text_dict = {}
     writable_dict = {}
+    pending_dict = {}
 
     result = await api.get_all_sensors(
-        False, float_dict, switches_dict, text_dict, writable_dict, {}
+        False, float_dict, switches_dict, text_dict, writable_dict, pending_dict
     )
 
     assert result is is_v12
@@ -205,6 +206,7 @@ async def test_get_all_sensors(load_fixture, is_v12):
     expected_switches_entries = reference_values.get("switches_dict", {})
     expected_text_entries = reference_values.get("text_dict", {})
     expected_writable_entries = reference_values.get("writable_dict", {})
+    expected_pending_entries = reference_values.get("pending_dict", {})
 
     # Verify length of dictionaries
     assert len(float_dict) == len(expected_float_entries), (
@@ -218,6 +220,9 @@ async def test_get_all_sensors(load_fixture, is_v12):
     )
     assert len(switches_dict) == len(expected_switches_entries), (
         f"len(switches_dict) is not equal to {len(expected_switches_entries)}"
+    )
+    assert len(pending_dict) == len(expected_pending_entries), (
+        f"len(pending_dict) is not equal to {len(expected_pending_entries)}"
     )
 
     # Check float_dict entries
@@ -252,6 +257,12 @@ async def test_get_all_sensors(load_fixture, is_v12):
         assert actual_entry["is_writable"] == expected_value["is_writable"], (
             f"Is writable mismatch for {expected_key}"
         )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
+        )
 
     # Check writable_dict entries
     for expected_key, expected_value in expected_writable_entries.items():
@@ -271,6 +282,9 @@ async def test_get_all_sensors(load_fixture, is_v12):
         )
         assert actual_entry["is_writable"] == expected_value["is_writable"], (
             f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
         )
 
         if expected_value.get("valid_values") is not None:
@@ -312,6 +326,9 @@ async def test_get_all_sensors(load_fixture, is_v12):
         assert actual_entry["is_writable"] == expected_value["is_writable"], (
             f"Is writable mismatch for {expected_key}"
         )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
+        )
 
         assert actual_entry.get("valid_values") is not None, (
             f"Valid values missing for switch {expected_key}"
@@ -349,6 +366,32 @@ async def test_get_all_sensors(load_fixture, is_v12):
         )
         assert actual_entry["is_writable"] == expected_value["is_writable"], (
             f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
+        )
+
+    # Check pending_dict entries
+    for expected_key, expected_value in expected_pending_entries.items():
+        assert expected_key in pending_dict, (
+            f"Expected key '{expected_key}' not found in pending_dict"
+        )
+        actual_entry = pending_dict[expected_key]
+
+        assert actual_entry["url"] == expected_value["url"], (
+            f"URL mismatch for {expected_key}"
+        )
+        assert actual_entry["unit"] == expected_value["unit"], (
+            f"Unit mismatch for {expected_key}"
+        )
+        assert actual_entry["value"] == expected_value["value"], (
+            f"Data mismatch for {expected_key}"
+        )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
         )
 
 

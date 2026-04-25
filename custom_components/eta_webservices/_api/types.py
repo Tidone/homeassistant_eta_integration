@@ -37,6 +37,7 @@ class ETAEndpoint(TypedDict):
     unit: str
     endpoint_type: str
     is_writable: bool
+    is_invalid: bool
 
 
 class ETAError(TypedDict):
