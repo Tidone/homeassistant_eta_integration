@@ -31,6 +31,7 @@ from custom_components.eta_webservices.const import (
     CHOSEN_SWITCHES,
     CHOSEN_TEXT_SENSORS,
     CHOSEN_WRITABLE_SENSORS,
+    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
     DOMAIN,
     ERROR_UPDATE_COORDINATOR,
     FLOAT_DICT,
@@ -56,9 +57,11 @@ def _make_api_mock(float_dict, text_dict, writable_dict, switch_dict):
     for info in text_dict.values():
         uri_to_value[info["url"]] = str(info["value"])
     for info in writable_dict.values():
-        # Use 0 as a safe numeric default — some fixture values are strings like
-        # "xxx" or "21:00" that cannot be passed through float().
-        uri_to_value[info["url"]] = 0
+        # Time sensors expect an ISO time string; numeric sensors can use 0.
+        if info["unit"] == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT:
+            uri_to_value[info["url"]] = "00:00"
+        else:
+            uri_to_value[info["url"]] = 0
 
     uri_to_switch = {
         info["url"]: int(info["valid_values"]["off_value"])
@@ -68,7 +71,9 @@ def _make_api_mock(float_dict, text_dict, writable_dict, switch_dict):
 
     mock_api = AsyncMock()
     mock_api.get_all_data = AsyncMock(
-        side_effect=lambda q: {uri: uri_to_value[uri] for uri in q if uri in uri_to_value}
+        side_effect=lambda q: {
+            uri: uri_to_value[uri] for uri in q if uri in uri_to_value
+        }
     )
     mock_api.get_all_switch_states = AsyncMock(
         side_effect=lambda uris: {uri: uri_to_switch.get(uri, 1802) for uri in uris}
@@ -77,7 +82,9 @@ def _make_api_mock(float_dict, text_dict, writable_dict, switch_dict):
     return mock_api
 
 
-def _assert_coordinator_assignments(all_entities, sensor_coordinator, writable_coordinator, error_coordinator):
+def _assert_coordinator_assignments(
+    all_entities, sensor_coordinator, writable_coordinator, error_coordinator
+):
     """Assert that every entity is fed by exactly one coordinator that has data for it."""
     for entity in all_entities:
         if isinstance(entity, EtaErrorEntity):
@@ -87,8 +94,8 @@ def _assert_coordinator_assignments(all_entities, sensor_coordinator, writable_c
             continue
 
         if entity.coordinator is sensor_coordinator:
-            assert entity.unique_id in sensor_coordinator.data, (
-                f"{type(entity).__name__} {entity.unique_id!r} missing from sensor_coordinator.data"
+            assert entity.uri in sensor_coordinator.data, (
+                f"{type(entity).__name__} {entity.unique_id!r} uri={entity.uri!r} missing from sensor_coordinator.data"
             )
         elif entity.coordinator is writable_coordinator:
             assert entity.uri in writable_coordinator.data, (
@@ -133,7 +140,10 @@ async def _run_test(
 
     with (
         patch("custom_components.eta_webservices.coordinator.async_get_clientsession"),
-        patch("custom_components.eta_webservices.coordinator.EtaAPI", return_value=mock_api),
+        patch(
+            "custom_components.eta_webservices.coordinator.EtaAPI",
+            return_value=mock_api,
+        ),
         patch("custom_components.eta_webservices.entity.async_get_clientsession"),
         patch("custom_components.eta_webservices.number.async_get_current_platform"),
         patch("custom_components.eta_webservices.sensor.async_get_current_platform"),
@@ -172,8 +182,9 @@ async def _run_test(
 async def test_coordinator_assignment_all_sensors(hass: HomeAssistant, load_fixture):
     """All four chosen lists fully populated: every entity uses the correct coordinator.
 
-    The sensor_coordinator serves float, text, timeslot, and switch entities.
-    The writable_coordinator serves writable number, time, and float-writable entities.
+    The sensor_coordinator serves float, text, timeslot, and switch entities (unless the
+    float sensor is also writable, in which case it uses the writable_coordinator).
+    The writable_coordinator serves writable number, time, and writable float entities.
     Error entities always use the error_coordinator.
     """
     fixture = load_fixture("api_assignment_reference_values_v12.json")
@@ -182,28 +193,27 @@ async def test_coordinator_assignment_all_sensors(hass: HomeAssistant, load_fixt
     writable_dict = fixture["writable_dict"]
     switch_dict = fixture["switches_dict"]
 
-    all_entities, sensor_coordinator, writable_coordinator, error_coordinator = (
-        await _run_test(
-            hass,
-            float_dict,
-            text_dict,
-            writable_dict,
-            switch_dict,
-            chosen_float_sensors=list(float_dict),
-            chosen_text_sensors=list(text_dict),
-            chosen_writable_sensors=list(writable_dict),
-            chosen_switches=list(switch_dict),
-            entry_id="test_all_sensors",
-        )
+    (
+        all_entities,
+        sensor_coordinator,
+        writable_coordinator,
+        error_coordinator,
+    ) = await _run_test(
+        hass,
+        float_dict,
+        text_dict,
+        writable_dict,
+        switch_dict,
+        chosen_float_sensors=list(float_dict),
+        chosen_text_sensors=list(text_dict),
+        chosen_writable_sensors=list(writable_dict),
+        chosen_switches=list(switch_dict),
+        entry_id="test_all_sensors",
     )
 
     # Sanity-check entity count (mirrors test_all_writable_and_non_writable_sensors_handled)
     assert len(all_entities) == (
-        len(float_dict)
-        + len(text_dict)
-        + len(writable_dict)
-        + len(switch_dict)
-        + 2
+        len(float_dict) + len(text_dict) + len(writable_dict) + len(switch_dict) + 2
     )
 
     _assert_coordinator_assignments(
@@ -212,11 +222,13 @@ async def test_coordinator_assignment_all_sensors(hass: HomeAssistant, load_fixt
 
 
 @pytest.mark.asyncio
-async def test_coordinator_assignment_no_writable_sensors(hass: HomeAssistant, load_fixture):
+async def test_coordinator_assignment_no_writable_sensors(
+    hass: HomeAssistant, load_fixture
+):
     """chosen_writable_sensors is empty: all regular entities use sensor_coordinator only.
 
-    No EtaWritableNumberSensor, EtaTime, EtaFloatWritableSensor, or EtaTimeWritableSensor
-    should be created. Every non-error entity must be in sensor_coordinator.data.
+    No EtaWritableNumberSensor or EtaTime should be created.
+    Every non-error entity must be in sensor_coordinator.data.
     """
     fixture = load_fixture("api_assignment_reference_values_v12.json")
     float_dict = fixture["float_dict"]
@@ -224,19 +236,22 @@ async def test_coordinator_assignment_no_writable_sensors(hass: HomeAssistant, l
     writable_dict = fixture["writable_dict"]
     switch_dict = fixture["switches_dict"]
 
-    all_entities, sensor_coordinator, writable_coordinator, error_coordinator = (
-        await _run_test(
-            hass,
-            float_dict,
-            text_dict,
-            writable_dict,
-            switch_dict,
-            chosen_float_sensors=list(float_dict),
-            chosen_text_sensors=list(text_dict),
-            chosen_writable_sensors=[],
-            chosen_switches=list(switch_dict),
-            entry_id="test_no_writable",
-        )
+    (
+        all_entities,
+        sensor_coordinator,
+        writable_coordinator,
+        error_coordinator,
+    ) = await _run_test(
+        hass,
+        float_dict,
+        text_dict,
+        writable_dict,
+        switch_dict,
+        chosen_float_sensors=list(float_dict),
+        chosen_text_sensors=list(text_dict),
+        chosen_writable_sensors=[],
+        chosen_switches=list(switch_dict),
+        entry_id="test_no_writable",
     )
 
     assert len(all_entities) == len(float_dict) + len(text_dict) + len(switch_dict) + 2
@@ -247,7 +262,9 @@ async def test_coordinator_assignment_no_writable_sensors(hass: HomeAssistant, l
 
 
 @pytest.mark.asyncio
-async def test_coordinator_assignment_only_writable_sensors(hass: HomeAssistant, load_fixture):
+async def test_coordinator_assignment_only_writable_sensors(
+    hass: HomeAssistant, load_fixture
+):
     """Only chosen_writable_sensors is populated; all other chosen lists are empty.
 
     Only EtaWritableNumberSensor, EtaTime, EtaTimeslotSensor (writable variant), and
@@ -259,19 +276,22 @@ async def test_coordinator_assignment_only_writable_sensors(hass: HomeAssistant,
     writable_dict = fixture["writable_dict"]
     switch_dict = fixture["switches_dict"]
 
-    all_entities, sensor_coordinator, writable_coordinator, error_coordinator = (
-        await _run_test(
-            hass,
-            float_dict,
-            text_dict,
-            writable_dict,
-            switch_dict,
-            chosen_float_sensors=[],
-            chosen_text_sensors=[],
-            chosen_writable_sensors=list(writable_dict),
-            chosen_switches=[],
-            entry_id="test_only_writable",
-        )
+    (
+        all_entities,
+        sensor_coordinator,
+        writable_coordinator,
+        error_coordinator,
+    ) = await _run_test(
+        hass,
+        float_dict,
+        text_dict,
+        writable_dict,
+        switch_dict,
+        chosen_float_sensors=[],
+        chosen_text_sensors=[],
+        chosen_writable_sensors=list(writable_dict),
+        chosen_switches=[],
+        entry_id="test_only_writable",
     )
 
     assert len(all_entities) == len(writable_dict) + 2

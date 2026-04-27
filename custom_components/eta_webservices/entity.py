@@ -1,13 +1,16 @@
 """Common entity definitions for the ETA sensor integration."""
 
 from abc import abstractmethod
-from typing import Generic, TypeVar, cast
+from typing import Any, Generic, TypeVar, cast
 
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity import Entity, generate_entity_id
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
 
 from .api import EtaAPI, ETAEndpoint
 from .const import (
@@ -15,11 +18,7 @@ from .const import (
     MAX_PARALLEL_REQUESTS,
     REQUEST_SEMAPHORE,
 )
-from .coordinator import (
-    ETAErrorUpdateCoordinator,
-    ETASensorUpdateCoordinator,
-    ETAWritableUpdateCoordinator,
-)
+from .coordinator import ETAErrorUpdateCoordinator
 from .utils import create_device_info
 
 _EntityT = TypeVar("_EntityT")
@@ -77,13 +76,15 @@ class EtaEntity(Entity):
 
 
 class EtaCoordinatedSensorEntity(
-    EtaEntity, CoordinatorEntity[ETASensorUpdateCoordinator], Generic[_EntityT]
+    EtaEntity,
+    CoordinatorEntity[DataUpdateCoordinator[dict[str, float | str | bool]]],
+    Generic[_EntityT],
 ):
     """Common coordinated sensor entity definition for normal ETA sensors."""
 
     def __init__(  # noqa: D107
         self,
-        coordinator: ETASensorUpdateCoordinator,
+        coordinator: DataUpdateCoordinator[dict[str, Any]],
         config: dict,
         hass: HomeAssistant,
         unique_id: str,
@@ -96,7 +97,7 @@ class EtaCoordinatedSensorEntity(
         CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
 
         self._attr_should_poll = False
-        data = self.coordinator.data.get(self.unique_id)  # pyright: ignore[reportArgumentType]
+        data = self.coordinator.data.get(self.uri)
         self.handle_data_updates(cast(_EntityT, data) if data is not None else None)
 
     @abstractmethod
@@ -106,42 +107,8 @@ class EtaCoordinatedSensorEntity(
     @callback
     def _handle_coordinator_update(self) -> None:
         """Update attributes when the coordinator updates."""
-        data = self.coordinator.data.get(self.unique_id)  # pyright: ignore[reportArgumentType]
+        data = self.coordinator.data.get(self.uri)
         self.handle_data_updates(cast(_EntityT, data) if data is not None else None)
-        super()._handle_coordinator_update()
-
-
-class EtaWritableSensorEntity(
-    EtaEntity, CoordinatorEntity[ETAWritableUpdateCoordinator]
-):
-    """Common sensor entity definition for all ETA sensors."""
-
-    def __init__(  # noqa: D107
-        self,
-        coordinator: ETAWritableUpdateCoordinator,
-        config: dict,
-        hass: HomeAssistant,
-        unique_id: str,
-        endpoint_info: ETAEndpoint,
-        entity_id_format: str,
-    ) -> None:
-        EtaEntity.__init__(
-            self, config, hass, unique_id, endpoint_info, entity_id_format
-        )
-        CoordinatorEntity.__init__(self, coordinator)  # pyright: ignore[reportArgumentType]
-
-        data = self.coordinator.data.get(self.uri)
-        self.handle_data_updates(float(data) if data is not None else None)
-
-    @abstractmethod
-    def handle_data_updates(self, data: float | None) -> None:  # noqa: D102
-        raise NotImplementedError
-
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Update attributes when the coordinator updates."""
-        data = self.coordinator.data.get(self.uri)
-        self.handle_data_updates(float(data) if data is not None else None)
         super()._handle_coordinator_update()
 
 

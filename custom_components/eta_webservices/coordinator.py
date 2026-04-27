@@ -239,26 +239,21 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
 
         async with timeout(REQUEST_TIMEOUT):
             if uri_sensor_queries:
-                all_sensor_data = await eta_client.get_all_data(uri_sensor_queries)
-                for sensor, (uri, _) in self.sensor_queries.items():
-                    result = all_sensor_data.get(uri)
-                    if result is None:
-                        continue
-                    data[sensor] = result
+                data = await eta_client.get_all_data(uri_sensor_queries)
 
             if self.switch_queries:
                 unique_switch_uris = list(
-                    # Query shared switch URIs once and map results back per entity.
+                    # Query shared switch URIs only once
                     dict.fromkeys([uri for uri, _, _ in self.switch_queries.values()])
                 )
                 all_switch_states = await eta_client.get_all_switch_states(
                     unique_switch_uris
                 )
-                for switch, (uri, on_value, _) in self.switch_queries.items():
+                for uri, on_value, _ in self.switch_queries.values():
                     result = all_switch_states.get(uri)
                     if result is None or isinstance(result, BaseException):
                         continue
-                    data[switch] = int(result) == on_value
+                    data[uri] = int(result) == on_value
 
         elapsed = time.monotonic() - start_time
         if (
@@ -276,7 +271,7 @@ class ETASensorUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str | b
         return data
 
 
-class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
+class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict[str, float | str]]):
     """Class to manage fetching data from the ETA terminal."""
 
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
@@ -311,7 +306,7 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
     def _should_force_number_handling(self, unit):
         return unit == CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
 
-    async def _async_update_data(self) -> dict:
+    async def _async_update_data(self) -> dict[str, float | str]:
         """Update data via library."""
         if (
             (
@@ -330,11 +325,7 @@ class ETAWritableUpdateCoordinator(DataUpdateCoordinator[dict]):
 
         eta_client = self._create_eta_client()
         sensor_list = {
-            self.all_writable_sensors[sensor]["url"]: {
-                "force_number_handling": self._should_force_number_handling(
-                    self.all_writable_sensors[sensor]["unit"]
-                )
-            }
+            self.all_writable_sensors[sensor]["url"]: {}
             for sensor in self.chosen_writable_sensors
         }
 
