@@ -5053,19 +5053,6 @@
       "is_writable": true,
       "is_invalid": false
     },
-    "eta_192_168_0_25__fwm_sonstiges_ein/aus_taste": {
-      "url": "/79/10531/0/0/12080",
-      "valid_values": {
-        "on_value": 1803,
-        "off_value": 1802
-      },
-      "friendly_name": "FWM > Sonstiges > Ein/Aus Taste",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": true,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_starten_nach_zusätzlichen_kriterien_extra_laden_sofort_laden": {
       "url": "/264/10601/0/0/13025",
       "valid_values": {
@@ -5117,19 +5104,6 @@
       "value": "Aus",
       "is_writable": true,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__puffer_puffer_warmwasserbereich_ladezeiten": {
-      "url": "/264/10601/12235/0/0",
-      "valid_values": {
-        "on_value": 1803,
-        "off_value": 1802
-      },
-      "friendly_name": "Puffer > Puffer > Warmwasserbereich > Ladezeiten",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": true,
-      "is_invalid": true
     },
     "eta_192_168_0_25__puffer_puffer_warmwasserbereich_ladezeiten_schaltzustand": {
       "url": "/264/10601/12235/0/1109",
@@ -5338,16 +5312,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__fwm_eingänge_durchflusssensor_impulse_pro_liter": {
-      "url": "/79/10531/0/0/12477",
-      "valid_values": null,
-      "friendly_name": "FWM > Eingänge > Durchflusssensor > Impulse pro Liter",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__fwm_eingänge_durchflusssensor_notbetrieb_ohne_durchflusssensor": {
       "url": "/79/10531/0/0/14834",
       "valid_values": null,
@@ -5477,16 +5441,6 @@
       "value": "Heizungspumpe (siehe Infotaste!)",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__fwm_zählerstände_laufzeit_zirkulation": {
-      "url": "/79/10531/0/0/14407",
-      "valid_values": null,
-      "friendly_name": "FWM > Zählerstände > Laufzeit Zirkulation",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__fwm_warmwasser": {
       "url": "/79/10531/0/0/19409",
@@ -5618,16 +5572,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__puffer_ausgänge": {
-      "url": "/264/10601/0/0/10991",
-      "valid_values": null,
-      "friendly_name": "Puffer > Ausgänge",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__puffer_zählerstände_zähler_pufferladungen": {
       "url": "/264/10601/0/0/15044",
       "valid_values": null,
@@ -5647,26 +5591,6 @@
       "value": "16.10.2024 15:58:42",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__puffer_einstellungen_gesamtvolumen_durchfluss_pufferpumpe": {
-      "url": "/264/10601/0/0/13634",
-      "valid_values": null,
-      "friendly_name": "Puffer > Einstellungen > Gesamtvolumen > Durchfluss Pufferpumpe",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_einstellungen_laden_mit_erzeuger": {
-      "url": "/264/10601/0/0/12932",
-      "valid_values": null,
-      "friendly_name": "Puffer > Einstellungen > Laden mit Erzeuger",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__puffer_einstellungen_laden_mit_anderen_verbrauchern": {
       "url": "/264/10601/0/0/12667",
@@ -5708,26 +5632,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_starten_nach_zusätzlichen_kriterien_starten_nach_leistung_leistung_über": {
-      "url": "/264/10601/0/0/13448",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Starten nach zusätzlichen Kriterien > Starten nach Leistung > Leistung über",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_starten_nach_zusätzlichen_kriterien_starten_nach_leistung_hysterese_unter_aus-temperaturen": {
-      "url": "/264/10601/0/0/13961",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Starten nach zusätzlichen Kriterien > Starten nach Leistung > Hysterese unter Aus-Temperaturen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_starten_nach_zusätzlichen_kriterien_extra_laden": {
       "url": "/264/10601/0/0/13026",
       "valid_values": null,
@@ -5747,56 +5651,6 @@
       "value": "Nein",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_starten_nach_zusätzlichen_kriterien_extra_laden_zeitprogramm_aktivieren?_startzeitpunkt": {
-      "url": "/264/10601/0/0/13029",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Starten nach zusätzlichen Kriterien > Extra laden > Zeitprogramm aktivieren? > Startzeitpunkt",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_starten_nach_zusätzlichen_kriterien_extra_laden_zeitprogramm_aktivieren?_laden_unter_außentemperatur": {
-      "url": "/264/10601/0/0/14230",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Starten nach zusätzlichen Kriterien > Extra laden > Zeitprogramm aktivieren? > Laden unter Außentemperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_freigabe_differenz": {
-      "url": "/264/10601/0/0/12213",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Freigabe Differenz",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_temperatur": {
-      "url": "/264/10601/12130/0/1110",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Ladezeiten > Temperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_montag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10601/12130/0/1111",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Ladezeiten > Montag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_montag_zeitfenster_1": {
       "url": "/264/10601/12130/0/1082",
@@ -5828,16 +5682,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_dienstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10601/12130/0/1112",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Ladezeiten > Dienstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_dienstag_zeitfenster_1": {
       "url": "/264/10601/12130/0/1086",
       "valid_values": null,
@@ -5867,16 +5711,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_mittwoch_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10601/12130/0/1113",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Ladezeiten > Mittwoch > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_mittwoch_zeitfenster_1": {
       "url": "/264/10601/12130/0/1090",
@@ -5908,16 +5742,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_donnerstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10601/12130/0/1114",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Ladezeiten > Donnerstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_donnerstag_zeitfenster_1": {
       "url": "/264/10601/12130/0/1094",
       "valid_values": null,
@@ -5947,16 +5771,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_freitag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10601/12130/0/1115",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Ladezeiten > Freitag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_freitag_zeitfenster_1": {
       "url": "/264/10601/12130/0/1098",
@@ -5988,16 +5802,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_samstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10601/12130/0/1116",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Ladezeiten > Samstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_samstag_zeitfenster_1": {
       "url": "/264/10601/12130/0/1102",
       "valid_values": null,
@@ -6027,16 +5831,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_sonntag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10601/12130/0/1117",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Ladezeiten > Sonntag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_ladezeiten_sonntag_zeitfenster_1": {
       "url": "/264/10601/12130/0/1106",
@@ -6068,46 +5862,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_kaskadeneinstellungen": {
-      "url": "/264/10601/0/0/13524",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Kaskadeneinstellungen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_kaskadeneinstellungen_umschalten_ab": {
-      "url": "/264/10601/0/0/12148",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Kaskadeneinstellungen > Umschalten ab",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_kaskadeneinstellungen_einschaltschwelle": {
-      "url": "/264/10601/0/0/13455",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Kaskadeneinstellungen > Einschaltschwelle",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_kaskadeneinstellungen_ausschaltschwelle": {
-      "url": "/264/10601/0/0/13005",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Kessel/Puffer > Kaskadeneinstellungen > Ausschaltschwelle",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__puffer_puffer_erzeuger_kessel/puffer_leistungsregelung_ladezustand_soll_extrapol": {
       "url": "/264/10601/12507/0/1056",
       "valid_values": null,
@@ -6117,176 +5871,6 @@
       "value": "Nein",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__puffer_puffer_anfahrentlastung": {
-      "url": "/264/10601/0/0/12668",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Anfahrentlastung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_anfahrentlastung_puffer_durchladen_im_pellets-_oder_brennerbetrieb": {
-      "url": "/264/10601/0/0/14561",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Anfahrentlastung > Puffer durchladen im Pellets- oder Brennerbetrieb",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_solar_abschöpfen": {
-      "url": "/264/10601/0/0/12652",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Solar abschöpfen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_solar_abschöpfen_aktivieren_?": {
-      "url": "/264/10601/0/0/12683",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Solar abschöpfen > Aktivieren ?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_solar_abschöpfen_...bis_puffer_max": {
-      "url": "/264/10601/0/0/12645",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Solar abschöpfen > ...bis Puffer Max",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_solar_abschöpfen_hysterese": {
-      "url": "/264/10601/0/0/13545",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Solar abschöpfen > Hysterese",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar": {
-      "url": "/264/10601/0/0/12949",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_ladestrategie_solar": {
-      "url": "/264/10601/0/0/13012",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Ladestrategie Solar",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_puffer_oben": {
-      "url": "/264/10601/0/0/13933",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Puffer oben",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_puffer_oben_min_solar": {
-      "url": "/264/10601/0/0/12407",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Puffer oben min Solar",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_puffer_soll_solar": {
-      "url": "/264/10601/0/0/12408",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Puffer Soll Solar",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_priorität_oben": {
-      "url": "/264/10601/0/0/13260",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Priorität Oben",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_puffer_mitte": {
-      "url": "/264/10601/0/0/13934",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Puffer mitte",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_puffer_unten": {
-      "url": "/264/10601/0/0/13935",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Puffer unten",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_priorität_unten": {
-      "url": "/264/10601/0/0/13261",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Priorität Unten",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_solar_vorlauf": {
-      "url": "/264/10601/0/0/12101",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Solar Vorlauf",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_erzeuger_solar_puffer_max": {
-      "url": "/264/10601/0/0/13014",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Erzeuger Solar > Puffer max",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_1_(oben)": {
       "url": "/264/10601/0/0/13145",
@@ -6308,76 +5892,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_1_(oben)_solar_überschuss": {
-      "url": "/264/10601/0/0/13188",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 1 (oben) > Solar Überschuss",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_1_(oben)_solar_überschuss_ab_außentemperatur": {
-      "url": "/264/10601/0/0/13199",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 1 (oben) > Solar Überschuss > ab Außentemperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_1_(oben)_solar_überschuss_ab_puffertemperatur": {
-      "url": "/264/10601/0/0/13224",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 1 (oben) > Solar Überschuss > ab Puffertemperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_1_(oben)_solar_überschuss_hysterese": {
-      "url": "/264/10601/0/0/13544",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 1 (oben) > Solar Überschuss > Hysterese",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_1_(oben)_aktive_frischwassermodule": {
-      "url": "/264/10601/0/0/15235",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 1 (oben) > Aktive Frischwassermodule",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_1_(oben)_aktive_frischwassermodule_modulwechsel_nach": {
-      "url": "/264/10601/0/0/15236",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 1 (oben) > Aktive Frischwassermodule > Modulwechsel nach",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_1_(oben)_aktive_frischwassermodule_timer": {
-      "url": "/264/10601/0/0/15237",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 1 (oben) > Aktive Frischwassermodule > Timer",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_2": {
       "url": "/264/10601/0/0/13223",
       "valid_values": null,
@@ -6397,146 +5911,6 @@
       "value": "Nein",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_2_solar_überschuss": {
-      "url": "/264/10601/0/0/12653",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 2 > Solar Überschuss",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_2_solar_überschuss_ab_außentemperatur": {
-      "url": "/264/10601/0/0/12680",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 2 > Solar Überschuss > ab Außentemperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_2_solar_überschuss_ab_puffertemperatur": {
-      "url": "/264/10601/0/0/13358",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 2 > Solar Überschuss > ab Puffertemperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_2_solar_überschuss_hysterese": {
-      "url": "/264/10601/0/0/13543",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 2 > Solar Überschuss > Hysterese",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_2_aktive_frischwassermodule": {
-      "url": "/264/10601/0/0/15238",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 2 > Aktive Frischwassermodule",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_2_aktive_frischwassermodule_modulwechsel_nach": {
-      "url": "/264/10601/0/0/15239",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 2 > Aktive Frischwassermodule > Modulwechsel nach",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_verbraucherniveaus_verbraucher_2_aktive_frischwassermodule_timer": {
-      "url": "/264/10601/0/0/15240",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Verbraucherniveaus > Verbraucher 2 > Aktive Frischwassermodule > Timer",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_warmwasserbereich": {
-      "url": "/264/10601/0/0/12952",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Warmwasserbereich",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_warmwasserbereich_warmwasser": {
-      "url": "/264/10601/0/0/13434",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Warmwasserbereich > Warmwasser",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_warmwasserbereich_warmwasser_unten": {
-      "url": "/264/10601/0/0/13932",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Warmwasserbereich > Warmwasser unten",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_warmwasserbereich_soll_temperatur": {
-      "url": "/264/10601/0/0/12293",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Warmwasserbereich > Soll Temperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_warmwasserbereich_solltemperatur_für_[sofort_laden]": {
-      "url": "/264/10601/0/0/14257",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Warmwasserbereich > Solltemperatur für [Sofort laden]",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_warmwasserbereich_einschaltdifferenz": {
-      "url": "/264/10601/0/0/12133",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Warmwasserbereich > Einschaltdifferenz",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__puffer_puffer_warmwasserbereich_leistung_für_warmwasserbereitung": {
-      "url": "/264/10601/0/0/13355",
-      "valid_values": null,
-      "friendly_name": "Puffer > Puffer > Warmwasserbereich > Leistung für Warmwasserbereitung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__puffer_sonstiges_ergänzung": {
       "url": "/264/10601/0/0/19391",
@@ -6558,16 +5932,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_eingänge_wassermangel_eingang": {
-      "url": "/264/10891/0/11031/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Wassermangel > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_eingänge_not-aus_schalter": {
       "url": "/264/10891/0/11032/0",
       "valid_values": null,
@@ -6577,16 +5941,6 @@
       "value": "OK",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_not-aus_schalter_eingang": {
-      "url": "/264/10891/0/11032/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Not-Aus Schalter > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_wartungsschalter": {
       "url": "/264/10891/0/11470/0",
@@ -6598,16 +5952,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_eingänge_wartungsschalter_eingang": {
-      "url": "/264/10891/0/11470/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Wartungsschalter > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_eingänge_stb": {
       "url": "/264/10891/0/11033/0",
       "valid_values": null,
@@ -6617,16 +5961,6 @@
       "value": "OK",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_stb_eingang": {
-      "url": "/264/10891/0/11033/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > STB > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_aschebox": {
       "url": "/264/10891/0/11034/0",
@@ -6638,16 +5972,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_eingänge_aschebox_eingang": {
-      "url": "/264/10891/0/11034/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Aschebox > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_eingänge_rost": {
       "url": "/264/10891/0/11317/0",
       "valid_values": null,
@@ -6657,16 +5981,6 @@
       "value": "Geschlossen",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_rost_eingang": {
-      "url": "/264/10891/0/11317/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Rost > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_pelletsbehälter": {
       "url": "/264/10891/0/11037/0",
@@ -6678,16 +5992,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_eingänge_pelletsbehälter_eingang": {
-      "url": "/264/10891/0/11037/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Pelletsbehälter > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_eingänge_schalter_wt-reinigung": {
       "url": "/264/10891/0/11072/0",
       "valid_values": null,
@@ -6697,16 +6001,6 @@
       "value": "Ja",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_schalter_wt-reinigung_eingang": {
-      "url": "/264/10891/0/11072/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Schalter WT-Reinigung > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_zustand": {
       "url": "/264/10891/0/11108/2002",
@@ -6737,46 +6031,6 @@
       "value": "HuS 118",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_restsauerstoff_heiz_strom": {
-      "url": "/264/10891/0/11108/2061",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Restsauerstoff > Heiz Strom",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_eingänge_restsauerstoff_heizleistung": {
-      "url": "/264/10891/0/11108/2057",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Restsauerstoff > Heizleistung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_eingänge_restsauerstoff_o2_nicht_korrigiert": {
-      "url": "/264/10891/0/11108/2059",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Restsauerstoff > O2 nicht korrigiert",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_eingänge_restsauerstoff_o2_nicht_korrigiert_bei_luft": {
-      "url": "/264/10891/0/11108/2157",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Restsauerstoff > O2 nicht korrigiert bei Luft",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_notbetrieb": {
       "url": "/264/10891/0/11108/2400",
@@ -6877,16 +6131,6 @@
       "value": "Vorwärts",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_ausgänge_stokerschnecke_stokerantrieb": {
-      "url": "/264/10891/0/0/14910",
-      "valid_values": null,
-      "friendly_name": "Kessel > Ausgänge > Stokerschnecke > Stokerantrieb",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_ausgänge_rost_zustand": {
       "url": "/264/10891/0/0/14023",
@@ -7058,16 +6302,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_ausgänge_abgasgebläse_abgasgebläse_solldrehzahl": {
-      "url": "/264/10891/0/0/12137",
-      "valid_values": null,
-      "friendly_name": "Kessel > Ausgänge > Abgasgebläse > Abgasgebläse Solldrehzahl",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_ausgänge_kesselpumpe_anforderung": {
       "url": "/264/10891/0/11123/2001",
       "valid_values": null,
@@ -7147,136 +6381,6 @@
       "value": "Rechts",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_leistung": {
-      "url": "/264/10891/14877/0/2287",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Leistung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_sensor_typ": {
-      "url": "/264/10891/14877/0/2011",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Sensor Typ",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_sensor-empf._[l/min_/_khz]": {
-      "url": "/264/10891/14877/0/12786",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Sensor-Empf. [l/min / kHz]",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_sensor-offset": {
-      "url": "/264/10891/14877/0/12787",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Sensor-Offset",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_impulse_pro_liter": {
-      "url": "/264/10891/14877/0/12477",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Impulse pro Liter",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_lin_x": {
-      "url": "/264/10891/14877/0/1050",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Lin x",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_lin_x1": {
-      "url": "/264/10891/14877/0/1051",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Lin x1",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_lin_y1": {
-      "url": "/264/10891/14877/0/1052",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Lin y1",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_lin_x2": {
-      "url": "/264/10891/14877/0/1053",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Lin x2",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_durchfluss_lin_y2": {
-      "url": "/264/10891/14877/0/1054",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Durchfluss > Lin y2",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_wassermenge": {
-      "url": "/264/10891/14877/0/2274",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Wassermenge",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_ertrag_heute": {
-      "url": "/264/10891/14877/0/12350",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Ertrag heute",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_zählerstände_wärmemessung_ertrag_gestern": {
-      "url": "/264/10891/14877/0/12769",
-      "valid_values": null,
-      "friendly_name": "Kessel > Zählerstände > Wärmemessung > Ertrag gestern",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_zählerstände_wärmemessung_beginn_der_messung": {
       "url": "/264/10891/14877/0/13267",
@@ -7388,46 +6492,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_kesselfolge": {
-      "url": "/264/10891/0/0/12443",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Einstellungen > Kesselfolge",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft": {
-      "url": "/264/10891/0/0/13939",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_aktivieren?": {
-      "url": "/264/10891/0/0/13940",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Aktivieren?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_ab_außentemperatur": {
-      "url": "/264/10891/0/0/13941",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > ab Außentemperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_kessel_einstellungen_brenner_verriegeln": {
       "url": "/264/10891/0/0/12651",
       "valid_values": null,
@@ -7478,16 +6542,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_kessel_kessel_angeforderte_leistung": {
-      "url": "/264/10891/0/0/12204",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kessel > Angeforderte Leistung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_kessel_kesselpumpe": {
       "url": "/264/10891/0/0/13219",
       "valid_values": null,
@@ -7497,16 +6551,6 @@
       "value": "Regeln",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_kessel_durchfluss": {
-      "url": "/264/10891/0/0/15142",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Durchfluss",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_kessel_rücklauf_strategie_rücklaufanhebung": {
       "url": "/264/10891/0/0/13365",
@@ -7647,66 +6691,6 @@
       "value": "---",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_kessel_kesselstörmeldung": {
-      "url": "/264/10891/0/0/14265",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kesselstörmeldung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kesselstörmeldung_kesselstörmeldung_für_schnittstellen": {
-      "url": "/264/10891/0/0/14267",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kesselstörmeldung > Kesselstörmeldung für Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kesselstörmeldung_invertieren": {
-      "url": "/264/10891/0/0/14227",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kesselstörmeldung > Invertieren",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kesselstörmeldung_ab_priorität": {
-      "url": "/264/10891/0/0/13353",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kesselstörmeldung > ab Priorität",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kessellaufmeldung": {
-      "url": "/264/10891/0/0/14268",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kessellaufmeldung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kessellaufmeldung_laufmeldung_von_schnittstellen": {
-      "url": "/264/10891/0/0/14275",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kessellaufmeldung > Laufmeldung von Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_kessel_kessellaufmeldung_aktiv_wenn": {
       "url": "/264/10891/0/0/13161",
@@ -7977,126 +6961,6 @@
       "value": "Aus",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x8-s610": {
-      "url": "/264/10911/0/0/6111",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X8-S610",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x8-s611": {
-      "url": "/264/10911/0/0/6112",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X8-S611",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x8-s612": {
-      "url": "/264/10911/0/0/6113",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X8-S612",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x8-s613": {
-      "url": "/264/10911/0/0/6114",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X8-S613",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x8-s614": {
-      "url": "/264/10911/0/0/6115",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X8-S614",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x8-s615": {
-      "url": "/264/10911/0/0/6116",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X8-S615",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x9-s610": {
-      "url": "/264/10911/0/0/6161",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X9-S610",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x9-s611": {
-      "url": "/264/10911/0/0/6162",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X9-S611",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x9-s612": {
-      "url": "/264/10911/0/0/6163",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X9-S612",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x9-s613": {
-      "url": "/264/10911/0/0/6164",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X9-S613",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x9-s614": {
-      "url": "/264/10911/0/0/6165",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X9-S614",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__diagnose_eingänge_x9-s615": {
-      "url": "/264/10911/0/0/6166",
-      "valid_values": null,
-      "friendly_name": "Diagnose > Eingänge > X9-S615",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__diagnose_ausgänge_s2": {
       "url": "/264/10911/0/0/5119",
@@ -8468,26 +7332,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_temperatur": {
-      "url": "/264/10101/12113/0/1110",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizzeiten > Temperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_montag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10101/12113/0/1111",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizzeiten > Montag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_montag_zeitfenster_1": {
       "url": "/264/10101/12113/0/1082",
       "valid_values": null,
@@ -8517,16 +7361,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_dienstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10101/12113/0/1112",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizzeiten > Dienstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_dienstag_zeitfenster_1": {
       "url": "/264/10101/12113/0/1086",
@@ -8558,16 +7392,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_mittwoch_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10101/12113/0/1113",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizzeiten > Mittwoch > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_mittwoch_zeitfenster_1": {
       "url": "/264/10101/12113/0/1090",
       "valid_values": null,
@@ -8597,16 +7421,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_donnerstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10101/12113/0/1114",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizzeiten > Donnerstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_donnerstag_zeitfenster_1": {
       "url": "/264/10101/12113/0/1094",
@@ -8638,16 +7452,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_freitag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10101/12113/0/1115",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizzeiten > Freitag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_freitag_zeitfenster_1": {
       "url": "/264/10101/12113/0/1098",
       "valid_values": null,
@@ -8677,16 +7481,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_samstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10101/12113/0/1116",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizzeiten > Samstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_samstag_zeitfenster_1": {
       "url": "/264/10101/12113/0/1102",
@@ -8718,16 +7512,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_sonntag_wert_außerhalb_der_zeitfenster": {
-      "url": "/264/10101/12113/0/1117",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizzeiten > Sonntag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__heizkreis_heizkreis_heizzeiten_sonntag_zeitfenster_1": {
       "url": "/264/10101/12113/0/1106",
       "valid_values": null,
@@ -8758,16 +7542,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__heizkreis_heizkreis_rücklauf": {
-      "url": "/264/10101/0/0/12220",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Rücklauf",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__heizkreis_heizkreis_heizkurve_bei_niedriger_heizkurve": {
       "url": "/264/10101/0/0/14052",
       "valid_values": null,
@@ -8777,16 +7551,6 @@
       "value": "Vorlauf Min halten",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__heizkreis_heizkreis_heizkurve_aus_bei_heizkurve_unter": {
-      "url": "/264/10101/0/0/12168",
-      "valid_values": null,
-      "friendly_name": "Heizkreis > Heizkreis > Heizkurve > Aus bei Heizkurve unter",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__heizkreis_heizkreis_heizkreispumpe": {
       "url": "/264/10101/0/0/13922",
@@ -8878,76 +7642,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__sys_außentemperatur_außentemperatur_von_schnittstellen": {
-      "url": "/264/10241/0/0/14273",
-      "valid_values": null,
-      "friendly_name": "Sys > Außentemperatur > Außentemperatur von Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_außentemperatur_zeitüberwachung": {
-      "url": "/264/10241/0/0/13168",
-      "valid_values": null,
-      "friendly_name": "Sys > Außentemperatur > Zeitüberwachung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_störmeldung": {
-      "url": "/264/10241/0/0/14262",
-      "valid_values": null,
-      "friendly_name": "Sys > Störmeldung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_störmeldung_anzeigen": {
-      "url": "/264/10241/0/0/14870",
-      "valid_values": null,
-      "friendly_name": "Sys > Störmeldung > Anzeigen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_störmeldung_störmeldung_für_schnittstellen": {
-      "url": "/264/10241/0/0/14264",
-      "valid_values": null,
-      "friendly_name": "Sys > Störmeldung > Störmeldung für Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_störmeldung_ab_priorität": {
-      "url": "/264/10241/0/0/13353",
-      "valid_values": null,
-      "friendly_name": "Sys > Störmeldung > ab Priorität",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_externe_störmeldung": {
-      "url": "/264/10241/0/0/14259",
-      "valid_values": null,
-      "friendly_name": "Sys > Externe Störmeldung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__sys_externe_störmeldung_name_der_externen_störmeldung": {
       "url": "/264/10241/0/0/14130",
       "valid_values": null,
@@ -8958,26 +7652,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__sys_externe_störmeldung_anzeigen": {
-      "url": "/264/10241/0/0/14871",
-      "valid_values": null,
-      "friendly_name": "Sys > Externe Störmeldung > Anzeigen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_externe_störmeldung_externe_störmeldung_von_schnittstellen": {
-      "url": "/264/10241/0/0/14261",
-      "valid_values": null,
-      "friendly_name": "Sys > Externe Störmeldung > Externe Störmeldung von Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__sys_antiblockierschutz_zeitpunkt": {
       "url": "/264/10241/0/0/14242",
       "valid_values": null,
@@ -8987,26 +7661,6 @@
       "value": "fix",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__sys_antiblockierschutz_an_welchem_tag?": {
-      "url": "/264/10241/0/0/14243",
-      "valid_values": null,
-      "friendly_name": "Sys > Antiblockierschutz > an welchem Tag?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_antiblockierschutz_zu_welcher_uhrzeit?": {
-      "url": "/264/10241/0/0/14244",
-      "valid_values": null,
-      "friendly_name": "Sys > Antiblockierschutz > zu welcher Uhrzeit?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     }
   },
   "writable_dict": {

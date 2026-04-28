@@ -3435,19 +3435,6 @@
       "is_writable": true,
       "is_invalid": false
     },
-    "eta_192_168_0_25__lagerum._sonstiges_taste_zurück": {
-      "url": "/40/10211/0/0/12884",
-      "valid_values": {
-        "on_value": 1803,
-        "off_value": 1802
-      },
-      "friendly_name": "LagerUm. > Sonstiges > Taste Zurück",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": true,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten": {
       "url": "/120/10101/12113/0/0",
       "valid_values": {
@@ -3811,19 +3798,6 @@
       "value": "Aus",
       "is_writable": true,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__ww_sonstiges_ein/aus_taste": {
-      "url": "/120/10111/0/0/12080",
-      "valid_values": {
-        "on_value": 1803,
-        "off_value": 1802
-      },
-      "friendly_name": "WW > Sonstiges > Ein/Aus Taste",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": true,
-      "is_invalid": true
     }
   },
   "text_dict": {
@@ -3846,16 +3820,6 @@
       "value": "Aus",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__lagerum._eingänge_nullpunktschalter_eingang": {
-      "url": "/40/10211/0/11133/2016",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Eingänge > Nullpunktschalter > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__lagerum._eingänge_positionsschalter": {
       "url": "/40/10211/0/0/12266",
@@ -3957,56 +3921,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__lagerum._austragung_umschalteinheit_8-fach": {
-      "url": "/40/10211/0/0/12877",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Austragung > Umschalteinheit 8-fach",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__lagerum._austragung_sollposition": {
-      "url": "/40/10211/0/0/12874",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Austragung > Sollposition",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__lagerum._austragung_spülposition_?": {
-      "url": "/40/10211/0/0/12876",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Austragung > Spülposition ?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__lagerum._austragung_istposition": {
-      "url": "/40/10211/0/0/12875",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Austragung > Istposition",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__lagerum._austragung_position_ist_spülposition_?": {
-      "url": "/40/10211/0/0/12878",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Austragung > Position ist Spülposition ?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__lagerum._austragung_umschalteinheit": {
       "url": "/40/10211/0/0/12136",
       "valid_values": null,
@@ -4097,46 +4011,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__lagerum._sonstiges_position_5": {
-      "url": "/40/10211/0/0/12879",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Sonstiges > Position 5",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__lagerum._sonstiges_position_6": {
-      "url": "/40/10211/0/0/12880",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Sonstiges > Position 6",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__lagerum._sonstiges_position_7": {
-      "url": "/40/10211/0/0/12881",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Sonstiges > Position 7",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__lagerum._sonstiges_position_8": {
-      "url": "/40/10211/0/0/12882",
-      "valid_values": null,
-      "friendly_name": "LagerUm. > Sonstiges > Position 8",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__hk_heizkreistyp": {
       "url": "/120/10101/0/0/12476",
       "valid_values": null,
@@ -4156,26 +4030,6 @@
       "value": "Ausgeschaltet",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__hk_heizkreis_heizzeiten_temperatur": {
-      "url": "/120/10101/12113/0/1110",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizzeiten > Temperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__hk_heizkreis_heizzeiten_montag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10101/12113/0/1111",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizzeiten > Montag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten_montag_zeitfenster_1": {
       "url": "/120/10101/12113/0/1082",
@@ -4207,16 +4061,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__hk_heizkreis_heizzeiten_dienstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10101/12113/0/1112",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizzeiten > Dienstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten_dienstag_zeitfenster_1": {
       "url": "/120/10101/12113/0/1086",
       "valid_values": null,
@@ -4246,16 +4090,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__hk_heizkreis_heizzeiten_mittwoch_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10101/12113/0/1113",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizzeiten > Mittwoch > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten_mittwoch_zeitfenster_1": {
       "url": "/120/10101/12113/0/1090",
@@ -4287,16 +4121,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__hk_heizkreis_heizzeiten_donnerstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10101/12113/0/1114",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizzeiten > Donnerstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten_donnerstag_zeitfenster_1": {
       "url": "/120/10101/12113/0/1094",
       "valid_values": null,
@@ -4326,16 +4150,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__hk_heizkreis_heizzeiten_freitag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10101/12113/0/1115",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizzeiten > Freitag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten_freitag_zeitfenster_1": {
       "url": "/120/10101/12113/0/1098",
@@ -4367,16 +4181,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__hk_heizkreis_heizzeiten_samstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10101/12113/0/1116",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizzeiten > Samstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten_samstag_zeitfenster_1": {
       "url": "/120/10101/12113/0/1102",
       "valid_values": null,
@@ -4406,16 +4210,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__hk_heizkreis_heizzeiten_sonntag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10101/12113/0/1117",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizzeiten > Sonntag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__hk_heizkreis_heizzeiten_sonntag_zeitfenster_1": {
       "url": "/120/10101/12113/0/1106",
@@ -4457,16 +4251,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__hk_heizkreis_rücklauf": {
-      "url": "/120/10101/0/0/12220",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Rücklauf",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__hk_heizkreis_heizkurve_bei_niedriger_heizkurve": {
       "url": "/120/10101/0/0/14052",
       "valid_values": null,
@@ -4477,26 +4261,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__hk_heizkreis_heizkurve_vorlauf_min": {
-      "url": "/120/10101/0/0/14051",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Heizkurve > Vorlauf Min",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__hk_heizkreis_freigabe_temperatur": {
-      "url": "/120/10101/0/0/12100",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Freigabe Temperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__hk_heizkreis_vorrang_warmwasser": {
       "url": "/120/10101/0/0/12178",
       "valid_values": null,
@@ -4506,16 +4270,6 @@
       "value": "Ja",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__hk_heizkreis_solar_abschöpfen": {
-      "url": "/120/10101/0/0/12652",
-      "valid_values": null,
-      "friendly_name": "HK > Heizkreis > Solar abschöpfen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__hk_heizkreis_estrich": {
       "url": "/120/10101/0/0/12302",
@@ -4647,26 +4401,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_temperatur": {
-      "url": "/120/10102/12113/0/1110",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Temperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_montag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10102/12113/0/1111",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Montag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__fbh_heizkreis_heizzeiten_montag_zeitfenster_1": {
       "url": "/120/10102/12113/0/1082",
       "valid_values": null,
@@ -4696,16 +4430,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_dienstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10102/12113/0/1112",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Dienstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__fbh_heizkreis_heizzeiten_dienstag_zeitfenster_1": {
       "url": "/120/10102/12113/0/1086",
@@ -4737,16 +4461,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_mittwoch_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10102/12113/0/1113",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Mittwoch > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__fbh_heizkreis_heizzeiten_mittwoch_zeitfenster_1": {
       "url": "/120/10102/12113/0/1090",
       "valid_values": null,
@@ -4776,16 +4490,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_donnerstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10102/12113/0/1114",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Donnerstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__fbh_heizkreis_heizzeiten_donnerstag_zeitfenster_1": {
       "url": "/120/10102/12113/0/1094",
@@ -4817,16 +4521,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_freitag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10102/12113/0/1115",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Freitag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__fbh_heizkreis_heizzeiten_freitag_zeitfenster_1": {
       "url": "/120/10102/12113/0/1098",
       "valid_values": null,
@@ -4856,16 +4550,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_samstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10102/12113/0/1116",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Samstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__fbh_heizkreis_heizzeiten_samstag_zeitfenster_1": {
       "url": "/120/10102/12113/0/1102",
@@ -4897,16 +4581,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__fbh_heizkreis_heizzeiten_sonntag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10102/12113/0/1117",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizzeiten > Sonntag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__fbh_heizkreis_heizzeiten_sonntag_zeitfenster_1": {
       "url": "/120/10102/12113/0/1106",
       "valid_values": null,
@@ -4937,16 +4611,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__fbh_heizkreis_rücklauf": {
-      "url": "/120/10102/0/0/12220",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Rücklauf",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__fbh_heizkreis_heizkurve_bei_niedriger_heizkurve": {
       "url": "/120/10102/0/0/14052",
       "valid_values": null,
@@ -4956,16 +4620,6 @@
       "value": "Abschalten",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__fbh_heizkreis_heizkurve_vorlauf_min": {
-      "url": "/120/10102/0/0/14051",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Heizkurve > Vorlauf Min",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__fbh_heizkreis_heizkreispumpe": {
       "url": "/120/10102/0/0/13922",
@@ -4986,16 +4640,6 @@
       "value": "Ja",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__fbh_heizkreis_solar_abschöpfen": {
-      "url": "/120/10102/0/0/12652",
-      "valid_values": null,
-      "friendly_name": "Fbh > Heizkreis > Solar abschöpfen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__fbh_heizkreis_estrich": {
       "url": "/120/10102/0/0/12302",
@@ -5057,76 +4701,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__sys_außentemperatur_außentemperatur_von_schnittstellen": {
-      "url": "/120/10241/0/0/14273",
-      "valid_values": null,
-      "friendly_name": "Sys > Außentemperatur > Außentemperatur von Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_außentemperatur_zeitüberwachung": {
-      "url": "/120/10241/0/0/13168",
-      "valid_values": null,
-      "friendly_name": "Sys > Außentemperatur > Zeitüberwachung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_störmeldung": {
-      "url": "/120/10241/0/0/14262",
-      "valid_values": null,
-      "friendly_name": "Sys > Störmeldung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_störmeldung_anzeigen": {
-      "url": "/120/10241/0/0/14870",
-      "valid_values": null,
-      "friendly_name": "Sys > Störmeldung > Anzeigen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_störmeldung_störmeldung_für_schnittstellen": {
-      "url": "/120/10241/0/0/14264",
-      "valid_values": null,
-      "friendly_name": "Sys > Störmeldung > Störmeldung für Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_störmeldung_ab_priorität": {
-      "url": "/120/10241/0/0/13353",
-      "valid_values": null,
-      "friendly_name": "Sys > Störmeldung > ab Priorität",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_externe_störmeldung": {
-      "url": "/120/10241/0/0/14259",
-      "valid_values": null,
-      "friendly_name": "Sys > Externe Störmeldung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__sys_externe_störmeldung_name_der_externen_störmeldung": {
       "url": "/120/10241/0/0/14130",
       "valid_values": null,
@@ -5136,26 +4710,6 @@
       "value": "Fremdgeraet",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__sys_externe_störmeldung_anzeigen": {
-      "url": "/120/10241/0/0/14871",
-      "valid_values": null,
-      "friendly_name": "Sys > Externe Störmeldung > Anzeigen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_externe_störmeldung_externe_störmeldung_von_schnittstellen": {
-      "url": "/120/10241/0/0/14261",
-      "valid_values": null,
-      "friendly_name": "Sys > Externe Störmeldung > Externe Störmeldung von Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__sys_antiblockierschutz_zeitpunkt": {
       "url": "/120/10241/0/0/14242",
@@ -5167,26 +4721,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__sys_antiblockierschutz_an_welchem_tag?": {
-      "url": "/120/10241/0/0/14243",
-      "valid_values": null,
-      "friendly_name": "Sys > Antiblockierschutz > an welchem Tag?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__sys_antiblockierschutz_zu_welcher_uhrzeit?": {
-      "url": "/120/10241/0/0/14244",
-      "valid_values": null,
-      "friendly_name": "Sys > Antiblockierschutz > zu welcher Uhrzeit?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_eingänge_wassermangel": {
       "url": "/40/10021/0/11031/0",
       "valid_values": null,
@@ -5196,16 +4730,6 @@
       "value": "OK",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_wassermangel_eingang": {
-      "url": "/40/10021/0/11031/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Wassermangel > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_not-aus_schalter": {
       "url": "/40/10021/0/11032/0",
@@ -5217,16 +4741,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_eingänge_not-aus_schalter_eingang": {
-      "url": "/40/10021/0/11032/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Not-Aus Schalter > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_eingänge_stb": {
       "url": "/40/10021/0/11033/0",
       "valid_values": null,
@@ -5237,16 +4751,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_eingänge_stb_eingang": {
-      "url": "/40/10021/0/11033/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > STB > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_eingänge_aschebox": {
       "url": "/40/10021/0/11034/0",
       "valid_values": null,
@@ -5256,16 +4760,6 @@
       "value": "Ja",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_aschebox_eingang": {
-      "url": "/40/10021/0/11034/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Aschebox > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_rost_geschlossen?": {
       "url": "/40/10021/0/0/12251",
@@ -5287,16 +4781,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_eingänge_glutbett_eingang": {
-      "url": "/40/10021/0/11036/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Glutbett > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_eingänge_pelletsbehälter": {
       "url": "/40/10021/0/11037/0",
       "valid_values": null,
@@ -5306,16 +4790,6 @@
       "value": "Nicht voll",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_pelletsbehälter_eingang": {
-      "url": "/40/10021/0/11037/2016",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Pelletsbehälter > Eingang",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_zustand": {
       "url": "/40/10021/0/11108/2002",
@@ -5346,46 +4820,6 @@
       "value": "HuS 118",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_eingänge_restsauerstoff_heiz_strom": {
-      "url": "/40/10021/0/11108/2061",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Restsauerstoff > Heiz Strom",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_eingänge_restsauerstoff_heizleistung": {
-      "url": "/40/10021/0/11108/2057",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Restsauerstoff > Heizleistung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_eingänge_restsauerstoff_o2_nicht_korrigiert": {
-      "url": "/40/10021/0/11108/2059",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Restsauerstoff > O2 nicht korrigiert",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_eingänge_restsauerstoff_o2_nicht_korrigiert_bei_luft": {
-      "url": "/40/10021/0/11108/2157",
-      "valid_values": null,
-      "friendly_name": "Kessel > Eingänge > Restsauerstoff > O2 nicht korrigiert bei Luft",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_eingänge_restsauerstoff_notbetrieb": {
       "url": "/40/10021/0/11108/2400",
@@ -5867,46 +5301,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_kesselfolge": {
-      "url": "/40/10021/0/0/12443",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Einstellungen > Kesselfolge",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft": {
-      "url": "/40/10021/0/0/13939",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_aktivieren?": {
-      "url": "/40/10021/0/0/13940",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > Aktivieren?",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_einstellungen_ausfallbereitschaft_ab_außentemperatur": {
-      "url": "/40/10021/0/0/13941",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Einstellungen > Ausfallbereitschaft > ab Außentemperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_kessel_einstellungen_brenner_verriegeln": {
       "url": "/40/10021/0/0/12651",
       "valid_values": null,
@@ -6017,16 +5411,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__kessel_kessel_entaschung_glutabbrand_sofort_beenden": {
-      "url": "/40/10021/0/0/13951",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Entaschung > Glutabbrand sofort beenden",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__kessel_kessel_entaschung_anzahl_rost_kippen": {
       "url": "/40/10021/0/0/12065",
       "valid_values": null,
@@ -6066,56 +5450,6 @@
       "value": "19:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__kessel_kessel_kesselstörmeldung": {
-      "url": "/40/10021/0/0/14265",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kesselstörmeldung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kesselstörmeldung_kesselstörmeldung_für_schnittstellen": {
-      "url": "/40/10021/0/0/14267",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kesselstörmeldung > Kesselstörmeldung für Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kesselstörmeldung_ab_priorität": {
-      "url": "/40/10021/0/0/13353",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kesselstörmeldung > ab Priorität",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kessellaufmeldung": {
-      "url": "/40/10021/0/0/14268",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kessellaufmeldung",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__kessel_kessel_kessellaufmeldung_laufmeldung_von_schnittstellen": {
-      "url": "/40/10021/0/0/14275",
-      "valid_values": null,
-      "friendly_name": "Kessel > Kessel > Kessellaufmeldung > Laufmeldung von Schnittstellen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__kessel_kessel_kessellaufmeldung_aktiv_wenn": {
       "url": "/40/10021/0/0/13161",
@@ -6167,16 +5501,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__ww_ausgänge": {
-      "url": "/120/10111/0/0/10991",
-      "valid_values": null,
-      "friendly_name": "WW > Ausgänge",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__ww_warmwasserspeicher": {
       "url": "/120/10111/0/0/19406",
       "valid_values": null,
@@ -6187,126 +5511,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasserspeicher_unten": {
-      "url": "/120/10111/0/0/12272",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Warmwasserspeicher unten",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasser_unten_aus": {
-      "url": "/120/10111/0/0/12135",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Warmwasser unten Aus",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasser_ladepumpe": {
-      "url": "/120/10111/0/0/12274",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Warmwasser Ladepumpe",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasser_ladepumpe_rücklauf_soll": {
-      "url": "/120/10111/0/0/12221",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Warmwasser Ladepumpe > Rücklauf Soll",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasser_ladepumpe_soll_differenz": {
-      "url": "/120/10111/0/0/13529",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Warmwasser Ladepumpe > Soll Differenz",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasser_ladepumpe_mindest_drehzahl": {
-      "url": "/120/10111/0/0/12227",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Warmwasser Ladepumpe > Mindest Drehzahl",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_warmwasser_ladepumpe_pumpendrehzahl": {
-      "url": "/120/10111/0/0/12258",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Warmwasser Ladepumpe > Pumpendrehzahl",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_vorlauf": {
-      "url": "/120/10111/0/0/12241",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Vorlauf",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_freigabe_temperatur": {
-      "url": "/120/10111/0/0/12100",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Freigabe Temperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_solarladung_bis": {
-      "url": "/120/10111/0/0/12426",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Solarladung bis",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_solar_abschöpfen": {
-      "url": "/120/10111/0/0/12652",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Solar abschöpfen",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_priorität": {
-      "url": "/120/10111/0/0/12770",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Priorität",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__ww_warmwasserspeicher_laden_mit_anderen_verbrauchern": {
       "url": "/120/10111/0/0/12667",
       "valid_values": null,
@@ -6316,46 +5520,6 @@
       "value": "Nein",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__ww_warmwasserspeicher_laden_mit_erzeuger": {
-      "url": "/120/10111/0/0/12932",
-      "valid_values": null,
-      "friendly_name": "WW > Warmwasserspeicher > Laden mit Erzeuger",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_zirkulation": {
-      "url": "/120/10111/0/0/12273",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_temperatur": {
-      "url": "/120/10111/12175/0/1110",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Zirkulationszeiten > Temperatur",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_montag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10111/12175/0/1111",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Zirkulationszeiten > Montag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_montag_zeitfenster_1": {
       "url": "/120/10111/12175/0/1082",
@@ -6387,16 +5551,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_dienstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10111/12175/0/1112",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Zirkulationszeiten > Dienstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_dienstag_zeitfenster_1": {
       "url": "/120/10111/12175/0/1086",
       "valid_values": null,
@@ -6426,16 +5580,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_mittwoch_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10111/12175/0/1113",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Zirkulationszeiten > Mittwoch > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_mittwoch_zeitfenster_1": {
       "url": "/120/10111/12175/0/1090",
@@ -6467,16 +5611,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_donnerstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10111/12175/0/1114",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Zirkulationszeiten > Donnerstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_donnerstag_zeitfenster_1": {
       "url": "/120/10111/12175/0/1094",
       "valid_values": null,
@@ -6506,16 +5640,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_freitag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10111/12175/0/1115",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Zirkulationszeiten > Freitag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_freitag_zeitfenster_1": {
       "url": "/120/10111/12175/0/1098",
@@ -6547,16 +5671,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_samstag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10111/12175/0/1116",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Zirkulationszeiten > Samstag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_samstag_zeitfenster_1": {
       "url": "/120/10111/12175/0/1102",
       "valid_values": null,
@@ -6587,16 +5701,6 @@
       "is_writable": false,
       "is_invalid": false
     },
-    "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_sonntag_wert_außerhalb_der_zeitfenster": {
-      "url": "/120/10111/12175/0/1117",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Zirkulationszeiten > Sonntag > Wert außerhalb der Zeitfenster",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
     "eta_192_168_0_25__ww_zirkulation_zirkulationszeiten_sonntag_zeitfenster_1": {
       "url": "/120/10111/12175/0/1106",
       "valid_values": null,
@@ -6626,26 +5730,6 @@
       "value": "00:00 - 00:00",
       "is_writable": false,
       "is_invalid": false
-    },
-    "eta_192_168_0_25__ww_zirkulation_rücklauf": {
-      "url": "/120/10111/0/0/12220",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Rücklauf",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
-    },
-    "eta_192_168_0_25__ww_zirkulation_stopp-differenz": {
-      "url": "/120/10111/0/0/12158",
-      "valid_values": null,
-      "friendly_name": "WW > Zirkulation > Stopp-Differenz",
-      "unit": "",
-      "endpoint_type": "TEXT",
-      "value": "xxx",
-      "is_writable": false,
-      "is_invalid": true
     },
     "eta_192_168_0_25__ww_sonstiges_ergänzung": {
       "url": "/120/10111/0/0/19391",

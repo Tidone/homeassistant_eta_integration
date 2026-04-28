@@ -221,6 +221,12 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
                     is_invalid=raw_dict.get("@strValue") == "xxx",
                 )
 
+                if endpoint_info["is_invalid"]:
+                    _LOGGER.debug(
+                        "Skipping potentially invalid endpoint %s (URI: %s)", key, uri
+                    )
+                    continue
+
                 unique_key = (
                     "eta_"
                     + self._http.host.replace(".", "_")

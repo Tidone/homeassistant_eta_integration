@@ -389,6 +389,9 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
         if unit == CUSTOM_UNIT_UNITLESS:
             value = float(str(value).replace(",", "."))
 
+        # is_invalid is determined based on the raw string value from the var endpoint
+        # the value `xxx` is hardcoded in the ETA firmware to indicate offline ETA CAN nodes, or nodes which provide no data
+
         return ETAEndpoint(
             valid_values=valid_values,
             friendly_name=f"{fub} > {data['@fullName']}",
@@ -680,6 +683,12 @@ class SensorDiscoveryV12(SensorDiscoveryBase):
                 continue
 
             endpoint_info = endpoint_infos[uri]
+
+            if endpoint_info["is_invalid"]:
+                _LOGGER.debug(
+                    "Skipping potentially invalid endpoint %s (URI: %s)", key, uri
+                )
+                continue
 
             try:
                 unique_key = (
