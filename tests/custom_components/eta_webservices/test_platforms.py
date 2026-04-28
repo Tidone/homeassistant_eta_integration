@@ -17,6 +17,9 @@ from custom_components.eta_webservices.sensor import (
 from custom_components.eta_webservices.time import (
     async_setup_entry as time_async_setup_entry,
 )
+from custom_components.eta_webservices.binary_sensor import (
+    async_setup_entry as binary_sensor_async_setup_entry,
+)
 from custom_components.eta_webservices.switch import (
     async_setup_entry as switch_async_setup_entry,
 )
@@ -131,10 +134,11 @@ async def test_all_writable_sensors_handled(hass: HomeAssistant, load_fixture):
         await sensor_async_setup_entry(hass, config_entry, add_entities)
         await time_async_setup_entry(hass, config_entry, add_entities)
         await switch_async_setup_entry(hass, config_entry, add_entities)
+        await binary_sensor_async_setup_entry(hass, config_entry, add_entities)
 
     # Every writable sensor produces exactly one entity across all platforms,
-    # plus the 2 always-present error sensors from sensor.py.
-    assert len(all_entities) == len(chosen_writable_sensors) + 2
+    # plus 2 error sensors from sensor.py and 1 EtaErrorSensor from binary_sensor.py.
+    assert len(all_entities) == len(chosen_writable_sensors) + 3
 
 
 @pytest.mark.asyncio
@@ -145,10 +149,12 @@ async def test_all_non_writable_sensors_handled(hass: HomeAssistant, load_fixtur
     - sensor.py handles all float sensors (EtaFloatSensor) and all text sensors
       (EtaTextSensor for regular units, EtaTimeslotSensor for timeslot units),
       plus always adds 2 error sensors.
-    - switch.py handles all switches (EtaSwitch).
+    - switch.py handles writable switches (EtaSwitch, is_writable=True).
+    - binary_sensor.py handles non-writable switches (EtaBinarySensor, is_writable=False)
+      plus always adds 1 EtaErrorSensor.
     - number.py and time.py contribute 0 entities (empty CHOSEN_WRITABLE_SENSORS).
 
-    Total = len(float_dict) + len(text_dict) + len(switches_dict) + 2.
+    Total = len(float_dict) + len(text_dict) + len(switches_dict) + 3.
     """
     fixture = load_fixture("api_assignment_reference_values_v12.json")
     float_dict = fixture["float_dict"]
@@ -201,11 +207,12 @@ async def test_all_non_writable_sensors_handled(hass: HomeAssistant, load_fixtur
         await sensor_async_setup_entry(hass, config_entry, add_entities)
         await time_async_setup_entry(hass, config_entry, add_entities)
         await switch_async_setup_entry(hass, config_entry, add_entities)
+        await binary_sensor_async_setup_entry(hass, config_entry, add_entities)
 
     # Every non-writable sensor produces exactly one entity across all platforms,
-    # plus the 2 always-present error sensors from sensor.py.
+    # plus 2 error sensors from sensor.py and 1 EtaErrorSensor from binary_sensor.py.
     assert len(all_entities) == (
-        len(chosen_float_sensors) + len(chosen_text_sensors) + len(chosen_switches) + 2
+        len(chosen_float_sensors) + len(chosen_text_sensors) + len(chosen_switches) + 3
     )
 
 
@@ -224,9 +231,11 @@ async def test_all_writable_and_non_writable_sensors_handled(
                  2 always-present error sensors.
     - number.py: writable sensors with regular / unitless units → EtaWritableNumberSensor.
     - time.py:   writable sensors with minutes_since_midnight   → EtaTime.
-    - switch.py: every switch → EtaSwitch.
+    - switch.py: writable switches (is_writable=True) → EtaSwitch.
+    - binary_sensor.py: non-writable switches (is_writable=False) → EtaBinarySensor,
+      plus always adds 1 EtaErrorSensor.
 
-    Total = len(float_dict) + len(text_dict) + len(writable_dict) + len(switches_dict) + 2
+    Total = len(float_dict) + len(text_dict) + len(writable_dict) + len(switches_dict) + 3
     (both the read-only and writable timeslot entities are created; the read-only one is
     disabled via the entity registry migration when a writable counterpart exists).
     """
@@ -290,9 +299,10 @@ async def test_all_writable_and_non_writable_sensors_handled(
         await sensor_async_setup_entry(hass, config_entry, add_entities)
         await time_async_setup_entry(hass, config_entry, add_entities)
         await switch_async_setup_entry(hass, config_entry, add_entities)
+        await binary_sensor_async_setup_entry(hass, config_entry, add_entities)
 
     assert len(all_entities) == (
-        len(float_dict) + len(text_dict) + len(writable_dict) + len(switch_dict) + 2
+        len(float_dict) + len(text_dict) + len(writable_dict) + len(switch_dict) + 3
     )
 
 

@@ -108,7 +108,8 @@ class EtaCoordinatedSensorEntity(
     def _handle_coordinator_update(self) -> None:
         """Update attributes when the coordinator updates."""
         data = self.coordinator.data.get(self.uri)
-        self.handle_data_updates(cast(_EntityT, data) if data is not None else None)
+        if self.coordinator.data:
+            self.handle_data_updates(cast(_EntityT, data) if data is not None else None)
         super()._handle_coordinator_update()
 
 

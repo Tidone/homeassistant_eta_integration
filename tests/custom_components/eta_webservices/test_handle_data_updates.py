@@ -20,6 +20,7 @@ from custom_components.eta_webservices.const import (
     CUSTOM_UNIT_TIMESLOT,
 )
 from custom_components.eta_webservices.number import EtaWritableNumberSensor
+from custom_components.eta_webservices.binary_sensor import EtaBinarySensor
 from custom_components.eta_webservices.switch import EtaSwitch
 from custom_components.eta_webservices.sensor import (
     EtaFloatSensor,
@@ -119,6 +120,19 @@ def _assert_clears_native_value(entity, coordinator, dummy_data):
     assert entity._attr_native_value is None
 
 
+def _assert_preserves_native_value_when_data_empty(entity, coordinator):
+    """Asserts _attr_native_value is not changed when coordinator.data is empty.
+
+    An empty coordinator.data dict signals a failed/empty poll; the entity must
+    keep its last known value rather than clearing it.
+    """
+    previous = entity._attr_native_value
+    coordinator.data = {}
+    with patch.object(entity, "async_write_ha_state"):
+        entity._handle_coordinator_update()
+    assert entity._attr_native_value == previous
+
+
 # ---------------------------------------------------------------------------
 # sensor.py — EtaFloatSensor
 # ---------------------------------------------------------------------------
@@ -137,6 +151,19 @@ def test_eta_float_sensor_clears_value_when_key_missing(hass: HomeAssistant):
     _assert_clears_native_value(entity, coordinator, {_OTHER_URL: 0.0})
 
 
+def test_eta_float_sensor_preserves_value_when_data_empty(hass: HomeAssistant):
+    """EtaFloatSensor retains its last value when coordinator.data is empty."""
+    coordinator = _make_sensor_coordinator(42.0)
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaFloatSensor(
+            _make_config(), hass, _UNIQUE_ID, _make_float_endpoint(), coordinator
+        )
+
+    assert entity._attr_native_value is not None
+
+    _assert_preserves_native_value_when_data_empty(entity, coordinator)
+
+
 # ---------------------------------------------------------------------------
 # sensor.py — EtaTextSensor
 # ---------------------------------------------------------------------------
@@ -153,6 +180,19 @@ def test_eta_text_sensor_clears_value_when_key_missing(hass: HomeAssistant):
     assert entity._attr_native_value is not None
 
     _assert_clears_native_value(entity, coordinator, {_OTHER_URL: "Aus"})
+
+
+def test_eta_text_sensor_preserves_value_when_data_empty(hass: HomeAssistant):
+    """EtaTextSensor retains its last value when coordinator.data is empty."""
+    coordinator = _make_sensor_coordinator("Ein")
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaTextSensor(
+            _make_config(), hass, _UNIQUE_ID, _make_float_endpoint(unit=""), coordinator
+        )
+
+    assert entity._attr_native_value is not None
+
+    _assert_preserves_native_value_when_data_empty(entity, coordinator)
 
 
 # ---------------------------------------------------------------------------
@@ -178,6 +218,24 @@ def test_eta_timeslot_sensor_clears_value_when_key_missing(hass: HomeAssistant):
     _assert_clears_native_value(entity, coordinator, {_OTHER_URL: "09:00 - 10:00"})
 
 
+def test_eta_timeslot_sensor_preserves_value_when_data_empty(hass: HomeAssistant):
+    """EtaTimeslotSensor retains its last value when coordinator.data is empty."""
+    coordinator = _make_sensor_coordinator("15:00 - 16:00")
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaTimeslotSensor(
+            _make_config(),
+            hass,
+            _UNIQUE_ID,
+            _make_float_endpoint(unit=CUSTOM_UNIT_TIMESLOT),
+            coordinator,
+            should_activate_service=False,
+        )
+
+    assert entity._attr_native_value is not None
+
+    _assert_preserves_native_value_when_data_empty(entity, coordinator)
+
+
 # ---------------------------------------------------------------------------
 # number.py — EtaWritableNumberSensor
 # ---------------------------------------------------------------------------
@@ -194,6 +252,19 @@ def test_eta_writable_number_sensor_clears_value_when_key_missing(hass: HomeAssi
     assert entity._attr_native_value is not None
 
     _assert_clears_native_value(entity, coordinator, {_OTHER_URL: 0.0})
+
+
+def test_eta_writable_number_sensor_preserves_value_when_data_empty(hass: HomeAssistant):
+    """EtaWritableNumberSensor retains its last value when coordinator.data is empty."""
+    coordinator = _make_writable_coordinator(42.0)
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaWritableNumberSensor(
+            _make_config(), hass, _UNIQUE_ID, _make_writable_endpoint(), coordinator
+        )
+
+    assert entity._attr_native_value is not None
+
+    _assert_preserves_native_value_when_data_empty(entity, coordinator)
 
 
 # ---------------------------------------------------------------------------
@@ -222,6 +293,23 @@ def test_eta_time_clears_value_when_key_missing(hass: HomeAssistant):
     _assert_clears_native_value(entity, coordinator, {_OTHER_URL: "00:00"})
 
 
+def test_eta_time_preserves_value_when_data_empty(hass: HomeAssistant):
+    """EtaTime retains its last value when coordinator.data is empty."""
+    coordinator = _make_writable_coordinator("19:00")
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaTime(
+            _make_config(),
+            hass,
+            _UNIQUE_ID,
+            _make_writable_endpoint(unit=CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT),
+            coordinator,
+        )
+
+    assert entity._attr_native_value is not None
+
+    _assert_preserves_native_value_when_data_empty(entity, coordinator)
+
+
 # ---------------------------------------------------------------------------
 # switch.py — EtaSwitch
 # ---------------------------------------------------------------------------
@@ -245,3 +333,58 @@ def test_eta_switch_clears_is_on_when_key_missing(hass: HomeAssistant):
     with patch.object(entity, "async_write_ha_state"):
         entity._handle_coordinator_update()
     assert entity._attr_is_on is None
+
+
+def test_eta_switch_preserves_is_on_when_data_empty(hass: HomeAssistant):
+    """EtaSwitch retains its last value when coordinator.data is empty."""
+    coordinator = _make_sensor_coordinator(True)
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaSwitch(
+            _make_config(), hass, _UNIQUE_ID, _make_switch_endpoint(), coordinator
+        )
+
+    assert entity._attr_is_on is not None  # sanity: True after construction
+    previous = entity._attr_is_on
+
+    coordinator.data = {}
+    with patch.object(entity, "async_write_ha_state"):
+        entity._handle_coordinator_update()
+    assert entity._attr_is_on == previous
+
+
+# ---------------------------------------------------------------------------
+# binary_sensor.py — EtaBinarySensor
+# ---------------------------------------------------------------------------
+
+
+def test_eta_binary_sensor_clears_is_on_when_key_missing(hass: HomeAssistant):
+    """EtaBinarySensor._attr_is_on is None when its URI is absent from data."""
+    coordinator = _make_sensor_coordinator(True)
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaBinarySensor(
+            _make_config(), hass, _UNIQUE_ID, _make_switch_endpoint(), coordinator
+        )
+
+    assert entity._attr_is_on is not None  # sanity: True after construction
+
+    coordinator.data = {_OTHER_URL: True}
+    with patch.object(entity, "async_write_ha_state"):
+        entity._handle_coordinator_update()
+    assert entity._attr_is_on is None
+
+
+def test_eta_binary_sensor_preserves_is_on_when_data_empty(hass: HomeAssistant):
+    """EtaBinarySensor retains its last value when coordinator.data is empty."""
+    coordinator = _make_sensor_coordinator(True)
+    with patch("custom_components.eta_webservices.entity.async_get_clientsession"):
+        entity = EtaBinarySensor(
+            _make_config(), hass, _UNIQUE_ID, _make_switch_endpoint(), coordinator
+        )
+
+    assert entity._attr_is_on is not None  # sanity: True after construction
+    previous = entity._attr_is_on
+
+    coordinator.data = {}
+    with patch.object(entity, "async_write_ha_state"):
+        entity._handle_coordinator_update()
+    assert entity._attr_is_on == previous

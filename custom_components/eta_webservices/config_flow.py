@@ -1042,18 +1042,19 @@ class EtaOptionsFlowHandler(OptionsFlow):
         new_switches: dict,
         new_text_sensors: dict,
         new_writable_sensors: dict,
+        new_pending_sensors: dict,
     ):
         try:
             for key in self.data[FLOAT_DICT]:
-                self.data[FLOAT_DICT][key]["value"] = new_float_sensors[key]["value"]
+                self.data[FLOAT_DICT][key] = new_float_sensors[key]
             for key in self.data[SWITCHES_DICT]:
-                self.data[SWITCHES_DICT][key]["value"] = new_switches[key]["value"]
+                self.data[SWITCHES_DICT][key] = new_switches[key]
             for key in self.data[TEXT_DICT]:
-                self.data[TEXT_DICT][key]["value"] = new_text_sensors[key]["value"]
+                self.data[TEXT_DICT][key] = new_text_sensors[key]
             for key in self.data[WRITABLE_DICT]:
-                self.data[WRITABLE_DICT][key]["value"] = new_writable_sensors[key][
-                    "value"
-                ]
+                self.data[WRITABLE_DICT][key] = new_writable_sensors[key]
+            for key in self.data[PENDING_DICT]:
+                self.data[PENDING_DICT][key] = new_pending_sensors[key]
         except Exception:
             _LOGGER.exception("Exception while updating sensor values")
 
@@ -1153,7 +1154,11 @@ class EtaOptionsFlowHandler(OptionsFlow):
             )
 
             self._handle_sensor_value_updates_from_enumeration(
-                new_float_sensors, new_switches, new_text_sensors, new_writable_sensors
+                new_float_sensors,
+                new_switches,
+                new_text_sensors,
+                new_writable_sensors,
+                new_pending_sensors,
             )
             _LOGGER.info("Updated sensor values")
             self._on_options_progress("Updated values for rediscovered entities", 0.98)

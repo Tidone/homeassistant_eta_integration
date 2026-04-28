@@ -30,6 +30,7 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
         endpoint_info["valid_values"] = ETAValidSwitchValues(
             on_value=1803, off_value=1802
         )
+        endpoint_info["is_writable"] = True
 
     def _is_writable(self, endpoint_info: ETAEndpoint) -> bool:
         """Check if endpoint is writable (v1.1 method)."""
@@ -46,11 +47,13 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
         ]
         endpoint_info["valid_values"]["dec_places"] = int(raw_dict["@decPlaces"])
         endpoint_info["valid_values"]["scale_factor"] = int(raw_dict["@scaleFactor"])
+        endpoint_info["is_writable"] = True
 
     def _sanitize_duplicate_nodes(
         self,
         all_endpoints: dict[str, list[str]],
         endpoint_data: dict[str, tuple[float | str, str, dict]],
+        deduplicated_uris: dict[str, str],
     ) -> int:
         """Sanitize duplicate nodes by removing invalid URIs (v1.1 version)."""
         nodes_to_check: list[tuple[str, list[str]]] = []
@@ -100,6 +103,10 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
                     key,
                     len(valid_uris),
                 )
+                # rename the keys of the valid URIs to make sure they are unique
+                # by adding a suffix like the URI to the key in deduplicated_uris
+                for uri in valid_uris:
+                    deduplicated_uris[uri] = f"{key}__dedup_{uri.replace('/', '_')}"
 
         removed_count = 0
         for uri in set(uris_to_remove):
@@ -186,7 +193,9 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
 
         # Sanitize duplicates
         self._emit_progress("Resolving duplicate endpoints", 0.95)
-        removed_count = self._sanitize_duplicate_nodes(all_endpoints, endpoint_data)
+        removed_count = self._sanitize_duplicate_nodes(
+            all_endpoints, endpoint_data, deduplicated_uris
+        )
         if removed_count > 0:
             _LOGGER.info("Removed %d invalid URIs from duplicate nodes", removed_count)
 
@@ -208,7 +217,15 @@ class SensorDiscoveryV11(SensorDiscoveryBase):
                     # If the unit is in the list of known units, the sensor will be detected as a float sensor anyway.
                     endpoint_type="TEXT",
                     value=value,
+                    is_writable=False,
+                    is_invalid=raw_dict.get("@strValue") == "xxx",
                 )
+
+                if endpoint_info["is_invalid"]:
+                    _LOGGER.debug(
+                        "Skipping potentially invalid endpoint %s (URI: %s)", key, uri
+                    )
+                    continue
 
                 unique_key = (
                     "eta_"

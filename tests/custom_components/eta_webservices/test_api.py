@@ -5,8 +5,13 @@ import pytest
 from unittest.mock import AsyncMock
 from aiohttp import ClientSession, ClientError, ClientResponseError
 
-from custom_components.eta_webservices.api import EtaAPI
 from custom_components.eta_webservices._api.api_client import APIClient
+from custom_components.eta_webservices.api import EtaAPI
+from custom_components.eta_webservices.const import (
+    CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT,
+    CUSTOM_UNIT_TIMESLOT,
+    CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE,
+)
 
 
 @pytest.mark.asyncio
@@ -134,72 +139,74 @@ async def test_get_all_sensors_reports_progress_for_v12_route(monkeypatch):
     assert ("fake-v12-running", 0.4) in progress_updates
 
 
+@pytest.mark.parametrize(
+    ("load_fixture", "is_v12"),
+    [
+        pytest.param("", True, id="default-v12"),
+        pytest.param("", False, id="default-v11"),
+        pytest.param("additional_data", True, id="additional_data-v12"),
+        pytest.param("additional_data", False, id="additional_data-v11"),
+    ],
+    indirect=["load_fixture"],
+)
 @pytest.mark.asyncio
-async def test_get_all_sensors_v12(load_fixture):
-    """Test get_all_sensors with API v1.2 using real fixture data.
+async def test_get_all_sensors(load_fixture, is_v12):
+    """Test get_all_sensors with real fixture data for both API v1.1 and v1.2.
 
     This test verifies:
-    - Public get_all_sensors() method routes to v12 when API version >= 1.2
+    - Public get_all_sensors() method routes to v12 when API version >= 1.2, v11 otherwise
     - Mock HTTP responses are properly used
-    - Endpoints are correctly parsed from varinfo endpoint
-    - Sensor values are fetched and added to correct dictionaries
+    - Endpoints are correctly parsed
+    - Sensor values are fetched and added to the correct dictionaries
     - All dictionaries are populated with expected entries
+    - endpoint_type, value, scale_factor, dec_places are present on entries
+    - Switches carry the correct on_value and off_value from the fixture
     """
-    # Load fixtures
     api_endpoint_data = load_fixture("api_endpoint_data.json")
-    assignment_target_values = load_fixture("api_assignment_reference_values_v12.json")
+    ref_file = (
+        "api_assignment_reference_values_v12.json"
+        if is_v12
+        else "api_assignment_reference_values_v11.json"
+    )
+    reference_values = load_fixture(ref_file)
 
-    # Setup mock session
     mock_session = AsyncMock(spec=ClientSession)
-
-    # Create API instance with test host
     api = EtaAPI(mock_session, "192.168.0.25", 8080)
+    api.is_correct_api_version = AsyncMock(return_value=is_v12)
 
-    # Mock is_correct_api_version to return True (v1.2+)
-    api.is_correct_api_version = AsyncMock(return_value=True)
-
-    # Setup mock responses based on fixture data
     def create_mock_response(url_path: str):
-        """Create a mock response for a given URL path."""
         response = AsyncMock()
         if url_path in api_endpoint_data:
             response.text = AsyncMock(return_value=api_endpoint_data[url_path])
         else:
-            # Return error for unknown endpoints
             response.text = AsyncMock(
                 return_value='<?xml version="1.0" encoding="utf-8"?>'
                 '<eta version="1.0"><error>Not found</error></eta>'
             )
         return response
 
-    # Mock the _get_request method to return fixture data
     async def mock_get_request(suffix):
-        """Mock _get_request to return fixture data."""
-        # Extract the path from the suffix
-        # suffix is like "/user/menu", "/user/var//120/10111/0/0/10990", etc.
-        response = create_mock_response(suffix)
-        return response
+        return create_mock_response(suffix)
 
     api._http.get_request = mock_get_request
 
-    # Initialize dictionaries
     float_dict = {}
     switches_dict = {}
     text_dict = {}
     writable_dict = {}
+    pending_dict = {}
 
-    # Execute the public method with force_legacy_mode=False
     result = await api.get_all_sensors(
-        False, float_dict, switches_dict, text_dict, writable_dict, {}
+        False, float_dict, switches_dict, text_dict, writable_dict, pending_dict
     )
 
-    assert result is True
-    # Assertions
-    # Verify expected entries from target values
-    expected_float_entries = assignment_target_values.get("float_dict", {})
-    expected_switches_entries = assignment_target_values.get("switches_dict", {})
-    expected_text_entries = assignment_target_values.get("text_dict", {})
-    expected_writable_entries = assignment_target_values.get("writable_dict", {})
+    assert result is is_v12
+
+    expected_float_entries = reference_values.get("float_dict", {})
+    expected_switches_entries = reference_values.get("switches_dict", {})
+    expected_text_entries = reference_values.get("text_dict", {})
+    expected_writable_entries = reference_values.get("writable_dict", {})
+    expected_pending_entries = reference_values.get("pending_dict", {})
 
     # Verify length of dictionaries
     assert len(float_dict) == len(expected_float_entries), (
@@ -214,6 +221,9 @@ async def test_get_all_sensors_v12(load_fixture):
     assert len(switches_dict) == len(expected_switches_entries), (
         f"len(switches_dict) is not equal to {len(expected_switches_entries)}"
     )
+    assert len(pending_dict) == len(expected_pending_entries), (
+        f"len(pending_dict) is not equal to {len(expected_pending_entries)}"
+    )
 
     # Check float_dict entries
     for expected_key, expected_value in expected_float_entries.items():
@@ -222,7 +232,6 @@ async def test_get_all_sensors_v12(load_fixture):
         )
         actual_entry = float_dict[expected_key]
 
-        # Verify critical fields
         assert actual_entry["url"] == expected_value["url"], (
             f"URL mismatch for {expected_key}: "
             f"expected {expected_value['url']}, got {actual_entry['url']}"
@@ -231,13 +240,12 @@ async def test_get_all_sensors_v12(load_fixture):
             f"Unit mismatch for {expected_key}: "
             f"expected {expected_value['unit']}, got {actual_entry['unit']}"
         )
-        assert actual_entry["endpoint_type"] == expected_value["endpoint_type"], (
-            f"Endpoint type mismatch for {expected_key}"
-        )
         assert actual_entry["friendly_name"] == expected_value["friendly_name"], (
             f"Friendly name mismatch for {expected_key}"
         )
-        # Value might differ slightly due to floating point precision, so we check with tolerance
+        assert actual_entry["endpoint_type"] == expected_value["endpoint_type"], (
+            f"Endpoint type mismatch for {expected_key}"
+        )
         if isinstance(actual_entry.get("value"), (int, float)):
             assert (
                 abs(actual_entry.get("value", 0) - expected_value.get("value", 0))
@@ -246,6 +254,15 @@ async def test_get_all_sensors_v12(load_fixture):
                 f"Value mismatch for {expected_key}: "
                 f"expected {expected_value.get('value')}, got {actual_entry.get('value')}"
             )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
+        )
 
     # Check writable_dict entries
     for expected_key, expected_value in expected_writable_entries.items():
@@ -254,7 +271,6 @@ async def test_get_all_sensors_v12(load_fixture):
         )
         actual_entry = writable_dict[expected_key]
 
-        # Verify critical fields
         assert actual_entry["url"] == expected_value["url"], (
             f"URL mismatch for {expected_key}"
         )
@@ -264,8 +280,13 @@ async def test_get_all_sensors_v12(load_fixture):
         assert actual_entry["value"] == expected_value["value"], (
             f"Data mismatch for {expected_key}"
         )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
+        )
 
-        # Check valid_values structure for writable entries
         if expected_value.get("valid_values") is not None:
             assert actual_entry.get("valid_values") is not None, (
                 f"Valid values missing for writable entry {expected_key}"
@@ -293,7 +314,6 @@ async def test_get_all_sensors_v12(load_fixture):
         )
         actual_entry = switches_dict[expected_key]
 
-        # Verify critical fields
         assert actual_entry["url"] == expected_value["url"], (
             f"URL mismatch for {expected_key}"
         )
@@ -303,16 +323,29 @@ async def test_get_all_sensors_v12(load_fixture):
         assert actual_entry["value"] == expected_value["value"], (
             f"Data mismatch for {expected_key}"
         )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
+        )
 
-        # Check switch valid_values (on_value and off_value)
         assert actual_entry.get("valid_values") is not None, (
             f"Valid values missing for switch {expected_key}"
         )
-        assert "on_value" in actual_entry["valid_values"], (
-            f"on_value missing for switch {expected_key}"
+        assert actual_entry["valid_values"].get("on_value") == expected_value[
+            "valid_values"
+        ].get("on_value"), (
+            f"on_value mismatch for switch {expected_key}: "
+            f"expected {expected_value['valid_values'].get('on_value')}, "
+            f"got {actual_entry['valid_values'].get('on_value')}"
         )
-        assert "off_value" in actual_entry["valid_values"], (
-            f"off_value missing for switch {expected_key}"
+        assert actual_entry["valid_values"].get("off_value") == expected_value[
+            "valid_values"
+        ].get("off_value"), (
+            f"off_value mismatch for switch {expected_key}: "
+            f"expected {expected_value['valid_values'].get('off_value')}, "
+            f"got {actual_entry['valid_values'].get('off_value')}"
         )
 
     # Check text_dict entries
@@ -322,7 +355,6 @@ async def test_get_all_sensors_v12(load_fixture):
         )
         actual_entry = text_dict[expected_key]
 
-        # Verify critical fields
         assert actual_entry["url"] == expected_value["url"], (
             f"URL mismatch for {expected_key}"
         )
@@ -331,6 +363,35 @@ async def test_get_all_sensors_v12(load_fixture):
         )
         assert actual_entry["value"] == expected_value["value"], (
             f"Data mismatch for {expected_key}"
+        )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
+        )
+
+    # Check pending_dict entries
+    for expected_key, expected_value in expected_pending_entries.items():
+        assert expected_key in pending_dict, (
+            f"Expected key '{expected_key}' not found in pending_dict"
+        )
+        actual_entry = pending_dict[expected_key]
+
+        assert actual_entry["url"] == expected_value["url"], (
+            f"URL mismatch for {expected_key}"
+        )
+        assert actual_entry["unit"] == expected_value["unit"], (
+            f"Unit mismatch for {expected_key}"
+        )
+        assert actual_entry["value"] == expected_value["value"], (
+            f"Data mismatch for {expected_key}"
+        )
+        assert actual_entry["is_writable"] == expected_value["is_writable"], (
+            f"Is writable mismatch for {expected_key}"
+        )
+        assert actual_entry["is_invalid"] == expected_value["is_invalid"], (
+            f"Is invalid mismatch for {expected_key}"
         )
 
 
@@ -423,256 +484,162 @@ async def test_get_all_sensors_v12_handles_exceptions():
     # The method should complete without raising an exception
 
 
+@pytest.mark.parametrize("is_v12", [True, False], ids=["v12", "v11"])
 @pytest.mark.asyncio
-async def test_get_all_sensors_v12_skips_duplicates(load_fixture):
-    """Test that get_all_sensors (v1.2) skips duplicate endpoints.
+async def test_get_all_sensors_skips_duplicates(is_v12):
+    """Test that get_all_sensors skips duplicate endpoints for both v1.1 and v1.2.
 
     This test verifies:
     - Same URI appearing multiple times in the menu is only processed once
-    - All dictionaries correctly reflect single processing of duplicate URIs
+    - Holds for both v1.1 (checks /user/var call count) and v1.2 (checks /user/varinfo call count)
     """
-    api_endpoint_data = load_fixture("api_endpoint_data.json")
+    dup_uri = "/120/10111/0/0/12271"
 
     mock_session = AsyncMock(spec=ClientSession)
     api = EtaAPI(mock_session, "192.168.0.25", 8080)
+    api.is_correct_api_version = AsyncMock(return_value=is_v12)
 
-    # Mock is_correct_api_version to return True (v1.2+)
-    api.is_correct_api_version = AsyncMock(return_value=True)
-
-    # Mock menu response with duplicate endpoint
     menu_xml = (
         '<?xml version="1.0" encoding="utf-8"?>'
         '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
         "<menu>"
         '<fub uri="/120/10111" name="WW">'
-        '<object uri="/120/10111/0/0/12271" name="Test1"/>'
-        '<object uri="/120/10111/0/0/12271" name="Test2"/>'
+        f'<object uri="{dup_uri}" name="Test1"/>'
+        f'<object uri="{dup_uri}" name="Test2"/>'
         "</fub>"
         "</menu>"
         "</eta>"
     )
 
-    def create_mock_response(url_path: str):
-        response = AsyncMock()
-        if url_path in api_endpoint_data:
-            response.text = AsyncMock(return_value=api_endpoint_data[url_path])
-        else:
-            response.text = AsyncMock(
-                return_value='<?xml version="1.0" encoding="utf-8"?>'
-                '<eta version="1.0"><error>Not found</error></eta>'
-            )
-        return response
+    varinfo_xml = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        f'<varInfo uri="/user/varinfo{dup_uri}">'
+        f'<variable uri="{dup_uri[1:]}" name="Test" fullName="Test" '
+        'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0" isWritable="0">'
+        "<type>DEFAULT</type>"
+        "</variable>"
+        "</varInfo>"
+        "</eta>"
+    )
+
+    var_xml = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        f'<value uri="/user/var{dup_uri}" strValue="20" '
+        'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0">200</value>'
+        "</eta>"
+    )
 
     call_count = {}
 
     async def mock_get_request(suffix):
         call_count[suffix] = call_count.get(suffix, 0) + 1
-        if suffix == "/user/menu":
-            response = AsyncMock()
-            response.text = AsyncMock(return_value=menu_xml)
-            return response
-        else:
-            return create_mock_response(suffix)
-
-    api._http.get_request = mock_get_request
-
-    float_dict = {}
-    switches_dict = {}
-    text_dict = {}
-    writable_dict = {}
-
-    result = await api.get_all_sensors(
-        False, float_dict, switches_dict, text_dict, writable_dict, {}
-    )
-
-    assert result is True
-    # Verify that the duplicate endpoint was only queried once
-    varinfo_key = "/user/varinfo//120/10111/0/0/12271"
-    var_key = "/user/var//120/10111/0/0/12271"
-
-    # The duplicate should have been skipped, so each endpoint should be called once
-    assert call_count.get(varinfo_key, 0) <= 1, (
-        f"Duplicate endpoint should be queried at most once, "
-        f"but was queried {call_count.get(varinfo_key, 0)} times"
-    )
-
-
-@pytest.mark.asyncio
-async def test_get_all_sensors_v11(load_fixture):
-    """Test get_all_sensors with API v1.1 using real fixture data.
-
-    This test verifies:
-    - Public get_all_sensors() method routes to v11 when API version < 1.2
-    - Mock HTTP responses are properly used for v1.1 API
-    - Endpoints are correctly parsed from menu endpoint
-    - Sensor values are fetched and added to correct dictionaries
-    - All dictionaries are populated with expected entries
-    - Writable sensors are identified by unit alone (no varinfo available)
-    - Switches are identified by empty unit and specific value codes (1802/1803)
-    """
-    # Load fixtures
-    api_endpoint_data = load_fixture("api_endpoint_data.json")
-    reference_values_v11 = load_fixture("api_assignment_reference_values_v11.json")
-
-    # Setup mock session
-    mock_session = AsyncMock(spec=ClientSession)
-
-    # Create API instance with test host
-    api = EtaAPI(mock_session, "192.168.0.25", 8080)
-
-    # Mock is_correct_api_version to return False (v1.1)
-    api.is_correct_api_version = AsyncMock(return_value=False)
-
-    # Setup mock responses based on fixture data
-    def create_mock_response(url_path: str):
-        """Create a mock response for a given URL path."""
         response = AsyncMock()
-        if url_path in api_endpoint_data:
-            response.text = AsyncMock(return_value=api_endpoint_data[url_path])
+        if "/user/menu" in suffix:
+            response.text = AsyncMock(return_value=menu_xml)
+        elif "/user/varinfo" in suffix:
+            response.text = AsyncMock(return_value=varinfo_xml)
+        elif "/user/var" in suffix:
+            response.text = AsyncMock(return_value=var_xml)
         else:
-            # Return error for unknown endpoints
             response.text = AsyncMock(
                 return_value='<?xml version="1.0" encoding="utf-8"?>'
                 '<eta version="1.0"><error>Not found</error></eta>'
             )
         return response
 
-    # Mock the _get_request method to return fixture data
-    async def mock_get_request(suffix):
-        """Mock _get_request to return fixture data."""
-        response = create_mock_response(suffix)
-        return response
-
     api._http.get_request = mock_get_request
 
-    # Initialize dictionaries
     float_dict = {}
     switches_dict = {}
     text_dict = {}
     writable_dict = {}
 
-    # Execute the public method with force_legacy_mode=False
     result = await api.get_all_sensors(
         False, float_dict, switches_dict, text_dict, writable_dict, {}
     )
 
-    assert result is False
-    # Assertions
-    # Verify expected entries from reference values
-    expected_float_entries = reference_values_v11.get("float_dict", {})
-    expected_switches_entries = reference_values_v11.get("switches_dict", {})
-    expected_text_entries = reference_values_v11.get("text_dict", {})
-    expected_writable_entries = reference_values_v11.get("writable_dict", {})
+    assert result is is_v12
 
-    # Verify length of dictionaries
-    assert len(float_dict) == len(expected_float_entries), (
-        f"len(float_dict) is not equal to {len(expected_float_entries)}"
+    varinfo_key = "/user/varinfo/" + dup_uri
+    var_key = "/user/var/" + dup_uri
+
+    # Both keys must be queried at most once — v11 never calls varinfo (count stays 0),
+    # v12 calls both exactly once.
+    assert call_count.get(varinfo_key, 0) <= 1, (
+        f"Duplicate endpoint varinfo should be queried at most once, "
+        f"but was queried {call_count.get(varinfo_key, 0)} times"
     )
-    assert len(text_dict) == len(expected_text_entries), (
-        f"len(text_dict) is not equal to {len(expected_text_entries)}"
-    )
-    assert len(writable_dict) == len(expected_writable_entries), (
-        f"len(writable_dict) is not equal to {len(expected_writable_entries)}"
-    )
-    assert len(switches_dict) == len(expected_switches_entries), (
-        f"len(switches_dict) is not equal to {len(expected_switches_entries)}"
+    assert call_count.get(var_key, 0) <= 1, (
+        f"Duplicate endpoint var should be queried at most once, "
+        f"but was queried {call_count.get(var_key, 0)} times"
     )
 
-    # Check float_dict entries
-    for expected_key, expected_value in expected_float_entries.items():
-        assert expected_key in float_dict, (
-            f"Expected key '{expected_key}' not found in float_dict"
-        )
-        actual_entry = float_dict[expected_key]
 
-        # Verify critical fields
-        assert actual_entry["url"] == expected_value["url"], (
-            f"URL mismatch for {expected_key}: "
-            f"expected {expected_value['url']}, got {actual_entry['url']}"
-        )
-        assert actual_entry["unit"] == expected_value["unit"], (
-            f"Unit mismatch for {expected_key}: "
-            f"expected {expected_value['unit']}, got {actual_entry['unit']}"
-        )
-        assert actual_entry["friendly_name"] == expected_value["friendly_name"], (
-            f"Friendly name mismatch for {expected_key}"
-        )
-        # Value might differ slightly due to floating point precision
-        if isinstance(actual_entry.get("value"), (int, float)):
-            assert (
-                abs(actual_entry.get("value", 0) - expected_value.get("value", 0)) < 0.1
-            ), (
-                f"Value mismatch for {expected_key}: "
-                f"expected {expected_value.get('value')}, got {actual_entry.get('value')}"
+@pytest.mark.parametrize(
+    "load_fixture",
+    ["", "additional_data"],
+    indirect=True,
+    ids=["default", "additional_data"],
+)
+@pytest.mark.parametrize("is_v12", [True, False], ids=["v12", "v11"])
+@pytest.mark.asyncio
+async def test_get_all_sensors_unique_ids(load_fixture, is_v12):
+    """Test that get_all_sensors produces no duplicate keys across all 5 dictionaries.
+
+    This test verifies:
+    - Every key in float_dict, switches_dict, text_dict, writable_dict, and pending_dict
+      is globally unique — no key appears in more than one dictionary
+    - Holds for both v1.1 and v1.2 discovery paths
+    """
+    api_endpoint_data = load_fixture("api_endpoint_data.json")
+
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.25", 8080)
+    api.is_correct_api_version = AsyncMock(return_value=is_v12)
+
+    def create_mock_response(url_path: str):
+        response = AsyncMock()
+        if url_path in api_endpoint_data:
+            response.text = AsyncMock(return_value=api_endpoint_data[url_path])
+        else:
+            response.text = AsyncMock(
+                return_value='<?xml version="1.0" encoding="utf-8"?>'
+                '<eta version="1.0"><error>Not found</error></eta>'
             )
+        return response
 
-    # Check writable_dict entries
-    for expected_key, expected_value in expected_writable_entries.items():
-        assert expected_key in writable_dict, (
-            f"Expected key '{expected_key}' not found in writable_dict"
-        )
-        actual_entry = writable_dict[expected_key]
+    async def mock_get_request(suffix):
+        return create_mock_response(suffix)
 
-        # Verify critical fields
-        assert actual_entry["url"] == expected_value["url"], (
-            f"URL mismatch for {expected_key}"
-        )
-        assert actual_entry["unit"] == expected_value["unit"], (
-            f"Unit mismatch for {expected_key}"
-        )
+    api._http.get_request = mock_get_request
 
-        # Check valid_values structure for writable entries (v11 uses default ranges)
-        if expected_value.get("valid_values") is not None:
-            assert actual_entry.get("valid_values") is not None, (
-                f"Valid values missing for writable entry {expected_key}"
+    float_dict = {}
+    switches_dict = {}
+    text_dict = {}
+    writable_dict = {}
+    pending_dict = {}
+
+    await api.get_all_sensors(
+        False, float_dict, switches_dict, text_dict, writable_dict, pending_dict
+    )
+
+    all_dicts = {
+        "float_dict": float_dict,
+        "switches_dict": switches_dict,
+        "text_dict": text_dict,
+        "writable_dict": writable_dict,
+        "pending_dict": pending_dict,
+    }
+
+    seen: dict[str, str] = {}
+    for dict_name, d in all_dicts.items():
+        for key in d:
+            assert key not in seen, (
+                f"Key '{key}' appears in both '{seen[key]}' and '{dict_name}'"
             )
-            expected_vv = expected_value["valid_values"]
-            actual_vv = actual_entry["valid_values"]
-
-            assert actual_vv.get("scaled_min_value") == expected_vv.get(
-                "scaled_min_value"
-            ), f"Scaled min value mismatch for {expected_key}"
-            assert actual_vv.get("scaled_max_value") == expected_vv.get(
-                "scaled_max_value"
-            ), f"Scaled max value mismatch for {expected_key}"
-
-    # Check switches_dict entries (v11 uses specific codes 1802/1803)
-    for expected_key, expected_value in expected_switches_entries.items():
-        assert expected_key in switches_dict, (
-            f"Expected key '{expected_key}' not found in switches_dict"
-        )
-        actual_entry = switches_dict[expected_key]
-
-        # Verify critical fields
-        assert actual_entry["url"] == expected_value["url"], (
-            f"URL mismatch for {expected_key}"
-        )
-        assert actual_entry["unit"] == expected_value["unit"], (
-            f"Unit mismatch for {expected_key}"
-        )
-
-        # Check switch valid_values (on_value=1803, off_value=1802)
-        assert actual_entry.get("valid_values") is not None, (
-            f"Valid values missing for switch {expected_key}"
-        )
-        assert actual_entry["valid_values"].get("on_value") == 1803, (
-            f"on_value should be 1803 for switch {expected_key}, got {actual_entry['valid_values'].get('on_value')}"
-        )
-        assert actual_entry["valid_values"].get("off_value") == 1802, (
-            f"off_value should be 1802 for switch {expected_key}, got {actual_entry['valid_values'].get('off_value')}"
-        )
-
-    # Check text_dict entries
-    for expected_key, expected_value in expected_text_entries.items():
-        assert expected_key in text_dict, (
-            f"Expected key '{expected_key}' not found in text_dict"
-        )
-        actual_entry = text_dict[expected_key]
-
-        # Verify critical fields
-        assert actual_entry["url"] == expected_value["url"], (
-            f"URL mismatch for {expected_key}"
-        )
+            seen[key] = dict_name
 
 
 @pytest.mark.asyncio
@@ -779,75 +746,6 @@ async def test_get_all_sensors_v11_distinguishes_sensor_types():
     assert len(writable_dict) > 0, "Writable sensor should be added"
     # Text sensor with empty value should not be added
     assert len(text_dict) == 0, "Empty text sensor should not be added"
-
-
-@pytest.mark.asyncio
-async def test_get_all_sensors_v11_skips_duplicates():
-    """Test that get_all_sensors (v1.1) skips duplicate endpoints.
-
-    This test verifies:
-    - Same URI appearing multiple times is only processed once
-    """
-    mock_session = AsyncMock(spec=ClientSession)
-    api = EtaAPI(mock_session, "192.168.0.1", 8080)
-
-    # Mock is_correct_api_version to return False (v1.1)
-    api.is_correct_api_version = AsyncMock(return_value=False)
-
-    menu_xml = (
-        '<?xml version="1.0" encoding="utf-8"?>'
-        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
-        "<menu>"
-        '<fub uri="/120/10101" name="HK">'
-        '<object uri="/120/10101/0/0/12197" name="Sensor1"/>'
-        '<object uri="/120/10101/0/0/12197" name="Sensor2"/>'
-        "</fub>"
-        "</menu>"
-        "</eta>"
-    )
-
-    sensor_var = (
-        '<?xml version="1.0" encoding="utf-8"?>'
-        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
-        '<value uri="/user/var/120/10101/0/0/12197" strValue="20" '
-        'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0">200</value>'
-        "</eta>"
-    )
-
-    call_count = {}
-
-    async def mock_get_request(suffix):
-        call_count[suffix] = call_count.get(suffix, 0) + 1
-        response = AsyncMock()
-        if "/user/menu" in suffix:
-            response.text = AsyncMock(return_value=menu_xml)
-        elif "12197" in suffix:
-            response.text = AsyncMock(return_value=sensor_var)
-        else:
-            response.text = AsyncMock(
-                return_value='<?xml version="1.0" encoding="utf-8"?>'
-                '<eta version="1.0"><error>Not found</error></eta>'
-            )
-        return response
-
-    api._http.get_request = mock_get_request
-
-    float_dict = {}
-    switches_dict = {}
-    text_dict = {}
-    writable_dict = {}
-
-    result = await api.get_all_sensors(
-        False, float_dict, switches_dict, text_dict, writable_dict, {}
-    )
-
-    assert result is False
-    # Verify duplicate was only queried once
-    var_key = "/user/var//120/10101/0/0/12197"
-    assert call_count.get(var_key, 0) <= 1, (
-        f"Duplicate endpoint should be queried at most once, "
-        f"but was queried {call_count.get(var_key, 0)} times"
-    )
 
 
 @pytest.mark.asyncio
@@ -2317,7 +2215,9 @@ async def test_api_client_get_request_enforces_semaphore_limit():
 
     mock_session.get = slow_get
 
-    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
+    client = APIClient(
+        mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent
+    )
 
     tasks = [client.get_request(f"/user/var/{i}") for i in range(max_concurrent * 2)]
     await asyncio.gather(*tasks)
@@ -2352,7 +2252,9 @@ async def test_api_client_post_request_enforces_semaphore_limit():
 
     mock_session.post = slow_post
 
-    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
+    client = APIClient(
+        mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent
+    )
 
     tasks = [
         client.post_request(f"/user/var/{i}", {"value": i})
@@ -2399,14 +2301,191 @@ async def test_api_client_get_and_post_share_semaphore():
     mock_session.get = slow_get
     mock_session.post = slow_post
 
-    client = APIClient(mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent)
-
-    tasks = (
-        [client.get_request(f"/user/var/{i}") for i in range(max_concurrent)]
-        + [client.post_request(f"/user/var/{i}", {"value": i}) for i in range(max_concurrent)]
+    client = APIClient(
+        mock_session, "192.168.0.1", 8080, max_concurrent_requests=max_concurrent
     )
+
+    tasks = [client.get_request(f"/user/var/{i}") for i in range(max_concurrent)] + [
+        client.post_request(f"/user/var/{i}", {"value": i})
+        for i in range(max_concurrent)
+    ]
     await asyncio.gather(*tasks)
 
     assert observed_max <= max_concurrent, (
         f"Mixed GET/POST should share the semaphore: expected <= {max_concurrent}, got {observed_max}"
+    )
+
+
+@pytest.mark.asyncio
+async def test_get_all_sensors_v12_non_writable_custom_unit_nodes():
+    """Test that v1.2 nodes with isWritable=0 and custom time-related units are detected correctly.
+
+    This test verifies:
+    - Nodes with unit resolving to CUSTOM_UNIT_TIMESLOT are placed in text_dict
+    - Nodes with unit resolving to CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE are placed in text_dict
+    - Nodes with unit resolving to CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT are placed in text_dict
+    - None of these non-writable nodes appear in writable_dict
+    """
+    mock_session = AsyncMock(spec=ClientSession)
+    api = EtaAPI(mock_session, "192.168.0.1", 8080)
+    api.is_correct_api_version = AsyncMock(return_value=True)
+
+    menu_xml = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        "<menu>"
+        '<fub uri="/120/10101" name="HK">'
+        '<object uri="/120/10101/0/0/12001" name="TimeslotSensor"/>'
+        '<object uri="/120/10101/0/0/12002" name="TimeslotTempSensor"/>'
+        '<object uri="/120/10101/0/0/12003" name="MinutesMidnight"/>'
+        "</fub>"
+        "</menu>"
+        "</eta>"
+    )
+
+    # TIMESLOT sensor: type=TIMESLOT, unit="", isWritable=0
+    # validValues min/max encode the 15-minute quarter-hour slots (0..96)
+    varinfo_timeslot = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<varInfo uri="/user/varinfo//120/10101/0/0/12001">'
+        '<variable uri="120/10101/0/0/12001" name="Zeitfenster 1" '
+        'fullName="Heizzeiten &gt; Montag &gt; Zeitfenster 1" '
+        'unit="" decPlaces="0" scaleFactor="1" advTextOffset="0" isWritable="0">'
+        "<type>TIMESLOT</type>"
+        "<validValues>"
+        '<min unit="" strValue="00:00 - 00:00"><begin>0</begin><end>0</end></min>'
+        '<def unit="" strValue="00:00 - 24:00"><begin>0</begin><end>96</end></def>'
+        '<max unit="" strValue="24:00 - 24:00"><begin>96</begin><end>96</end></max>'
+        "</validValues>"
+        "</variable>"
+        "</varInfo>"
+        "</eta>"
+    )
+
+    # var: unit="" means parse_data returns strValue as-is
+    var_timeslot = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<value uri="/user/var/120/10101/0/0/12001" strValue="15:00 - 22:00" '
+        'unit="" decPlaces="0" scaleFactor="1" advTextOffset="0">0</value>'
+        "</eta>"
+    )
+
+    # TIMESLOT_PLUS_TEMPERATURE sensor: type=TIMESLOT, unit="°C", isWritable=0
+    # validValues additionally carry a temperature <value> per slot boundary
+    varinfo_timeslot_temp = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<varInfo uri="/user/varinfo//120/10101/0/0/12002">'
+        '<variable uri="120/10101/0/0/12002" name="Zeitfenster 1" '
+        'fullName="Ladezeiten &gt; Montag &gt; Zeitfenster 1" '
+        'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0" isWritable="0">'
+        "<type>TIMESLOT</type>"
+        "<validValues>"
+        '<min unit="°C" strValue="00:00 - 00:00 0"><begin>0</begin><end>0</end><value>0</value></min>'
+        '<def unit="°C" strValue="00:00 - 24:00 55"><begin>0</begin><end>96</end><value>550</value></def>'
+        '<max unit="°C" strValue="24:00 - 24:00 90"><begin>96</begin><end>96</end><value>900</value></max>'
+        "</validValues>"
+        "</variable>"
+        "</varInfo>"
+        "</eta>"
+    )
+
+    # var: unit="°C" is in FLOAT_SENSOR_UNITS so parse_data returns a float,
+    # but _parse_unit uses var_raw["@strValue"] for TIMESLOT detection
+    var_timeslot_temp = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<value uri="/user/var/120/10101/0/0/12002" strValue="15:30 - 18:00 55" '
+        'unit="°C" decPlaces="0" scaleFactor="10" advTextOffset="0">155</value>'
+        "</eta>"
+    )
+
+    # MINUTES_SINCE_MIDNIGHT sensor: type=DEFAULT, unit="", isWritable=0
+    # validValues are plain numeric min/max (0..1439 minutes)
+    varinfo_minutes = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<varInfo uri="/user/varinfo//120/10101/0/0/12003">'
+        '<variable uri="120/10101/0/0/12003" name="Ruhezeit" '
+        'fullName="Einstellungen &gt; Ruhezeit" '
+        'unit="" decPlaces="0" scaleFactor="1" advTextOffset="0" isWritable="0">'
+        "<type>DEFAULT</type>"
+        "<validValues>"
+        '<min unit="" strValue="0">0</min>'
+        '<def unit="" strValue="0">0</def>'
+        '<max unit="" strValue="1439">1439</max>'
+        "</validValues>"
+        "</variable>"
+        "</varInfo>"
+        "</eta>"
+    )
+
+    # var: unit="" means parse_data returns strValue="21:00";
+    # str("21:00").isnumeric() is False so _parse_unit falls through to the
+    # _is_valid_time check, which matches HH:MM → CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT
+    var_minutes = (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<eta version="1.0" xmlns="http://www.eta.co.at/rest/v1">'
+        '<value uri="/user/var/120/10101/0/0/12003" strValue="21:00" '
+        'unit="" decPlaces="0" scaleFactor="1" advTextOffset="0">1260</value>'
+        "</eta>"
+    )
+
+    async def mock_get_request(suffix):
+        response = AsyncMock()
+        if "/user/menu" in suffix:
+            response.text = AsyncMock(return_value=menu_xml)
+        elif "12001" in suffix and "/user/varinfo" in suffix:
+            response.text = AsyncMock(return_value=varinfo_timeslot)
+        elif "12001" in suffix:
+            response.text = AsyncMock(return_value=var_timeslot)
+        elif "12002" in suffix and "/user/varinfo" in suffix:
+            response.text = AsyncMock(return_value=varinfo_timeslot_temp)
+        elif "12002" in suffix:
+            response.text = AsyncMock(return_value=var_timeslot_temp)
+        elif "12003" in suffix and "/user/varinfo" in suffix:
+            response.text = AsyncMock(return_value=varinfo_minutes)
+        elif "12003" in suffix:
+            response.text = AsyncMock(return_value=var_minutes)
+        else:
+            response.text = AsyncMock(
+                return_value='<?xml version="1.0" encoding="utf-8"?>'
+                '<eta version="1.0"><error>Not found</error></eta>'
+            )
+        return response
+
+    api._http.get_request = mock_get_request
+
+    float_dict = {}
+    switches_dict = {}
+    text_dict = {}
+    writable_dict = {}
+
+    result = await api.get_all_sensors(
+        False, float_dict, switches_dict, text_dict, writable_dict, {}
+    )
+
+    assert result is True  # v12 path was used
+
+    # isWritable=0 means none of the three sensors should be registered as writable
+    assert len(writable_dict) == 0, (
+        f"Non-writable sensors must not appear in writable_dict, got: {list(writable_dict)}"
+    )
+
+    # All three should be detected and placed in text_dict
+    assert len(text_dict) == 3, (
+        f"Expected 3 custom-unit text sensors, got {len(text_dict)}: {list(text_dict)}"
+    )
+
+    units_in_text_dict = {entry["unit"] for entry in text_dict.values()}
+    assert CUSTOM_UNIT_TIMESLOT in units_in_text_dict, (
+        "TIMESLOT sensor should be detected and placed in text_dict"
+    )
+    assert CUSTOM_UNIT_TIMESLOT_PLUS_TEMPERATURE in units_in_text_dict, (
+        "TIMESLOT_PLUS_TEMPERATURE sensor should be detected and placed in text_dict"
+    )
+    assert CUSTOM_UNIT_MINUTES_SINCE_MIDNIGHT in units_in_text_dict, (
+        "MINUTES_SINCE_MIDNIGHT sensor should be detected and placed in text_dict"
     )

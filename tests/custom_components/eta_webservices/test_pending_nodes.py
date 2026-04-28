@@ -114,8 +114,7 @@ async def test_pending_node_goes_to_pending_dict(load_fixture):
         return_value=_build_minimal_sensors_dict(PENDING_URI)
     )
 
-    # Mock get_request: varinfo returns the invalid XML; var is never called in
-    # the varinfo-phase so we only need to handle the varinfo path.
+    # Mock get_request: varinfo returns the invalid XML.
     async def mock_get_request(suffix: str):
         if suffix == PENDING_VARINFO_PATH:
             return _make_response(INVALID_VARINFO_XML)
@@ -125,8 +124,8 @@ async def test_pending_node_goes_to_pending_dict(load_fixture):
 
     api._http.get_request = mock_get_request
 
-    # Mock get_data: the var endpoint returns ("---", "") — still invalid.
-    api._http.get_data = AsyncMock(return_value=("---", ""))
+    # Mock get_data_plus_raw: the var endpoint returns ("---", "") — still invalid.
+    api._http.get_data_plus_raw = AsyncMock(return_value=("---", "", {"@strValue": "---", "@unit": ""}))
 
     float_dict: dict = {}
     switches_dict: dict = {}
@@ -190,8 +189,8 @@ async def test_valid_node_does_not_go_to_pending_dict():
         )
 
     api._http.get_request = mock_get_request
-    # get_data is called because unit="%" → float sensor
-    api._http.get_data = AsyncMock(return_value=(20.64, "%"))
+    # get_data_plus_raw is called because unit="%" → float sensor
+    api._http.get_data_plus_raw = AsyncMock(return_value=(20.64, "%", {"@strValue": "20,6", "@unit": "%"}))
 
     float_dict: dict = {}
     switches_dict: dict = {}
@@ -442,7 +441,7 @@ async def test_pending_node_with_invalid_permission_error():
 
     # Simulate what happens when xmltodict.parse(error_xml)["eta"]["value"]
     # raises KeyError because the response contains <error> instead of <value>.
-    api._http.get_data = AsyncMock(side_effect=KeyError("value"))
+    api._http.get_data_plus_raw = AsyncMock(side_effect=KeyError("value"))
 
     float_dict: dict = {}
     switches_dict: dict = {}
