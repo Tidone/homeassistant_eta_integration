@@ -261,7 +261,7 @@ def _create_repository_moved_issue(hass: core.HomeAssistant) -> None:
             "available in the **HACS default store**.\n\n"
             "This repository will no longer receive updates. Please switch:\n"
             "1. In HACS, remove this integration's custom repository.\n"
-            "2. Search for **meinETA** (ETA) in the HACS store and install it.\n"
+            "2. Search for **ETA Heating** in the HACS store and install it.\n"
             "3. Restart Home Assistant.\n\n"
             "Your entities, history and automations are kept.\n"
             "[Open the new repository](https://github.com/meinETA/homeassistant-eta)"
