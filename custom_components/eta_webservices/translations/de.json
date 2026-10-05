@@ -187,5 +187,11 @@
                 }
             }
         }
+    },
+    "issues": {
+        "repository_moved": {
+            "title": "ETA-Integration ist umgezogen",
+            "description": "Diese ETA-Integration ist in ein neues Repository umgezogen und jetzt im **HACS-Standard-Store** verfügbar.\n\nDieses Repository erhält keine Updates mehr. Bitte wechsle:\n\n1. Entferne in HACS das benutzerdefinierte Repository dieser Integration.\n2. Suche im HACS-Store nach **ETA Heating** und installiere es von dort.\n3. Starte Home Assistant neu.\n\nDeine Entitäten, der Verlauf und deine Automationen bleiben erhalten. Details siehe Link unten."
+        }
     }
 }

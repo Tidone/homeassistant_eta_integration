@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **This repository has moved.** The ETA integration is now maintained as **[ETA Heating](https://github.com/meinETA/homeassistant-eta)** and is available directly in the **HACS default store**.
+>
+> This repository will no longer receive updates. Head over to **[meinETA/homeassistant-eta](https://github.com/meinETA/homeassistant-eta)** for installation and migration steps. Your entities, history and automations are preserved when you switch.
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 
 # ETA Integration for Home Assistant
