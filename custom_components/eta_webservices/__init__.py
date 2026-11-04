@@ -6,7 +6,9 @@ from typing import Any
 
 from homeassistant import config_entries, core
 from homeassistant.const import Platform
+from homeassistant.components import persistent_notification
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import issue_registry as ir
 
 from .config_flow import EtaFlowHandler
 from .const import (
@@ -98,6 +100,8 @@ async def async_setup_entry(
     # options_update_listener (registered above) is already in place before
     # any promotion fires and updates the options.
     hass.async_create_task(pending_coordinator.async_refresh())
+
+    _create_repository_moved_issue(hass)
 
     await async_setup_services(hass, entry)
 
@@ -236,3 +240,32 @@ async def async_unload_entry(
         hass.data[DOMAIN].pop(entry.entry_id)
 
     return unload_ok
+
+
+def _create_repository_moved_issue(hass: core.HomeAssistant) -> None:
+    """Notify the user that this integration has moved to a new repository."""
+    ir.async_create_issue(
+        hass,
+        DOMAIN,
+        "repository_moved",
+        is_fixable=False,
+        severity=ir.IssueSeverity.CRITICAL,
+        translation_key="repository_moved",
+        learn_more_url="https://github.com/meinETA/homeassistant-eta",
+    )
+
+    persistent_notification.async_create(
+        hass,
+        (
+            "This ETA integration has moved to a new repository and is now "
+            "available in the **HACS default store**.\n\n"
+            "This repository will no longer receive updates. Please switch:\n"
+            "1. In HACS, remove this integration's custom repository.\n"
+            "2. Search for **ETA Heating** in the HACS store and install it.\n"
+            "3. Restart Home Assistant.\n\n"
+            "Your entities, history and automations are kept.\n"
+            "[Open the new repository](https://github.com/meinETA/homeassistant-eta)"
+        ),
+        title="ETA integration has moved",
+        notification_id="eta_repository_moved",
+    )
