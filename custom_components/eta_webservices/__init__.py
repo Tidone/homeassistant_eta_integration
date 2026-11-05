@@ -55,6 +55,10 @@ PLATFORMS: list[Platform] = [
 
 _LOGGER = logging.getLogger(__name__)
 
+MIGRATION_GUIDE_URL = (
+    "https://github.com/meinETA/homeassistant-eta/blob/main/docs/migration.md"
+)
+
 
 async def async_setup_entry(
     hass: core.HomeAssistant, entry: config_entries.ConfigEntry
@@ -253,7 +257,8 @@ def _create_repository_moved_issue(hass: core.HomeAssistant) -> None:
         is_fixable=False,
         severity=ir.IssueSeverity.CRITICAL,
         translation_key="repository_moved",
-        learn_more_url="https://github.com/meinETA/homeassistant-eta/blob/main/docs/migration.md",
+        translation_placeholders={"guide_url": MIGRATION_GUIDE_URL},
+        learn_more_url=MIGRATION_GUIDE_URL,
     )
 
     persistent_notification.async_create(
@@ -266,7 +271,7 @@ def _create_repository_moved_issue(hass: core.HomeAssistant) -> None:
             "This version keeps working, but this repository will no longer "
             "receive updates. Your setup is saved automatically, so you can "
             "switch at any time.\n\n"
-            "[Open the migration guide](https://github.com/meinETA/homeassistant-eta/blob/main/docs/migration.md)"
+            f"[Open the migration guide]({MIGRATION_GUIDE_URL})"
         ),
         title="ETA integration has moved",
         notification_id="eta_repository_moved",
