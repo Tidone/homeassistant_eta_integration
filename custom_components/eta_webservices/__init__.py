@@ -41,6 +41,7 @@ from .coordinator import (
     ETASensorUpdateCoordinator,
     ETAWritableUpdateCoordinator,
 )
+from .migration_snapshot import async_save_snapshot
 from .services import async_setup_services
 
 PLATFORMS: list[Platform] = [
@@ -102,6 +103,7 @@ async def async_setup_entry(
     hass.async_create_task(pending_coordinator.async_refresh())
 
     _create_repository_moved_issue(hass)
+    await async_save_snapshot(hass, entry)
 
     await async_setup_services(hass, entry)
 
@@ -251,20 +253,20 @@ def _create_repository_moved_issue(hass: core.HomeAssistant) -> None:
         is_fixable=False,
         severity=ir.IssueSeverity.CRITICAL,
         translation_key="repository_moved",
-        learn_more_url="https://github.com/meinETA/homeassistant-eta",
+        learn_more_url="https://github.com/meinETA/homeassistant-eta/blob/main/docs/migration.md",
     )
 
     persistent_notification.async_create(
         hass,
         (
             "This ETA integration has moved to a new repository and is now "
-            "available in the **HACS default store**.\n\n"
-            "This repository will no longer receive updates. Please switch:\n"
-            "1. In HACS, remove this integration's custom repository.\n"
-            "2. Search for **ETA Heating** in the HACS store and install it.\n"
-            "3. Restart Home Assistant.\n\n"
-            "Your entities, history and automations are kept.\n"
-            "[Open the new repository](https://github.com/meinETA/homeassistant-eta)"
+            "available as **ETA Heating** in the **Home Assistant Marketplace** "
+            "(Home Assistant 2026.11 and newer) and the **HACS default store** "
+            "(older versions).\n\n"
+            "This version keeps working, but this repository will no longer "
+            "receive updates. Your setup is saved automatically, so you can "
+            "switch at any time.\n\n"
+            "[Open the migration guide](https://github.com/meinETA/homeassistant-eta/blob/main/docs/migration.md)"
         ),
         title="ETA integration has moved",
         notification_id="eta_repository_moved",
