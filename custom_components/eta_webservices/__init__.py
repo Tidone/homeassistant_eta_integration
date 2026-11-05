@@ -250,6 +250,8 @@ async def async_unload_entry(
 
 def _create_repository_moved_issue(hass: core.HomeAssistant) -> None:
     """Notify the user that this integration has moved to a new repository."""
+    # Deleting first clears an earlier "ignore", so the notice returns on every setup.
+    ir.async_delete_issue(hass, DOMAIN, "repository_moved")
     ir.async_create_issue(
         hass,
         DOMAIN,
