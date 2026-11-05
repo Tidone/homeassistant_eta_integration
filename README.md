@@ -1,7 +1,7 @@
 > [!IMPORTANT]
-> **This repository has moved.** The ETA integration is now maintained as **[ETA Heating](https://github.com/meinETA/homeassistant-eta)** and is available directly in the **HACS default store**.
+> **This repository has moved.** The ETA integration is now maintained as **[ETA Heating](https://github.com/meinETA/homeassistant-eta)** and is available in the **Home Assistant Marketplace** (Home Assistant 2026.11 and newer) and the **HACS default store** (older versions).
 >
-> This repository will no longer receive updates. Head over to **[meinETA/homeassistant-eta](https://github.com/meinETA/homeassistant-eta)** for installation and migration steps. Your entities, history and automations are preserved when you switch.
+> Version 1.4.3 keeps working, but this repository will no longer receive updates. Update to 1.4.3 and restart Home Assistant before you switch, because 1.4.2 and older do not save your setup. Then follow the **[migration guide](https://github.com/meinETA/homeassistant-eta/blob/main/docs/migration.md)** to switch. Your entity IDs, devices and history are kept.
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 

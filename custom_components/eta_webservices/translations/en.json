@@ -191,7 +191,7 @@
     "issues": {
         "repository_moved": {
             "title": "ETA integration has moved",
-            "description": "This ETA integration has moved to a new repository and is now available in the **HACS default store**.\n\nThis repository will no longer receive updates. Please switch:\n\n1. In HACS, remove this integration's custom repository.\n2. Search for **ETA Heating** in the HACS store and install it from there.\n3. Restart Home Assistant.\n\nYour entities, history and automations are kept. See the link below for details."
+            "description": "This ETA integration has moved to a new repository and is now available as **ETA Heating** in the **Home Assistant Marketplace** (Home Assistant 2026.11 and newer) and the **HACS default store** (older versions).\n\nThis version keeps working, but this repository will no longer receive updates. Your setup is saved automatically, so you can switch at any time:\n\n1. Remove this integration under **Settings → Devices & services**, then uninstall it in the Marketplace or HACS.\n2. Remove this integration's custom repository.\n3. Install **ETA Heating** and restart Home Assistant.\n4. Add **ETA Heating** and choose **Restore previous setup**.\n\nYour entity IDs, devices and history are kept. [Open the migration guide]({guide_url})"
         }
     }
 }
